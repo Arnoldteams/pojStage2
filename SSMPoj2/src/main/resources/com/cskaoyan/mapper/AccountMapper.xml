@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cskaoyan.mapper.AccountMapper">
+    <select id="queryById" resultType="string">
+        select money from cskaoyan_account where id = #{id}
+    </select>
+
+    <update id="updateById">
+        update cskaoyan_account set money = #{money} where id = #{id}
+    </update>
+</mapper>
