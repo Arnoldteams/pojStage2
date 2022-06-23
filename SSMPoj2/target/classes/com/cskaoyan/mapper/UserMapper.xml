@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cskaoyan.mapper.UserMapper">
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="user.id">
+        insert into user ( username, pwd, email, birthday )
+        VALUES
+            (
+                #{user.username},
+                #{user.pwd},
+                #{user.email},
+                #{user.birthday})
+    </insert>
+
+    <select id="queryUsersByLike" resultType="com.cskaoyan.bean.User">
+        select
+            *
+        from
+            `user`
+        where username like concat('%',#{content},'%')
+    </select>
+</mapper>

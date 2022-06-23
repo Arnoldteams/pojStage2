@@ -1,6 +1,9 @@
 package com.cskaoyan.config;
 
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+
+import javax.servlet.Filter;
 
 
 public class ApplicationInit extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -21,5 +24,14 @@ public class ApplicationInit extends AbstractAnnotationConfigDispatcherServletIn
     @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};
+    }
+
+    @Override
+    protected Filter[] getServletFilters() {
+        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+        characterEncodingFilter.setEncoding("utf-8");
+        characterEncodingFilter.setForceRequestEncoding(true);
+        characterEncodingFilter.setForceResponseEncoding(true);
+        return new Filter[]{characterEncodingFilter};
     }
 }

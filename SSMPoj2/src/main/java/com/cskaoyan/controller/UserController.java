@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -22,6 +23,21 @@ public class UserController {
 
     @Autowired
     AccountService accountService;
+
+    @RequestMapping("hello")
+    public Result hello(HttpSession httpSession, String name, String pwd) {
+        return Result.ok("hello");
+    }
+
+
+    @RequestMapping("login")
+    public Result login(HttpSession httpSession, String name, String pwd) {
+
+        httpSession.setAttribute("name",name);
+        httpSession.setAttribute("pwd",pwd);
+
+        return Result.ok("登陆成功");
+    }
 
     @RequestMapping("register")
     public Result register(User user) {
