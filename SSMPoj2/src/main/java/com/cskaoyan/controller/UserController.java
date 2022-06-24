@@ -64,4 +64,13 @@ public class UserController {
         return Result.ok();
     }
 
+    //yinan
+    @RequestMapping("cheers")
+    public Result sayCheers(){
+
+        System.out.println("Break a leg !");
+
+        return Result.ok("abc");
+    }
+
 }
