@@ -34,6 +34,11 @@ public class UserController {
         return Result.ok("xiaofang come in");
     }
 
+    @RequestMapping("sparkx")
+    public Result helloSparkX(){
+        return Result.ok("hello SparkX");
+    }
+
 
     @RequestMapping("login")
     public Result login(HttpSession httpSession, String name, String pwd) {
