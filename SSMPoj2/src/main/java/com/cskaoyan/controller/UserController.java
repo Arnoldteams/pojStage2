@@ -29,6 +29,11 @@ public class UserController {
         return Result.ok("hello");
     }
 
+    @RequestMapping("hello2")
+    public Result hello2(HttpSession httpSession, String name, String pwd) {
+        return Result.ok("xiaofang come in");
+    }
+
 
     @RequestMapping("login")
     public Result login(HttpSession httpSession, String name, String pwd) {
