@@ -1,6 +1,7 @@
 package com.cskaoyan.service;
 
 import com.cskaoyan.bean.MarketTopic;
+import com.cskaoyan.bean.MarketTopicExample;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.mapper.MarketTopicMapper;
@@ -38,19 +39,23 @@ public class AdminTopicServiceImpl implements AdminTopicService {
     public CommonData<MarketTopic> getList(BaseParam baseInfo, String subtitle, String title) {
 //        分页开启
         PageHelper.startPage(baseInfo.getPage(), baseInfo.getLimit());
-        String sort = baseInfo.getSort();
+
+        MarketTopicExample marketTopicExample = new MarketTopicExample();
+        MarketTopicExample.Criteria or = marketTopicExample.or();
 
 //        设置模糊查询
         if (title != null) {
             title = "%" + title + "%";
+            or.andTitleLike(title);
         }
         if (subtitle != null) {
             subtitle = "%" + subtitle + "%";
+            or.andSubtitleLike(subtitle);
         }
+        marketTopicExample.setOrderByClause(baseInfo.getSort()+" "+baseInfo.getOrder());
 
 //        查询符合条件的专题
-        List<MarketTopic> marketTopicList = marketTopicMapper.selectByConditionWithBLOBs(baseInfo.getSort(),
-                baseInfo.getOrder(), title, subtitle);
+        List<MarketTopic> marketTopicList = marketTopicMapper.selectByExampleWithBLOBs(marketTopicExample);
 //        获得页面信息
         PageInfo<MarketTopic> pageInfo = new PageInfo<>(marketTopicList);
 

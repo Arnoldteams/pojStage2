@@ -35,7 +35,4 @@ public interface MarketTopicMapper {
 
     int updateByPrimaryKey(MarketTopic record);
 
-//    根据条件查询专题信息
-    List<MarketTopic> selectByConditionWithBLOBs(@Param("sort") String sort, @Param("order") String order, @Param(
-            "title") String title, @Param("subtitle") String subtitle);
 }
