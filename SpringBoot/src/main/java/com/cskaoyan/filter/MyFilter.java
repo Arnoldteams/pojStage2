@@ -8,12 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * @Author: raink3@126.com
- * @createTime: 2022年06月24日 21:51:20
- * @version:
- * @Description:
- */
 public class MyFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,

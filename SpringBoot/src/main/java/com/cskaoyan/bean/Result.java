@@ -3,12 +3,12 @@ package com.cskaoyan.bean;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-/**
- * @Author: raink3@126.com
- * @createTime: 2022年06月21日 21:39:53
- * @version:
- * @Description:
- */
+/***
+ * @author: 于艳帆
+ * @createTime: 2022-06-25 10:04:12
+ * @description: response 返回格式
+*/
+
 @Data
 public class Result<T>{
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
