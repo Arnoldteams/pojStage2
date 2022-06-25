@@ -62,4 +62,15 @@ public class MarketPermission {
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
     }
+
+    public static MarketPermission getMarketPermissionWithSomeInfo(Integer id,String permission){
+        MarketPermission marketPermission = new MarketPermission();
+        marketPermission.setRoleId(id);
+        marketPermission.setPermission(permission);
+        Date date = new Date();
+        marketPermission.setAddTime(date);
+        marketPermission.setUpdateTime(date);
+        marketPermission.setDeleted(false);
+        return marketPermission;
+    }
 }

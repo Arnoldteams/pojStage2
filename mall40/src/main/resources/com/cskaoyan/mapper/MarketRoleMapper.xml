@@ -10,6 +10,8 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="deleted" jdbcType="BIT" property="deleted" />
   </resultMap>
+
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -39,6 +41,8 @@
       </foreach>
     </where>
   </sql>
+
+
   <sql id="Update_By_Example_Where_Clause">
     <where>
       <foreach collection="example.oredCriteria" item="criteria" separator="or">
@@ -68,9 +72,13 @@
       </foreach>
     </where>
   </sql>
+
+
   <sql id="Base_Column_List">
-    id, name, desc, enabled, add_time, update_time, deleted
+    id, name, `desc`, enabled, add_time, update_time, deleted
   </sql>
+
+
   <select id="selectByExample" parameterType="com.cskaoyan.bean.MarketRoleExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -85,6 +93,9 @@
       order by ${orderByClause}
     </if>
   </select>
+
+
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -101,15 +112,16 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.cskaoyan.bean.MarketRole">
-    insert into market_role (id, name, desc, 
+  <insert id="insert" parameterType="com.cskaoyan.bean.MarketRole" >
+    insert into market_role (id, name, `desc`,
       enabled, add_time, update_time, 
       deleted)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}, 
       #{enabled,jdbcType=BIT}, #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{deleted,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="com.cskaoyan.bean.MarketRole">
+
+  <insert id="insertSelective" parameterType="com.cskaoyan.bean.MarketRole" useGeneratedKeys="true" keyProperty="id">
     insert into market_role
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -119,7 +131,7 @@
         name,
       </if>
       <if test="desc != null">
-        desc,
+        `desc`,
       </if>
       <if test="enabled != null">
         enabled,
@@ -134,6 +146,7 @@
         deleted,
       </if>
     </trim>
+
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=INTEGER},
@@ -233,7 +246,7 @@
   <update id="updateByPrimaryKey" parameterType="com.cskaoyan.bean.MarketRole">
     update market_role
     set name = #{name,jdbcType=VARCHAR},
-      desc = #{desc,jdbcType=VARCHAR},
+      `desc` = #{desc,jdbcType=VARCHAR},
       enabled = #{enabled,jdbcType=BIT},
       add_time = #{addTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
