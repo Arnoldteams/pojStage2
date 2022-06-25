@@ -47,4 +47,9 @@ public class AdminKeywordServiceImpl implements AdminKeywordService {
         marketKeywordMapper.insert(marketKeyword);
         return marketKeyword;
     }
+
+    @Override
+    public void updateKeywordById(MarketKeyword marketKeyword) {
+        marketKeywordMapper.updateByPrimaryKey(marketKeyword);
+    }
 }

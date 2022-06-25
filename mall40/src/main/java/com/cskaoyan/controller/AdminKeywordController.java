@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,7 +35,6 @@ public class AdminKeywordController {
      * @param: adminKeywordBO - [AdminKeywordBO]
      * @return: com.cskaoyan.bean.BaseRespVo<com.cskaoyan.bean.vo.AdminKeywordVO>
      */
-
     @RequestMapping("list")
     public BaseRespVo<AdminKeywordVO> list(AdminKeywordBO adminKeywordBO) {
 
@@ -69,6 +70,25 @@ public class AdminKeywordController {
         MarketKeyword marketKeyword = adminKeywordService.insertKeyword(adminKeywordBO);
 
         resp.setData(marketKeyword);
+        return resp;
+    }
+
+
+    /**
+     * @author: 于艳帆
+     * @createTime: 2022-06-25 23:30:46
+     * @description: 修改一条数据，并返回对应的PO
+     * @param: marketKeyword - [MarketKeyword]
+      * @return: com.cskaoyan.bean.BaseRespVo<com.cskaoyan.bean.MarketKeyword>
+    */
+    @PostMapping("update")
+    public BaseRespVo<MarketKeyword> update(@RequestBody MarketKeyword marketKeyword){
+        BaseRespVo<MarketKeyword> resp = new BaseRespVo<>();
+
+        marketKeyword.setUpdateTime(new Date());
+        adminKeywordService.updateKeywordById(marketKeyword);
+        resp.setData(marketKeyword);
+
         return resp;
     }
 }

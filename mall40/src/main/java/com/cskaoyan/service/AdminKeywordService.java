@@ -9,4 +9,6 @@ public interface AdminKeywordService {
     List<MarketKeyword> queryAllKeywordList(AdminKeywordBO adminKeywordBO);
 
     MarketKeyword insertKeyword(AdminKeywordBO adminKeywordBO);
+
+    void updateKeywordById(MarketKeyword marketKeyword);
 }
