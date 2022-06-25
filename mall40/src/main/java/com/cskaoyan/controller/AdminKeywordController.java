@@ -6,6 +6,8 @@ import com.cskaoyan.bean.bo.AdminKeywordBO;
 import com.cskaoyan.bean.vo.AdminKeywordVO;
 import com.cskaoyan.service.AdminKeywordService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,12 +55,20 @@ public class AdminKeywordController {
         return resp;
     }
 
-    @RequestMapping("create")
-    public BaseRespVo<MarketKeyword> create(AdminKeywordBO adminKeywordBO){
-        // BaseRespVo<MarketKeyword> resp = new BaseRespVo<>();
-        // MarketKeyword marketKeyword = adminKeywordService.insertKeyword(adminKeywordBO);
-        //
-        // resp.setData(marketKeyword);
-        return null;
+    /**
+     * @author: 于艳帆
+     * @createTime: 2022-06-25 22:10:15
+     * @description: 插入一条数据，并返回对应的PO
+     * @param: adminKeywordBO - [AdminKeywordBO]
+     * @return: com.cskaoyan.bean.BaseRespVo<com.cskaoyan.bean.MarketKeyword>
+     */
+    @PostMapping("create")
+    public BaseRespVo<MarketKeyword> create(@RequestBody AdminKeywordBO adminKeywordBO) {
+
+        BaseRespVo<MarketKeyword> resp = new BaseRespVo<>();
+        MarketKeyword marketKeyword = adminKeywordService.insertKeyword(adminKeywordBO);
+
+        resp.setData(marketKeyword);
+        return resp;
     }
 }

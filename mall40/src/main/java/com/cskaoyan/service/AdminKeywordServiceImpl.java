@@ -33,4 +33,18 @@ public class AdminKeywordServiceImpl implements AdminKeywordService {
 
         return marketKeywords;
     }
+
+    @Override
+    public MarketKeyword insertKeyword(AdminKeywordBO adminKeywordBO) {
+        MarketKeyword marketKeyword = new MarketKeyword();
+        marketKeyword.setKeyword(adminKeywordBO.getKeyword());
+        marketKeyword.setUrl(adminKeywordBO.getUrl());
+        marketKeyword.setIsHot(adminKeywordBO.getIsHot());
+        marketKeyword.setIsDefault(adminKeywordBO.getIsDefault());
+
+        marketKeyword.setSortOrder(100);
+
+        marketKeywordMapper.insert(marketKeyword);
+        return marketKeyword;
+    }
 }

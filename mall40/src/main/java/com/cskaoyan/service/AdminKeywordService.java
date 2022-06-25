@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface AdminKeywordService {
     List<MarketKeyword> queryAllKeywordList(AdminKeywordBO adminKeywordBO);
+
+    MarketKeyword insertKeyword(AdminKeywordBO adminKeywordBO);
 }
