@@ -36,7 +36,7 @@ public class MyTest {
     @Test
     public void testInsertUser(){
         User user = new User();
-        user.setUsername("zss");
+        user.setUsername("666");
         user.setBirthday(new Date());
 
         userService.insertUser(user);

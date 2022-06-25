@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "cskaoyan.datasource.password",
+      "type": "java.lang.String",
+      "description": "Description for cskaoyan.datasource.password."
+  }
+] }
