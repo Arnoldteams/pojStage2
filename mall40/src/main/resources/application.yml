@@ -30,4 +30,5 @@ mybatis:
     cache-enabled: true
 
 
-
+pagehelper:
+  helper-dialect: mysql
