@@ -29,6 +29,16 @@ public class UserController {
         return Result.ok("hello");
     }
 
+    @RequestMapping("hello2")
+    public Result hello2(HttpSession httpSession, String name, String pwd) {
+        return Result.ok("xiaofang come in");
+    }
+
+    @RequestMapping("sparkx")
+    public Result helloSparkX(){
+        return Result.ok("hello SparkX");
+    }
+
 
     @RequestMapping("login")
     public Result login(HttpSession httpSession, String name, String pwd) {
@@ -62,6 +72,15 @@ public class UserController {
         accountService.transfer(test.getFrom(),test.getTo(),test.getMoney());
 
         return Result.ok();
+    }
+
+    //yinan
+    @RequestMapping("cheers")
+    public Result sayCheers(){
+
+        System.out.println("Break a leg !");
+
+        return Result.ok("abc");
     }
 
 }
