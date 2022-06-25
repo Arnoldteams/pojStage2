@@ -29,9 +29,11 @@ mybatis:
   configuration:
     cache-enabled: true
 
+# 配置自动分页
+pagehelper:
+  helper-dialect: mysql
+
+# 配置日志
 logging:
   level:
     com.cskaoyan.mapper: debug
-
-
-
