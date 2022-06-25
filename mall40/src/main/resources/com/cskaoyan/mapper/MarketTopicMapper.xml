@@ -381,16 +381,16 @@
     ,
     <include refid="Blob_Column_List" />
     from market_topic
+    <where>
+      <if test="title != null and title != ''">
+        and title like #{title}
+      </if>
+      <if test="subtitle != null and subtitle != ''">
+        and subtitle like #{subtitle}
+      </if>
+    </where>
     <if test="sort != null">
       order by ${sort} ${order}
     </if>
-    <where>
-      <if test="title != null and title != ''">
-        and title = #{title}
-      </if>
-      <if test="subtitle != null and subtitle != ''">
-        and subtitle = #{subtitle}
-      </if>
-    </where>
   </select>
 </mapper>
