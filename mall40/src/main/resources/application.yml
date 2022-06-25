@@ -29,5 +29,9 @@ mybatis:
   configuration:
     cache-enabled: true
 
+logging:
+  level:
+    com.cskaoyan.mapper: debug
+
 
 
