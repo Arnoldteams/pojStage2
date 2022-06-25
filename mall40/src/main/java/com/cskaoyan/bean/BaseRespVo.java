@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class BaseRespVo<T> {
     T data;
-    String errmsg;
+    String errmsg = "成功";
     int errno;
 
     public static <T> BaseRespVo ok(T data) {
