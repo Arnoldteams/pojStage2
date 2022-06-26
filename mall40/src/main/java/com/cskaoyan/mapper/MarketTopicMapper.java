@@ -34,4 +34,5 @@ public interface MarketTopicMapper {
     int updateByPrimaryKeyWithBLOBs(MarketTopic record);
 
     int updateByPrimaryKey(MarketTopic record);
+
 }
