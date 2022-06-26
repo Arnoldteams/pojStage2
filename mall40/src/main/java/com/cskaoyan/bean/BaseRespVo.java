@@ -42,6 +42,19 @@ public class BaseRespVo<T> {
         baseRespVo.setErrmsg("认证失败");
         return baseRespVo;
     }
+    public static <T> BaseRespVo lessPassword() {
+        BaseRespVo baseRespVo = new BaseRespVo();
+        baseRespVo.setErrno(602);
+        baseRespVo.setErrmsg("管理员密码长度不能小于6");
+        return baseRespVo;
+    }
+    public static <T> BaseRespVo invalidAdminUsername() {
+        BaseRespVo baseRespVo = new BaseRespVo();
+        baseRespVo.setErrno(601);
+        baseRespVo.setErrmsg("管理员名称不符合规定");
+        return baseRespVo;
+    }
+
 
 
 }
