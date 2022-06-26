@@ -14,7 +14,7 @@ public interface AdminStorageService {
      * @param: baseParam - [BaseParam]
      * @return: java.util.List<com.cskaoyan.bean.MarketStorage>
      */
-    List<MarketStorage> queryAllStorage(BaseParam baseParam);
+    List<MarketStorage> queryAllStorage(BaseParam baseParam,String key,String name);
 
     /**
      * @author: 于艳帆

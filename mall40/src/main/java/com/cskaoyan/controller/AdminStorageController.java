@@ -34,11 +34,11 @@ public class AdminStorageController {
      */
 
     @GetMapping("list")
-    public BaseRespVo<AdminStorageVO> list(BaseParam baseParam) {
+    public BaseRespVo<AdminStorageVO> list(BaseParam baseParam,String key,String name) {
         BaseRespVo<AdminStorageVO> resp = new BaseRespVo<>();
         AdminStorageVO adminStorageVO = new AdminStorageVO();
 
-        List<MarketStorage> list = adminStorageService.queryAllStorage(baseParam);
+        List<MarketStorage> list = adminStorageService.queryAllStorage(baseParam,key,name);
 
         Integer limit = baseParam.getLimit();
         Integer pages = list.size() / limit + 1;
@@ -87,4 +87,7 @@ public class AdminStorageController {
 
         return resp;
     }
+
+
+
 }
