@@ -62,4 +62,5 @@ public class MarketIssue {
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
     }
+
 }

@@ -6,10 +6,7 @@ import com.cskaoyan.bean.bo.AdminKeywordBO;
 import com.cskaoyan.bean.vo.AdminKeywordVO;
 import com.cskaoyan.service.AdminKeywordService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,7 +16,7 @@ import java.util.List;
  * @Author: 于艳帆
  * @createTime: 2022年06月25日 20:02:45
  * @version:v0.1
- * @Description: 处理：商场管理-关键词
+ * @Description: 处理：商场管理-关键词业务（CRUD）
  */
 @RestController
 @RequestMapping("admin/keyword")
@@ -35,7 +32,7 @@ public class AdminKeywordController {
      * @param: adminKeywordBO - [AdminKeywordBO]
      * @return: com.cskaoyan.bean.BaseRespVo<com.cskaoyan.bean.vo.AdminKeywordVO>
      */
-    @RequestMapping("list")
+    @GetMapping("list")
     public BaseRespVo<AdminKeywordVO> list(AdminKeywordBO adminKeywordBO) {
 
         BaseRespVo<AdminKeywordVO> resp = new BaseRespVo<>();
@@ -91,4 +88,14 @@ public class AdminKeywordController {
 
         return resp;
     }
+
+    @PostMapping("delete")
+    public BaseRespVo<String> delete(@RequestBody MarketKeyword marketKeyword){
+        BaseRespVo<String> resp = new BaseRespVo<>();
+
+        adminKeywordService.deleteKeywordById(marketKeyword);
+
+        return resp;
+    }
+
 }
