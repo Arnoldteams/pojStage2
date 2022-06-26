@@ -73,6 +73,12 @@
             <optional>true</optional>
         </dependency>
 
+        <!--工具包，判断为空，去除括号-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
