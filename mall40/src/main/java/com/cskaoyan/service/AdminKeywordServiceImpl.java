@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @Author: 于艳帆
  * @createTime: 2022年06月25日 20:15:23
- * @version:
+ * @version: v0.1
  * @Description:
  */
 @Service
@@ -51,5 +51,10 @@ public class AdminKeywordServiceImpl implements AdminKeywordService {
     @Override
     public void updateKeywordById(MarketKeyword marketKeyword) {
         marketKeywordMapper.updateByPrimaryKey(marketKeyword);
+    }
+
+    @Override
+    public void deleteKeywordById(MarketKeyword marketKeyword) {
+        marketKeywordMapper.deleteByPrimaryKey(marketKeyword.getId());
     }
 }
