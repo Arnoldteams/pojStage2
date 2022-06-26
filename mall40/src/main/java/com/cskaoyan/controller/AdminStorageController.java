@@ -72,5 +72,19 @@ public class AdminStorageController {
     }
 
 
-    // public BaseRespVo<>
+    /**
+     * @author: 于艳帆
+     * @createTime: 2022-06-26 19:50:34
+     * @description: 根据id删除Storage表中数据
+     * @param: marketStorage - [MarketStorage]
+     * @return: com.cskaoyan.bean.BaseRespVo<java.lang.String>
+     */
+    @PostMapping("delete")
+    public BaseRespVo<String> delete(@RequestBody MarketStorage marketStorage) {
+        BaseRespVo<String> resp = new BaseRespVo<>();
+
+        adminStorageService.deleteKeywordById(marketStorage);
+
+        return resp;
+    }
 }

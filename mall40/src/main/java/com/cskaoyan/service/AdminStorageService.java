@@ -24,4 +24,13 @@ public interface AdminStorageService {
      * @return: void
      */
     void updateStorageById(MarketStorage marketStorage);
+
+    /**
+     * @author: 于艳帆
+     * @createTime: 2022-06-26 19:51:20
+     * @description: 根据id删除Storage表中数据
+     * @param: marketStorage - [MarketStorage]
+     * @return: void
+     */
+    void deleteKeywordById(MarketStorage marketStorage);
 }

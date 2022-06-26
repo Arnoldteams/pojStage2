@@ -38,4 +38,9 @@ public class AdminStorageServiceImpl implements AdminStorageService {
     public void updateStorageById(MarketStorage marketStorage) {
         marketStorageMapper.updateByPrimaryKey(marketStorage);
     }
+
+    @Override
+    public void deleteKeywordById(MarketStorage marketStorage) {
+        marketStorageMapper.deleteByPrimaryKey(marketStorage.getId());
+    }
 }
