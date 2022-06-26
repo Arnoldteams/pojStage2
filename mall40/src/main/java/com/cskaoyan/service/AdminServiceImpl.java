@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class MarketAdminServiceImpl implements MarketAdminService {
+public class AdminServiceImpl implements AdminService {
 
    @Autowired
     MarketAdminMapper marketAdminMapper;

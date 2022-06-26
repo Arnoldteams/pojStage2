@@ -2,14 +2,12 @@ package com.cskaoyan.service;
 
 import com.cskaoyan.bean.BasePageInfo;
 import com.cskaoyan.bean.MarketIssue;
-import com.cskaoyan.bean.MarketIssueExample;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.mapper.MarketIssueMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Date;
 import java.util.List;
@@ -21,7 +19,7 @@ import java.util.List;
  */
 
 @Service
-public class MarketIssueServiceImpl implements MarketIssueService {
+public class AdminIssueServiceImpl implements AdminIssueService {
 
     @Autowired
     MarketIssueMapper marketIssueMapper;
@@ -37,7 +35,7 @@ public class MarketIssueServiceImpl implements MarketIssueService {
     @Override
     public CommonData<MarketIssue> queryMarketIssue(BasePageInfo basePageInfo, String question) {
         List<MarketIssue> marketIssueList;
-        if (question == null ||question.equals("")) {
+        if (question == null ||"".equals(question)) {
             marketIssueList = marketIssueMapper.selectAllMarketIssue();
         } else {
             question = "%" + question + "%";

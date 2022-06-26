@@ -11,6 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @Service
-public class MarketOrderServiceImpl {
+public class AdminOrderServiceImpl {
 
 }

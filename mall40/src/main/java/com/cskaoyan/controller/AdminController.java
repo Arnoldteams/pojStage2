@@ -2,7 +2,7 @@ package com.cskaoyan.controller;
 
 import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.vo.DashBoardVO;
-import com.cskaoyan.service.MarketAdminService;
+import com.cskaoyan.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
 
     @Autowired
-    MarketAdminService marketAdminService;
+    AdminService marketAdminService;
 
     @RequestMapping("dashboard")
     public BaseRespVo dashboard(){
