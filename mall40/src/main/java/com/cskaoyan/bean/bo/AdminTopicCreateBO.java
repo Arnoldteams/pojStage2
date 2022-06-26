@@ -23,7 +23,7 @@ public class AdminTopicCreateBO {
 
     private String picUrl;
 
-    private String goods;
+    private Integer[] goods;
 
     private String content;
 

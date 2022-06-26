@@ -7,10 +7,18 @@ import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.userManager.AdminUserListVO;
 import com.cskaoyan.bean.vo.userManager.UserEntity;
 import com.cskaoyan.service.*;
+import com.cskaoyan.bean.BasePageInfo;
+import com.cskaoyan.bean.BaseRespVo;
+import com.cskaoyan.bean.MarketLog;
+import com.cskaoyan.bean.bo.userManager.AdminUserListBO;
+import com.cskaoyan.bean.param.BaseParam;
+import com.cskaoyan.bean.vo.AdminListVO;
+import com.cskaoyan.bean.vo.userManager.AdminUserListVO;
+import com.cskaoyan.bean.vo.userManager.UserEntity;
+import com.cskaoyan.service.UserService;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 import com.cskaoyan.bean.BaseRespVo;
@@ -18,6 +26,8 @@ import com.cskaoyan.bean.vo.DashBoardVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @Author: ZY
@@ -143,4 +153,25 @@ public class AdminController {
         return BaseRespVo.ok(data);
     }
 
+    /**
+     * 获得所有日志信息
+     * @param info 分页信息
+     * @param name 根据操作管理员查询
+     * @return com.cskaoyan.bean.BaseRespVo
+     * @author xyg2597@163.com
+     * @since 2022/06/26 20:45
+     */
+    @GetMapping("log/list")
+    public BaseRespVo logList(BaseParam info, String name){
+
+        List<MarketLog> marketLogList = userService.getLogList(info, name);
+
+        AdminListVO<MarketLog> adminListVO = new AdminListVO<>();
+        PageInfo<MarketLog> marketLogPageInfo = new PageInfo<>(marketLogList);
+
+//        封装到VO中
+        adminListVO.setBaseParam(marketLogPageInfo);
+        adminListVO.setList(marketLogList);
+        return BaseRespVo.ok(adminListVO);
+    }
 }
