@@ -3,10 +3,8 @@ package com.cskaoyan.controller;
 import com.cskaoyan.bean.BasePageInfo;
 import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.MarketIssue;
-import com.cskaoyan.bean.MarketIssueExample;
 import com.cskaoyan.bean.param.CommonData;
-import com.cskaoyan.bo.MarketIssueCreateBO;
-import com.cskaoyan.service.MarketIssueService;
+import com.cskaoyan.service.AdminIssueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminIssueController {
 
     @Autowired
-    MarketIssueService marketIssueService;
+    AdminIssueService marketIssueService;
 
     /**
      * @author: ZY
