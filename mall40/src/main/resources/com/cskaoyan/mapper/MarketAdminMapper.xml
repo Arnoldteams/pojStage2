@@ -288,4 +288,22 @@
       role_ids = #{roleIds,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+  <!--以下是商城首页的方法-->
+  <select id="selectGoodsTotal" resultType="java.lang.Integer">
+    select count(id) from market_goods
+    </select>
+
+  <select id="selectOrderTotal" resultType="java.lang.Integer">
+     select count(id) from market_order
+  </select>
+
+  <select id="selectProductTotal" resultType="java.lang.Integer">
+    select count(id) from market_goods_product
+  </select>
+
+  <select id="selectUserTotal" resultType="java.lang.Integer">
+      select count(id) from market_user
+  </select>
 </mapper>

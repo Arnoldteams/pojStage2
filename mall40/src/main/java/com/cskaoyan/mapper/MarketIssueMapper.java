@@ -28,4 +28,15 @@ public interface MarketIssueMapper {
     int updateByPrimaryKeySelective(MarketIssue record);
 
     int updateByPrimaryKey(MarketIssue record);
+
+
+//    以下是我新增的方法
+    
+
+    List<MarketIssue> selectAllMarketIssue();
+
+    List<MarketIssue> selectByPrimaryWords(@Param("sort") String sort,@Param("order") String order, @Param("question") String question);
+
+    void updateMarketIssueStatus(MarketIssue marketIssue);
+
 }
