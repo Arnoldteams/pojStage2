@@ -72,4 +72,13 @@ public class MarketRole {
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
     }
+
+    public static MarketRole getMarketWithSomeInfo(MarketRole role){
+        role.setDeleted(false);
+        Date date = new Date();
+        role.setAddTime(date);
+        role.setUpdateTime(date);
+        role.setEnabled(true);
+        return role;
+    }
 }

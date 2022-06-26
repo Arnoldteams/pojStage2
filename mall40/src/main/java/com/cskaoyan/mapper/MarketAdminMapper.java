@@ -28,4 +28,11 @@ public interface MarketAdminMapper {
     int updateByPrimaryKeySelective(MarketAdmin record);
 
     int updateByPrimaryKey(MarketAdmin record);
+
+
+    /*以下是商城首页的方法*/
+    Integer selectGoodsTotal();
+    Integer selectOrderTotal();
+    Integer selectProductTotal();
+    Integer selectUserTotal();
 }
