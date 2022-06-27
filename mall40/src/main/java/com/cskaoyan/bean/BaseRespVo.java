@@ -24,36 +24,42 @@ public class BaseRespVo<T> {
         baseRespVo.setErrmsg(msg);
         return baseRespVo;
     }
+
     public static <T> BaseRespVo invalidData() {
         BaseRespVo baseRespVo = new BaseRespVo();
         baseRespVo.setErrno(504);
         baseRespVo.setErrmsg("更新数据已失效");
         return baseRespVo;
     }
+
     public static <T> BaseRespVo invalidParameter(String msg) {
         BaseRespVo baseRespVo = new BaseRespVo();
         baseRespVo.setErrno(400);
         baseRespVo.setErrmsg(msg);
         return baseRespVo;
     }
+
     public static <T> BaseRespVo unAuthc() {
         BaseRespVo baseRespVo = new BaseRespVo();
         baseRespVo.setErrno(502);
         baseRespVo.setErrmsg("认证失败");
         return baseRespVo;
     }
+
     public static <T> BaseRespVo lessPassword() {
         BaseRespVo baseRespVo = new BaseRespVo();
         baseRespVo.setErrno(602);
         baseRespVo.setErrmsg("管理员密码长度不能小于6");
         return baseRespVo;
     }
+
     public static <T> BaseRespVo invalidAdminUsername() {
         BaseRespVo baseRespVo = new BaseRespVo();
         baseRespVo.setErrno(601);
         baseRespVo.setErrmsg("管理员名称不符合规定");
         return baseRespVo;
     }
+
     public static <T> BaseRespVo invalidPrice() {
         BaseRespVo baseRespVo = new BaseRespVo();
         baseRespVo.setErrno(402);
@@ -72,10 +78,13 @@ public class BaseRespVo<T> {
         BaseRespVo baseRespVo = new BaseRespVo();
         baseRespVo.setErrno(623);
         baseRespVo.setErrmsg("订单不能删除");
+        return baseRespVo;
+    }
 
-    public static <T> BaseRespVo AuthNotEnough(String Msg){
+    public static <T> BaseRespVo AuthNotEnough(String Msg) {
         BaseRespVo baseRespVo = new BaseRespVo();
         baseRespVo.setErrno(641);
         baseRespVo.setErrmsg(Msg);
         return baseRespVo;
-    }}
+    }
+}

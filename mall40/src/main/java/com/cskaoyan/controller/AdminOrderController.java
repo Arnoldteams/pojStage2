@@ -103,15 +103,15 @@ public class AdminOrderController {
     }
 
 
-/**
-* @author: ZY
-* @createTime: 2022/06/27 14:54:21
-* @description: 老师给的订单数据都不能删，之后能删再改
-* @param: orderId
-* @return: com.cskaoyan.bean.BaseRespVo
-        */
+    /**
+     * @author: ZY
+     * @createTime: 2022/06/27 14:54:21
+     * @description: 老师给的订单数据都不能删，之后能删再改
+     * @param: orderId
+     * @return: com.cskaoyan.bean.BaseRespVo
+     */
     @RequestMapping("delete")
-    public BaseRespVo delete(Integer orderId){
+    public BaseRespVo delete(Integer orderId) {
         return BaseRespVo.unableDelete();
     }
 }
