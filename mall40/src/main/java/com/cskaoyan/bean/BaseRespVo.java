@@ -61,11 +61,21 @@ public class BaseRespVo<T> {
         return baseRespVo;
     }
 
+    public static <T> BaseRespVo errParam() {
+        BaseRespVo baseRespVo = new BaseRespVo();
+        baseRespVo.setErrno(401);
+        baseRespVo.setErrmsg("参数不对");
+        return baseRespVo;
+    }
+
+    public static <T> BaseRespVo unableDelete() {
+        BaseRespVo baseRespVo = new BaseRespVo();
+        baseRespVo.setErrno(623);
+        baseRespVo.setErrmsg("订单不能删除");
 
     public static <T> BaseRespVo AuthNotEnough(String Msg){
         BaseRespVo baseRespVo = new BaseRespVo();
         baseRespVo.setErrno(641);
         baseRespVo.setErrmsg(Msg);
         return baseRespVo;
-    }
-}
+    }}
