@@ -6,6 +6,7 @@ import com.cskaoyan.bean.MarketRolesSetPermissionsBo;
 import com.cskaoyan.bean.bo.AdminPermissionsBo;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
+import com.cskaoyan.bean.vo.AdminOptionsVo;
 import com.cskaoyan.bean.vo.MarketSystemPermissionsVo;
 import com.cskaoyan.service.AdminRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,5 +117,19 @@ public class AdminRoleController {
         }
         adminRoleService.updateRolePermissions(adminPermissions);
         return BaseRespVo.ok(null);
+    }
+
+
+    /**
+     * @description: 管理员用户界面显示彩色小标签
+     * @parameter: []
+     * @return: com.cskaoyan.bean.BaseRespVo
+     * @author: 帅关
+     * @createTime: 2022/6/27 15:50
+     */
+    @RequestMapping("/options")
+    public BaseRespVo adminRoleOptions(){
+        CommonData<AdminOptionsVo> data = adminRoleService.queryAllRolesWithNoInfo();
+        return BaseRespVo.ok(data);
     }
 }

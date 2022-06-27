@@ -27,7 +27,7 @@ public class AdminIssueController {
     /**
      * @author: ZY
      * @createTime: 2022/06/25 22:19:49
-     * @description: 显示首页所有问答
+     * @description: 显示首页问答
      * @param: basePageInfo
      * @param: question
      * @return: com.cskaoyan.bean.BaseRespVo
@@ -61,8 +61,8 @@ public class AdminIssueController {
      */
     @RequestMapping("delete")
     public BaseRespVo delete(@RequestBody MarketIssue marketIssue) {
-        marketIssueService.deleteMarketIssue(marketIssue);
-       // marketIssueService.updateMarketIssueStatus(marketIssue);
+        //marketIssueService.deleteMarketIssue(marketIssue);
+        marketIssueService.updateMarketIssueStatus(marketIssue);
         return new BaseRespVo();
     }
 

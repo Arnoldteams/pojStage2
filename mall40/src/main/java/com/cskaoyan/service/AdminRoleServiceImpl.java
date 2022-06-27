@@ -4,18 +4,13 @@ import com.cskaoyan.bean.*;
 import com.cskaoyan.bean.bo.AdminPermissionsBo;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
-import com.cskaoyan.bean.vo.MarketSystemPermissionsVo;
-import com.cskaoyan.bean.vo.PermissionChildVo;
-import com.cskaoyan.bean.vo.PermissionGrandChildVo;
-import com.cskaoyan.bean.vo.PermissionsVo;
+import com.cskaoyan.bean.vo.*;
 import com.cskaoyan.mapper.MarketPermissionMapper;
 import com.cskaoyan.mapper.MarketRoleMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import java.util.*;
 
 /**
@@ -43,11 +38,13 @@ public class AdminRoleServiceImpl implements AdminRoleService{
     public CommonData<MarketRole> queryAllRoles(BaseParam param, String name) {
 
         MarketRoleExample example = new MarketRoleExample();
+        MarketRoleExample.Criteria or = example.or();
+
+        // 设置排序语句
         String OrderByClause = param.getSort() + " " + param.getOrder();
         example.setOrderByClause(OrderByClause);
 
         // 查询deleted = false的所有角色
-        MarketRoleExample.Criteria or = example.or();
         or.andDeletedEqualTo(false);
 
         // 角色用户名模糊查询
@@ -56,8 +53,6 @@ public class AdminRoleServiceImpl implements AdminRoleService{
             or.andNameLike(sqlName);
         }
 
-        // 设置排序语句
-        example.setOrderByClause(OrderByClause);
         List<MarketRole> roles = roleMapper.selectByExample(example);
 
         // 配置分页工具
@@ -159,9 +154,10 @@ public class AdminRoleServiceImpl implements AdminRoleService{
         // 生成sql语句
         MarketPermissionExample example = new MarketPermissionExample();
 
-        // 获取指定id中所有的权限
+        // 获取数据库中指定id中所有的权限
         List<String> strings = permissionMapper.selectAllPermissionApiById(adminPermissions.getRoleId());
-        // 获取需要更新的权限
+
+        // 获取前端传来的需要更新的权限
         List<String> permissions = adminPermissions.getPermissions();
 
         // 获取交集 --> 需要更新更新时间的权限
@@ -212,5 +208,23 @@ public class AdminRoleServiceImpl implements AdminRoleService{
             permissionMapper.insertSelective(marketPermission3);
         }
 
+    }
+
+
+    /**
+     * @description: 获取所有角色id 和 name信息，用于管理员界面的小标签
+     * @parameter: []
+     * @return: com.cskaoyan.bean.param.CommonData<com.cskaoyan.bean.AdminOptionsVo>
+     * @author: 帅关
+     * @createTime: 2022/6/27 16:33
+     */
+    @Override
+    public CommonData<AdminOptionsVo> queryAllRolesWithNoInfo() {
+        List<AdminOptionsVo> list = permissionMapper.selectAllPermission();
+
+        // 配置分页工具
+        PageInfo<AdminOptionsVo> pageInfo = new PageInfo<>(list);
+        PageHelper.startPage(1,pageInfo.getSize());
+        return CommonData.data(pageInfo);
     }
 }

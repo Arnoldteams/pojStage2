@@ -145,6 +145,7 @@ public class AdminController {
         CommonData<MarketFeedback> data = feedbackService.queryFeedback(username,id,pageInfo);
         return BaseRespVo.ok(data);    }
 
+    @Autowired
     AdminService marketAdminService;
 
     @RequestMapping("dashboard")

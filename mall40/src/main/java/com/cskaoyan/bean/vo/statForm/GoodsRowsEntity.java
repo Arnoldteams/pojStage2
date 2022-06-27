@@ -13,9 +13,9 @@ import java.util.Date;
  */
 @Data
 public class GoodsRowsEntity {
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private Double amount;
     private Integer orders;
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date day;
     private Integer products;
 }
