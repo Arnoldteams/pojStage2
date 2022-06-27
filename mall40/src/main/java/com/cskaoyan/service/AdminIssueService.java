@@ -14,9 +14,10 @@ public interface AdminIssueService {
 
     MarketIssue addMarketIssue(String question, String answer);
 
-    void deleteMarketIssue(MarketIssue marketIssue);
+//    void deleteMarketIssue(MarketIssue marketIssue);
+    void updateMarketIssueStatus(MarketIssue marketIssue);
 
     MarketIssue updateMarketIssue(MarketIssue marketIssue);
 
-    void updateMarketIssueStatus(MarketIssue marketIssue);
+
 }

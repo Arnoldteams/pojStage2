@@ -620,4 +620,45 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!--新增方法-->
+  <update id="updateOrderStatus">
+    update market_order
+    set
+    order_status=301,ship_sn=#{shipSn},ship_channel=#{shipChannel},ship_time=curtime()
+    where id = #{orderId}
+  </update>
+
+
+
+
+  <select id="selectOrder" resultType="com.cskaoyan.bean.MarketOrder">
+    select
+     actual_price as actualPrice,
+    add_time as addTime,address,
+    aftersale_status as aftersaleStatus,
+    comments,consignee,coupon_price as couponPrice,
+    deleted,freight_price as freightPrice,goods_price as goodsPrice,
+    id,integral_price as integralPrice,message,mobile,
+    order_price as orderPrice,order_sn as orderSn,order_status as orderStatus,
+    ship_channel as shipChannel,ship_time as shipTime,update_time as updateTime,user_id as userId
+    <!--<include refid="Base_Column_List" />-->
+    from market_order
+    where id=#{id}
+    </select>
+
+  <select id="selectOrderGoods" resultType="com.cskaoyan.bean.MarketOrderGoods">
+    select add_time as addTime,comment,deleted,goods_id as goodsId,goods_name as goodsName,
+   goods_sn as goodsSn,id,number,pic_url as picUrl,price,product_id as productId
+   from market_order_goods
+   where order_id=#{id}
+  </select>
+
+  <select id="selectUser" resultType="com.cskaoyan.bean.MarketUser">
+   select market_user.avatar,market_user.nickname from market_user
+   left join market_order on market_user.id=market_order.user_id
+   where market_order.id=#{id}
+  </select>
+
+
 </mapper>

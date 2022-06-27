@@ -2,6 +2,10 @@ package com.cskaoyan.mapper;
 
 import com.cskaoyan.bean.MarketOrder;
 import com.cskaoyan.bean.MarketOrderExample;
+import com.cskaoyan.bean.MarketOrderGoods;
+import com.cskaoyan.bean.MarketUser;
+import com.cskaoyan.bean.bo.AdminOrderShipBO;
+import com.cskaoyan.bean.param.User;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -28,4 +32,13 @@ public interface MarketOrderMapper {
     int updateByPrimaryKeySelective(MarketOrder record);
 
     int updateByPrimaryKey(MarketOrder record);
+
+    void updateOrderStatus(AdminOrderShipBO adminOrderShipBO);
+
+//    新增方法
+    MarketOrder selectOrder(Integer id);
+
+    MarketUser selectUser(Integer id);
+
+
 }
