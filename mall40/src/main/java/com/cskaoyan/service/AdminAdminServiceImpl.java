@@ -52,25 +52,6 @@ public class AdminAdminServiceImpl implements AdminAdminService {
         for (MarketAdmin marketAdmin : marketAdmins) {
 
             AdminListSingleVO adminListSingleVO = AdminListSingleVO.setAdminListSingleVO(marketAdmin);
-//            AdminListSingleVO adminListSingleVO = new AdminListSingleVO();
-//
-//
-////            将str类型的id解析为Integer数组
-//            String roleIds = marketAdmin.getRoleIds();
-//            String strip = StringUtils.strip(roleIds, "[]");
-//            String[] split = strip.split(",");
-//            Integer[] integers = new Integer[3];
-//
-//            for (int i = 0; i < split.length; i++) {
-//                integers[i] = Integer.parseInt(split[i]);
-//            }
-//
-//
-////            设置传给浏览器的值
-//            adminListSingleVO.setRoleIds(integers);
-//            adminListSingleVO.setAvatar(marketAdmin.getAvatar());
-//            adminListSingleVO.setId(marketAdmin.getId());
-//            adminListSingleVO.setUsername(marketAdmin.getUsername());
 
 //            添加到管理员list中
             adminListSingleVOList.add(adminListSingleVO);
@@ -102,7 +83,7 @@ public class AdminAdminServiceImpl implements AdminAdminService {
         marketAdmin.setUpdateTime(date);
         marketAdmin.setAvatar(adminCreateBO.getAvatar());
         marketAdmin.setPassword(adminCreateBO.getPassword());
-        marketAdmin.setRoleIds(Arrays.toString(adminCreateBO.getRoleIds()));
+        marketAdmin.setRoleIds(adminCreateBO.getRoleIds());
         marketAdmin.setUsername(adminCreateBO.getUsername());
 
         marketAdminMapper.insertSelective(marketAdmin);
@@ -122,6 +103,7 @@ public class AdminAdminServiceImpl implements AdminAdminService {
     @Override
     public void adminUpdate(MarketAdmin marketAdmin) {
 
+        marketAdmin.setUpdateTime(new Date());
 
         marketAdminMapper.updateByPrimaryKeySelective(marketAdmin);
 

@@ -28,4 +28,6 @@ public interface MarketStorageMapper {
     int updateByPrimaryKeySelective(MarketStorage record);
 
     int updateByPrimaryKey(MarketStorage record);
+
+    int insertStorage(@Param("marketStorage") MarketStorage marketStorage);
 }

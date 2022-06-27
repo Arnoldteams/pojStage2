@@ -48,16 +48,16 @@ public class AdminCreateVO {
         adminCreateVO.setAddTime(selectMarketAdmin.getAddTime());
         adminCreateVO.setUpdateTime(selectMarketAdmin.getUpdateTime());
 
-        String roleIds = selectMarketAdmin.getRoleIds();
-        String[] split = StringUtils.strip(roleIds, "[]").split(",");
-        int length = split.length;
-        Integer[] integers = new Integer[length];
-        for (int i = 0; i < length; i++) {
-            integers[i] = Integer.parseInt(split[i]);
-        }
+//        String roleIds = ;
+//        String[] split = StringUtils.strip(roleIds, "[]").split(",");
+//        int length = split.length;
+//        Integer[] integers = new Integer[length];
+//        for (int i = 0; i < length; i++) {
+//            integers[i] = Integer.parseInt(split[i]);
+//        }
 
 
-        adminCreateVO.setRoleIds(integers);
+        adminCreateVO.setRoleIds(selectMarketAdmin.getRoleIds());
 
         return adminCreateVO;
     }
