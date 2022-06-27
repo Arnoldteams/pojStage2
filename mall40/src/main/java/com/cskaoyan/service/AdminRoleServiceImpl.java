@@ -1,17 +1,17 @@
 package com.cskaoyan.service;
 
-import com.cskaoyan.bean.MarketRole;
-import com.cskaoyan.bean.MarketRoleExample;
+import com.cskaoyan.bean.*;
+import com.cskaoyan.bean.bo.AdminPermissionsBo;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
+import com.cskaoyan.bean.vo.*;
 import com.cskaoyan.mapper.MarketPermissionMapper;
 import com.cskaoyan.mapper.MarketRoleMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import java.util.*;
 
 /**
  * 系统管理-角色管理
@@ -27,7 +27,6 @@ public class AdminRoleServiceImpl implements AdminRoleService{
     @Autowired
     MarketPermissionMapper permissionMapper;
 
-
     /**
      * @description: 显示所有-搜索 角色
      * @parameter: [param, name]
@@ -36,13 +35,16 @@ public class AdminRoleServiceImpl implements AdminRoleService{
      * @createTime: 2022/6/25 21:42
      */
     @Override
-    public CommonData<MarketRole> QueryAllRoles(BaseParam param, String name) {
+    public CommonData<MarketRole> queryAllRoles(BaseParam param, String name) {
 
         MarketRoleExample example = new MarketRoleExample();
+        MarketRoleExample.Criteria or = example.or();
+
+        // 设置排序语句
         String OrderByClause = param.getSort() + " " + param.getOrder();
+        example.setOrderByClause(OrderByClause);
 
         // 查询deleted = false的所有角色
-        MarketRoleExample.Criteria or = example.or();
         or.andDeletedEqualTo(false);
 
         // 角色用户名模糊查询
@@ -51,8 +53,6 @@ public class AdminRoleServiceImpl implements AdminRoleService{
             or.andNameLike(sqlName);
         }
 
-        // 设置排序语句
-        example.setOrderByClause(OrderByClause);
         List<MarketRole> roles = roleMapper.selectByExample(example);
 
         // 配置分页工具
@@ -100,10 +100,131 @@ public class AdminRoleServiceImpl implements AdminRoleService{
         return roleMapper.insertSelective(role);
     }
 
-    // @Override
-    // public int updateRolePermissions() {
-    //
-    //
-    //     permissionMapper.insertSelective()
-    // }
+    /**
+     * @description: 查询所有权限
+     * @parameter: []
+     * @return: com.cskaoyan.bean.vo.MarketSystemPermissionsVo
+     * @author: 帅关
+     * @createTime: 2022/6/26 13:24
+     */
+    @Override
+    public MarketSystemPermissionsVo queryAllRolePermissions(Integer id) {
+        // 读第一层
+        List<PermissionsVo> permissions = permissionMapper.queryAllPermissions();
+        Iterator<PermissionsVo> permissionIterator = permissions.iterator();
+        // 读第二层
+        while(permissionIterator.hasNext()){
+            PermissionsVo permission = permissionIterator.next();
+            Integer key = permission.getKey();
+            List<PermissionChildVo> children = permissionMapper.selectPermissionChildByPermissionKey(key);
+            Iterator<PermissionChildVo> childIterator = children.iterator();
+            // 读第三层
+            while (childIterator.hasNext()){
+                PermissionChildVo child = childIterator.next();
+                Integer childKey = child.getKey();
+                List<PermissionGrandChildVo> grandChild = permissionMapper.selectGrandChildByChildKey(childKey);
+                child.setChildren(grandChild);
+            }
+            permission.setChildren(children);
+        }
+        MarketSystemPermissionsVo permissionsVo = new MarketSystemPermissionsVo();
+        permissionsVo.setSystemPermissions(permissions);
+
+        // 查询角色权限
+        List<String> apis;
+        if(id == 1){
+            apis = permissionMapper.selectAllPermissionApi();
+        }else{
+            apis = permissionMapper.selectPermissionApiById(id);
+        }
+        permissionsVo.setAssignedPermissions(apis);
+        return permissionsVo;
+    }
+
+    /**
+     * @description: 更新角色权限
+     * @parameter: [adminPermissions]
+     * @return: void
+     * @author: 帅关
+     * @createTime: 2022/6/26 18:37
+     */
+    @Override
+    public void updateRolePermissions(AdminPermissionsBo adminPermissions) {
+
+        // 生成sql语句
+        MarketPermissionExample example = new MarketPermissionExample();
+
+        // 获取数据库中指定id中所有的权限
+        List<String> strings = permissionMapper.selectAllPermissionApiById(adminPermissions.getRoleId());
+
+        // 获取前端传来的需要更新的权限
+        List<String> permissions = adminPermissions.getPermissions();
+
+        // 获取交集 --> 需要更新更新时间的权限
+        ArrayList<String> union = new ArrayList<>(strings);
+        union.retainAll(permissions);
+
+        MarketPermissionExample.Criteria or = null;
+        MarketPermission marketPermission = new MarketPermission();
+        Date date = new Date();
+        for (String string : union) {
+            or = example.or();
+            // 更新指定角色id的权限
+            or.andRoleIdEqualTo(adminPermissions.getRoleId());
+            // 更新指定角色的指定权限
+            or.andPermissionEqualTo(string);
+        }
+        marketPermission.setUpdateTime(date);
+        marketPermission.setDeleted(false);
+        if(union.size() != 0){
+            permissionMapper.updateByExampleSelective(marketPermission,example);
+        }
+
+        // 获取需要删除的权限
+        strings.removeAll(union);
+        MarketPermission marketPermission2 = new MarketPermission();
+        example = new MarketPermissionExample();
+        for (String string : strings) {
+            or = example.or();
+            // 更新指定角色的指定权限
+            or.andPermissionEqualTo(string);
+            or.andRoleIdEqualTo(adminPermissions.getRoleId());
+        }
+        marketPermission2.setDeleted(true);
+        marketPermission2.setUpdateTime(date);
+        if(strings.size() != 0){
+            permissionMapper.updateByExampleSelective(marketPermission2,example);
+        }
+
+        //获取需要添加的权限
+        HashSet<String> hashSet = new HashSet<>(permissions);
+        permissions.removeAll(union);
+        MarketPermission marketPermission3 = new MarketPermission();
+        for (String string : permissions) {
+            marketPermission3.setUpdateTime(date);
+            marketPermission3.setAddTime(date);
+            marketPermission3.setRoleId(adminPermissions.getRoleId());
+            marketPermission3.setPermission(string);
+            permissionMapper.insertSelective(marketPermission3);
+        }
+
+    }
+
+
+    /**
+     * @description: 获取所有角色id 和 name信息，用于管理员界面的小标签
+     * @parameter: []
+     * @return: com.cskaoyan.bean.param.CommonData<com.cskaoyan.bean.AdminOptionsVo>
+     * @author: 帅关
+     * @createTime: 2022/6/27 16:33
+     */
+    @Override
+    public CommonData<AdminOptionsVo> queryAllRolesWithNoInfo() {
+        List<AdminOptionsVo> list = permissionMapper.selectAllPermission();
+
+        // 配置分页工具
+        PageInfo<AdminOptionsVo> pageInfo = new PageInfo<>(list);
+        PageHelper.startPage(1,pageInfo.getSize());
+        return CommonData.data(pageInfo);
+    }
 }

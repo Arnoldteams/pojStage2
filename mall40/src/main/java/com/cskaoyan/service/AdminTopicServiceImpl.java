@@ -15,9 +15,7 @@ import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -89,8 +87,9 @@ public class AdminTopicServiceImpl implements AdminTopicService {
         marketTopic.setAddTime(date);
         marketTopic.setUpdateTime(date);
         marketTopicMapper.insertSelective(marketTopic);
+        MarketTopic selectMarketTopic = marketTopicMapper.selectByPrimaryKey(marketTopic.getId());
 
-        return marketTopic;
+        return selectMarketTopic;
     }
 
     /**
@@ -108,11 +107,17 @@ public class AdminTopicServiceImpl implements AdminTopicService {
 
 //        获得商品id，并转化成Integer类型
         String goods = marketTopic.getGoods();
-        String replace = goods.replace("[", "");
-        String replace1 = replace.replace("]", "");
+        String strip = StringUtils.strip(goods, "[]");
 
+//        将专题信息封装封装成前端所需要的信息
+        AdminTopicReadVO adminTopicReadVO = new AdminTopicReadVO();
+        adminTopicReadVO.setTopic(marketTopic);
 
-        String[] goodsSplit = replace1.split(",");
+        if (StringUtils.isEmpty(strip)) {
+            adminTopicReadVO.setGoodsList(null);
+            return adminTopicReadVO;
+        }
+        String[] goodsSplit = strip.split(",");
 
         ArrayList<Integer> integers = new ArrayList<>();
         for (String s : goodsSplit) {
@@ -133,9 +138,9 @@ public class AdminTopicServiceImpl implements AdminTopicService {
             topicReadGoodsVO.setAllFiled(marketGood);
             topicReadGoodsVOS.add(topicReadGoodsVO);
         }
-//        封装成前端所需要的信息
-        AdminTopicReadVO adminTopicReadVO = new AdminTopicReadVO();
-        adminTopicReadVO.setTopic(marketTopic);
+//        AdminTopicReadVO adminTopicReadVO = new AdminTopicReadVO();
+//        adminTopicReadVO.setTopic(marketTopic);
+//        将商品列表封装成前端所需要的信息
         adminTopicReadVO.setGoodsList(topicReadGoodsVOS);
 
 
@@ -171,6 +176,16 @@ public class AdminTopicServiceImpl implements AdminTopicService {
         or.andIdIn(idList);
 
         marketTopicMapper.deleteByExample(marketTopicExample);
+    }
+
+    @Override
+    public MarketTopic topicUpdate(MarketTopic marketTopic) {
+        //        有选择的插入到数据库中
+        Date date = new Date();
+        marketTopic.setUpdateTime(date);
+        marketTopicMapper.updateByPrimaryKeySelective(marketTopic);
+
+        return marketTopic;
     }
 }
 

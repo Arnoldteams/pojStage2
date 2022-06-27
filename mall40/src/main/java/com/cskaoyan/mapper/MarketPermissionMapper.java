@@ -2,6 +2,7 @@ package com.cskaoyan.mapper;
 
 import com.cskaoyan.bean.MarketPermission;
 import com.cskaoyan.bean.MarketPermissionExample;
+import com.cskaoyan.bean.vo.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -28,4 +29,18 @@ public interface MarketPermissionMapper {
     int updateByPrimaryKeySelective(MarketPermission record);
 
     int updateByPrimaryKey(MarketPermission record);
+
+    List<PermissionsVo> queryAllPermissions();
+
+    List<PermissionChildVo> selectPermissionChildByPermissionKey(@Param("key") Integer key);
+
+    List<PermissionGrandChildVo> selectGrandChildByChildKey(@Param("key") Integer key);
+
+    List<String> selectPermissionApiById(@Param("roleId") Integer roleId);
+
+    List<String> selectAllPermissionApiById(@Param("roleId") Integer roleId);
+
+    List<String> selectAllPermissionApi();
+
+    List<AdminOptionsVo> selectAllPermission();
 }

@@ -98,11 +98,11 @@ public class AdminStorageController {
      * @return: com.cskaoyan.bean.BaseRespVo<com.cskaoyan.bean.vo.AdminStorageVO>
      */
     @GetMapping("list")
-    public BaseRespVo<AdminStorageVO> list(BaseParam baseParam) {
+    public BaseRespVo<AdminStorageVO> list(BaseParam baseParam,String key,String name) {
         BaseRespVo<AdminStorageVO> resp = new BaseRespVo<>();
         AdminStorageVO adminStorageVO = new AdminStorageVO();
 
-        List<MarketStorage> list = adminStorageService.queryAllStorage(baseParam);
+        List<MarketStorage> list = adminStorageService.queryAllStorage(baseParam,key,name);
 
         Integer limit = baseParam.getLimit();
         Integer pages = list.size() / limit + 1;
@@ -131,6 +131,22 @@ public class AdminStorageController {
         marketStorage.setUpdateTime(new Date());
         adminStorageService.updateStorageById(marketStorage);
         resp.setData(marketStorage);
+
+        return resp;
+    }
+
+    /**
+     * @author: 于艳帆
+     * @createTime: 2022-06-26 19:50:34
+     * @description: 根据id删除Storage表中数据
+     * @param: marketStorage - [MarketStorage]
+     * @return: com.cskaoyan.bean.BaseRespVo<java.lang.String>
+     */
+    @PostMapping("delete")
+    public BaseRespVo<String> delete(@RequestBody MarketStorage marketStorage) {
+        BaseRespVo<String> resp = new BaseRespVo<>();
+
+        adminStorageService.deleteKeywordById(marketStorage);
 
         return resp;
     }

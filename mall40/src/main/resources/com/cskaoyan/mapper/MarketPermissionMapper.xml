@@ -185,6 +185,8 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
+
   <update id="updateByExample" parameterType="map">
     update market_permission
     set id = #{record.id,jdbcType=INTEGER},
@@ -227,4 +229,39 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="queryAllPermissions" resultType="com.cskaoyan.bean.vo.PermissionsVo">
+    select id,label,`key` from market_permission_table
+    where ISNULL(pid) and type = 1;
+  </select>
+
+  <select id="selectPermissionChildByPermissionKey" resultType="com.cskaoyan.bean.vo.PermissionChildVo">
+    select id,label,`key` from market_permission_table
+    where pid = #{key} and type = 2;
+  </select>
+
+  <select id="selectGrandChildByChildKey" resultType="com.cskaoyan.bean.vo.PermissionGrandChildVo">
+    select id, api, label from market_permission_table
+    where pid = #{key} and type = 3;
+  </select>
+
+  <select id="selectPermissionApiById" resultType="java.lang.String">
+    select permission from market_permission
+    where role_id = #{roleId}
+    and deleted = false;
+    </select>
+
+  <select id="selectAllPermissionApiById" resultType="java.lang.String">
+    select permission from market_permission
+    where role_id = #{roleId}
+  </select>
+
+  <select id="selectAllPermissionApi" resultType="java.lang.String">
+    select id from market_permission_table
+    where type = 3;
+    </select>
+
+  <select id="selectAllPermission" resultType="com.cskaoyan.bean.vo.AdminOptionsVo">
+    select id as value, name as label from market_role
+    </select>
 </mapper>

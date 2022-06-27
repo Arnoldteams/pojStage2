@@ -26,6 +26,12 @@ public class AdminKeywordServiceImpl implements AdminKeywordService {
     public List<MarketKeyword> queryAllKeywordList(AdminKeywordBO adminKeywordBO) {
 
         MarketKeywordExample example = new MarketKeywordExample();
+        if(adminKeywordBO.getKeyword() != null){
+            MarketKeywordExample.Criteria or = example.or();
+            or.andKeywordLike("%"+adminKeywordBO.getKeyword()+"%"); // 查找条件为关键词
+
+        }
+
         example.setOrderByClause(adminKeywordBO.getSort()+" "+adminKeywordBO.getOrder());
 
         PageHelper.startPage(adminKeywordBO.getPage(), adminKeywordBO.getLimit());

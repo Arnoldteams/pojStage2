@@ -1,7 +1,9 @@
 package com.cskaoyan.controller;
 
-import com.cskaoyan.bean.*;
 import com.cskaoyan.bean.bo.adminGoodsCreateBo.AdminGoodsCreateBo;
+
+import com.cskaoyan.bean.BaseRespVo;
+import com.cskaoyan.bean.MarketGoods;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.adminGoodsCatAndBrand.AdminGoodsCatAndBrandVo;
@@ -9,10 +11,6 @@ import com.cskaoyan.service.AdminGoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @description: 商品模块

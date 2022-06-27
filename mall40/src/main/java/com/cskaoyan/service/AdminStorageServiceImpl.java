@@ -5,6 +5,7 @@ import com.cskaoyan.bean.MarketStorageExample;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.mapper.MarketStorageMapper;
 import com.github.pagehelper.PageHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +25,17 @@ public class AdminStorageServiceImpl implements AdminStorageService {
     MarketStorageMapper marketStorageMapper;
 
     @Override
-    public List<MarketStorage> queryAllStorage(BaseParam baseParam) {
+    public List<MarketStorage> queryAllStorage(BaseParam baseParam,String key,String name) {
         MarketStorageExample example = new MarketStorageExample();
+        if (!StringUtils.isEmpty(key)){
+            MarketStorageExample.Criteria or = example.or();
+            or.andKeyLike("%"+key+"%");
+        }
+        if (!StringUtils.isEmpty(name)){
+            MarketStorageExample.Criteria or = example.or();
+            or.andNameLike("%"+name+"%");
+        }
+
         example.setOrderByClause(baseParam.getSort() + " " + baseParam.getOrder());
 
         PageHelper.startPage(baseParam.getPage(), baseParam.getLimit());
@@ -39,6 +49,7 @@ public class AdminStorageServiceImpl implements AdminStorageService {
         marketStorageMapper.updateByPrimaryKey(marketStorage);
     }
 
+
     /**
      * @param marketStorage 图片对象
      * @author: Sssd
@@ -46,5 +57,11 @@ public class AdminStorageServiceImpl implements AdminStorageService {
     @Override
     public void addAdminStorage(MarketStorage marketStorage) {
         marketStorageMapper.insertStorage(marketStorage);
+    }
+
+    @Override
+    public void deleteKeywordById(MarketStorage marketStorage) {
+        marketStorageMapper.deleteByPrimaryKey(marketStorage.getId());
+
     }
 }

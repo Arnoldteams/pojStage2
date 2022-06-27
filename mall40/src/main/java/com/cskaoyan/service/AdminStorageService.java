@@ -14,7 +14,7 @@ public interface AdminStorageService {
      * @param: baseParam - [BaseParam]
      * @return: java.util.List<com.cskaoyan.bean.MarketStorage>
      */
-    List<MarketStorage> queryAllStorage(BaseParam baseParam);
+    List<MarketStorage> queryAllStorage(BaseParam baseParam,String key,String name);
 
     /**
      * @author: 于艳帆
@@ -26,9 +26,20 @@ public interface AdminStorageService {
     void updateStorageById(MarketStorage marketStorage);
 
     /**
+
      * @author: Sssd
      * @description: 图片上传功能
      * @param marketStorage 图片对象
      */
     void addAdminStorage(MarketStorage marketStorage);
+
+    /**
+     * @author: 于艳帆
+     * @createTime: 2022-06-26 19:51:20
+     * @description: 根据id删除Storage表中数据
+     * @param: marketStorage - [MarketStorage]
+     * @return: void
+     */
+    void deleteKeywordById(MarketStorage marketStorage);
+
 }
