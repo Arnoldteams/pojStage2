@@ -49,7 +49,8 @@ public class LogHandler {
         Signature signature = joinPoint.getSignature();
         String name = signature.getName();
         String action = "";
-        String result = "";
+        String successResult = "";
+        String unSuccessResult = "";
 
 //        获得增强类
         Object target = joinPoint.getTarget();
@@ -58,7 +59,8 @@ public class LogHandler {
             if (name.equals(declaredMethod.getName())) {
                 LogAnnotation annotation = declaredMethod.getAnnotation(LogAnnotation.class);
                 action = annotation.value();
-                result = annotation.result();
+                successResult = annotation.successResult();
+                unSuccessResult = annotation.unSuccessResult();
             }
         }
 
@@ -86,8 +88,10 @@ public class LogHandler {
             marketLog.setStatus(false);
         }
         marketLog.setType(1);
-        if (!"成功".equals(proceed.getErrmsg())) {
-            marketLog.setResult(result);
+        if ("成功".equals(proceed.getErrmsg())) {
+            marketLog.setResult(successResult);
+        } else {
+            marketLog.setResult(unSuccessResult);
         }
 
         marketLogMapper.insertSelective(marketLog);

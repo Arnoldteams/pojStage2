@@ -134,7 +134,7 @@ public class AdminTopicController {
      * @since 2022/06/26 14:44
      */
     @PostMapping("batch-delete")
-    @LogAnnotation(value = "批量删除专题信息",result = "删除成功")
+    @LogAnnotation(value = "批量删除专题信息",successResult = "删除成功")
     public BaseRespVo topicBatchDelete(@RequestBody Map idList){
 
         List<Integer> ids = (List<Integer>) idList.get("ids");

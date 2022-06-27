@@ -18,8 +18,10 @@ public @interface LogAnnotation {
 
     String value() default "";
 
-    String result() default "";
+    String successResult() default "";
 
     String comment() default "";
+
+    String unSuccessResult() default "";
 
 }
