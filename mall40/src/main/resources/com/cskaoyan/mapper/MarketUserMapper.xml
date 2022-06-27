@@ -400,6 +400,6 @@
   </update>
 
   <select id="countUserByAddTime" resultType="com.cskaoyan.bean.vo.statForm.RowsEntity">
-    select add_time as day ,count(*) as users from market_user group by add_time
+    select convert(add_time,date) as day ,count(*) as users from market_user group by convert(add_time,date)
   </select>
 </mapper>
