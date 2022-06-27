@@ -2,6 +2,7 @@ package com.cskaoyan.mapper;
 
 import com.cskaoyan.bean.MarketOrderGoods;
 import com.cskaoyan.bean.MarketOrderGoodsExample;
+import com.cskaoyan.bean.vo.statForm.GoodsRowsEntity;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -28,4 +29,7 @@ public interface MarketOrderGoodsMapper {
     int updateByPrimaryKeySelective(MarketOrderGoods record);
 
     int updateByPrimaryKey(MarketOrderGoods record);
+
+    List<GoodsRowsEntity> countOrderGoodsByAddTime();
+
 }

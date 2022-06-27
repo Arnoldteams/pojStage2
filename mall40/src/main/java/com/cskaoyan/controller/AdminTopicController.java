@@ -67,18 +67,7 @@ public class AdminTopicController {
         marketTopic.setPrice(adminTopicCreateBO.getPrice());
         marketTopic.setPicUrl(adminTopicCreateBO.getPicUrl());
         marketTopic.setReadCount(adminTopicCreateBO.getReadCount());
-
-//        StringBuffer stringBuffer = new StringBuffer();
-//        stringBuffer.append("[");
-//        String[] goods = adminTopicCreateBO.getGoods();
-//        if (goods.length != 0) {
-//            for (String good : goods) {
-//                stringBuffer.append(good).append(",");
-//            }
-//            stringBuffer.append("\b");
-//        }
-
-        marketTopic.setGoods(adminTopicCreateBO.getGoods());
+        marketTopic.setGoods(Arrays.toString(adminTopicCreateBO.getGoods()));
 
 
         MarketTopic marketTopicVo = adminTopicService.topicCreate(marketTopic);

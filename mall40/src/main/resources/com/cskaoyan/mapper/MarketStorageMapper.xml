@@ -71,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, key, name, type, size, url, add_time, update_time, deleted
+    id, `key`, name, type, size, url, add_time, update_time, deleted
   </sql>
   <select id="selectByExample" parameterType="com.cskaoyan.bean.MarketStorageExample" resultMap="BaseResultMap">
     select
@@ -258,16 +258,16 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.cskaoyan.bean.MarketStorage">
+  <update id="updateByPrimaryKey" parameterType="com.cskaoyan.bean.MarketStorage" useGeneratedKeys="true" keyProperty="id">
     update market_storage
-    set key = #{key,jdbcType=VARCHAR},
+    set `key` = #{key,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
       type = #{type,jdbcType=VARCHAR},
       size = #{size,jdbcType=INTEGER},
-      url = #{url,jdbcType=VARCHAR},
+      `url` = #{url,jdbcType=VARCHAR},
       add_time = #{addTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      deleted = #{deleted,jdbcType=BIT}
+      `deleted` = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

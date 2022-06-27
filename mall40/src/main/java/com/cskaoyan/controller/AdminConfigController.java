@@ -1,14 +1,12 @@
 package com.cskaoyan.controller;
 
 import com.cskaoyan.bean.BaseRespVo;
-import com.cskaoyan.bean.MarketKeyword;
 import com.cskaoyan.bean.bo.AdminConfigBO;
 import com.cskaoyan.bean.vo.AdminConfigVO;
 import com.cskaoyan.service.AdminConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * @Author: 于艳帆
