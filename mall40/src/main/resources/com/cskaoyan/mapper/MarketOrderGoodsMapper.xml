@@ -350,4 +350,8 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="countOrderGoodsByAddTime" resultType="com.cskaoyan.bean.vo.statForm.GoodsRowsEntity">
+    select convert(add_time,date ) as day,count(*) as orders, sum(number) as products,sum(price) as amount from market_order_goods group by convert(add_time,date )
+    </select>
 </mapper>

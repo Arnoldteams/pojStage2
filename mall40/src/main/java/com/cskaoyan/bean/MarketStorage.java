@@ -1,5 +1,7 @@
 package com.cskaoyan.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class MarketStorage {
@@ -17,6 +19,7 @@ public class MarketStorage {
 
     private Date addTime;
 
+    @JsonFormat(locale = "yyyy-MM-dd hh:mm:ss")
     private Date updateTime;
 
     private Boolean deleted;

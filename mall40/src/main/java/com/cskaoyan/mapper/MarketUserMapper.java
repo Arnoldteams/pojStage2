@@ -2,6 +2,7 @@ package com.cskaoyan.mapper;
 
 import com.cskaoyan.bean.MarketUser;
 import com.cskaoyan.bean.MarketUserExample;
+import com.cskaoyan.bean.vo.statForm.RowsEntity;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -28,4 +29,7 @@ public interface MarketUserMapper {
     int updateByPrimaryKeySelective(MarketUser record);
 
     int updateByPrimaryKey(MarketUser record);
+
+    List<RowsEntity> countUserByAddTime();
+
 }
