@@ -43,5 +43,10 @@ public class BaseRespVo<T> {
         return baseRespVo;
     }
 
-
+    public static <T> BaseRespVo AuthNotEnough(String Msg){
+        BaseRespVo baseRespVo = new BaseRespVo();
+        baseRespVo.setErrno(641);
+        baseRespVo.setErrmsg(Msg);
+        return baseRespVo;
+    }
 }

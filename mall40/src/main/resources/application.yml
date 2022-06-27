@@ -37,3 +37,7 @@ pagehelper:
 logging:
   level:
     com.cskaoyan.mapper: debug
+
+com:
+  cskaoyan:
+    logPath: D://log.txt
