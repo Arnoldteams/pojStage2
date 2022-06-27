@@ -6,6 +6,7 @@ import com.cskaoyan.bean.MarketRolesSetPermissionsBo;
 import com.cskaoyan.bean.bo.AdminPermissionsBo;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
+import com.cskaoyan.bean.vo.AdminOptionsVo;
 import com.cskaoyan.bean.vo.MarketSystemPermissionsVo;
 
 /**
@@ -31,4 +32,8 @@ public interface AdminRoleService {
 
     // 更新角色权限
     void updateRolePermissions(AdminPermissionsBo adminPermissions);
+
+    // 查询所有角色信息
+    CommonData<AdminOptionsVo> queryAllRolesWithNoInfo();
+
 }

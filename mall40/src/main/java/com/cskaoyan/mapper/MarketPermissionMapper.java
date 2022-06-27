@@ -2,10 +2,7 @@ package com.cskaoyan.mapper;
 
 import com.cskaoyan.bean.MarketPermission;
 import com.cskaoyan.bean.MarketPermissionExample;
-import com.cskaoyan.bean.vo.MarketSystemPermissionsVo;
-import com.cskaoyan.bean.vo.PermissionChildVo;
-import com.cskaoyan.bean.vo.PermissionGrandChildVo;
-import com.cskaoyan.bean.vo.PermissionsVo;
+import com.cskaoyan.bean.vo.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -44,4 +41,6 @@ public interface MarketPermissionMapper {
     List<String> selectAllPermissionApiById(@Param("roleId") Integer roleId);
 
     List<String> selectAllPermissionApi();
+
+    List<AdminOptionsVo> selectAllPermission();
 }
