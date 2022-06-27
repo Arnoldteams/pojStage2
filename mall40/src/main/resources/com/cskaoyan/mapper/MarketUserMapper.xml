@@ -398,4 +398,8 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="countUserByAddTime" resultType="com.cskaoyan.bean.vo.statForm.RowsEntity">
+    select add_time as day ,count(*) as users from market_user group by add_time
+  </select>
 </mapper>
