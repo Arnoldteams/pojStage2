@@ -37,6 +37,7 @@ public class AdminCollectServiceImpl implements AdminCollectService {
         if (valueId != null) {
             or.andValueIdEqualTo(valueId);
         }
+        or.andDeletedEqualTo(false);
         example.setOrderByClause(pageInfo.getSort() + " " + pageInfo.getOrder());
         List<MarketCollect> collectList = collectMapper.selectByExample(example);
         PageInfo<MarketCollect> collectPageInfo = new PageInfo<>(collectList);

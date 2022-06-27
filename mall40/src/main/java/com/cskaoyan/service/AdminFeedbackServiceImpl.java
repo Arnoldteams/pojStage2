@@ -34,6 +34,7 @@ public class AdminFeedbackServiceImpl implements AdminFeedbackService{
         if (username != null) {
             or.andUsernameLike("%"+username+"%");
         }
+        or.andDeletedEqualTo(false);
         example.setOrderByClause(pageInfo.getSort() + " " + pageInfo.getOrder());
         List<MarketFeedback> list = feedbackMapper.selectByExample(example);
         PageInfo<MarketFeedback> info = new PageInfo<>(list);
