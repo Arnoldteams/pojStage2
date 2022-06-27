@@ -54,6 +54,12 @@ public class BaseRespVo<T> {
         baseRespVo.setErrmsg("管理员名称不符合规定");
         return baseRespVo;
     }
+    public static <T> BaseRespVo invalidPrice() {
+        BaseRespVo baseRespVo = new BaseRespVo();
+        baseRespVo.setErrno(402);
+        baseRespVo.setErrmsg("参数值不对");
+        return baseRespVo;
+    }
 
 
     public static <T> BaseRespVo AuthNotEnough(String Msg){

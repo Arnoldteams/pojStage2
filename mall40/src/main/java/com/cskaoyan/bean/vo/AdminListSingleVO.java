@@ -25,13 +25,16 @@ public class AdminListSingleVO {
         AdminListSingleVO adminListSingleVO = new AdminListSingleVO();
 //            将str类型的id解析为Integer数组
         String roleIds = marketAdmin.getRoleIds();
+//        格式规范
         String strip = StringUtils.strip(roleIds, "[]");
+
         String[] split = strip.split(",");
         int length = split.length;
         Integer[] integers = new Integer[length];
 
         for (int i = 0; i < length; i++) {
-            integers[i] = Integer.parseInt(split[i]);
+            String trim = split[i].trim();
+            integers[i] = Integer.parseInt(trim);
         }
 
 

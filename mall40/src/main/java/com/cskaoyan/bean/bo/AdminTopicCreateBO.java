@@ -1,8 +1,10 @@
 package com.cskaoyan.bean.bo;
 
+import com.cskaoyan.bean.MarketTopic;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -13,11 +15,13 @@ import java.util.Date;
 
 @Data
 public class AdminTopicCreateBO {
+    private Integer id;
+
     private String title;
 
     private String subtitle;
 
-    private BigDecimal price;
+    private String price;
 
     private String readCount;
 
@@ -27,5 +31,32 @@ public class AdminTopicCreateBO {
 
     private String content;
 
+//    private Date addTime;
+//
+//    private Date updateTime;
+//
+//    private Boolean deleted;
+//
+//    private Integer sortOrder;
 
+    public static MarketTopic toCreateMarkTopic(MarketTopic marketTopic, AdminTopicCreateBO adminTopicCreateBO) {
+        marketTopic.setContent(adminTopicCreateBO.getContent());
+        marketTopic.setTitle(adminTopicCreateBO.getTitle());
+        marketTopic.setSubtitle(adminTopicCreateBO.getSubtitle());
+        marketTopic.setPicUrl(adminTopicCreateBO.getPicUrl());
+        marketTopic.setReadCount(adminTopicCreateBO.getReadCount());
+        marketTopic.setGoods(Arrays.toString(adminTopicCreateBO.getGoods()));
+        return marketTopic;
+    }
+
+//    public static MarketTopic toUpdateMarkTopic(MarketTopic marketTopic, AdminTopicCreateBO adminTopicCreateBO) {
+//        MarketTopic updateMarketTopic = toCreateMarkTopic(marketTopic, adminTopicCreateBO);
+//        updateMarketTopic.setId(adminTopicCreateBO.getId());
+//        updateMarketTopic.setAddTime(adminTopicCreateBO.getAddTime());
+//        updateMarketTopic.setUpdateTime(adminTopicCreateBO.getUpdateTime());
+//        updateMarketTopic.setDeleted(adminTopicCreateBO.getDeleted());
+//        updateMarketTopic.setSortOrder(adminTopicCreateBO.getSortOrder());
+//
+//        return updateMarketTopic;
+//    }
 }

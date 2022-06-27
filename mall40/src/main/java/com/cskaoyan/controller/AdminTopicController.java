@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -61,16 +62,16 @@ public class AdminTopicController {
 
         MarketTopic marketTopic = new MarketTopic();
 
-        marketTopic.setContent(adminTopicCreateBO.getContent());
-        marketTopic.setTitle(adminTopicCreateBO.getTitle());
-        marketTopic.setSubtitle(adminTopicCreateBO.getSubtitle());
-        marketTopic.setPrice(adminTopicCreateBO.getPrice());
-        marketTopic.setPicUrl(adminTopicCreateBO.getPicUrl());
-        marketTopic.setReadCount(adminTopicCreateBO.getReadCount());
-        marketTopic.setGoods(Arrays.toString(adminTopicCreateBO.getGoods()));
+        MarketTopic createMarketTopic = AdminTopicCreateBO.toCreateMarkTopic(marketTopic, adminTopicCreateBO);
+        BigDecimal price;
+        try {
+            price = new BigDecimal(adminTopicCreateBO.getPrice());
+        }catch (Exception e){
+            return BaseRespVo.invalidPrice();
+        }
+        createMarketTopic.setPrice(price);
 
-
-        MarketTopic marketTopicVo = adminTopicService.topicCreate(marketTopic);
+        MarketTopic marketTopicVo = adminTopicService.topicCreate(createMarketTopic);
 
         return BaseRespVo.ok(marketTopicVo);
 
@@ -90,6 +91,21 @@ public class AdminTopicController {
         AdminTopicReadVO adminTopicReadVO = adminTopicService.readTopic(id);
 
         return BaseRespVo.ok(adminTopicReadVO);
+    }
+
+    /**
+     * 更新专题信息
+     * @param marketTopic
+     * @return com.cskaoyan.bean.BaseRespVo
+     * @author xyg2597@163.com
+     * @since 2022/06/27 10:46
+     */
+    @PostMapping("update")
+    public BaseRespVo topicUpdate(@RequestBody MarketTopic marketTopic){
+
+        MarketTopic marketTopicVo = adminTopicService.topicUpdate(marketTopic);
+
+        return BaseRespVo.ok(marketTopicVo);
     }
 
     /**
