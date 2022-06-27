@@ -138,8 +138,7 @@ public class AdminTopicServiceImpl implements AdminTopicService {
             topicReadGoodsVO.setAllFiled(marketGood);
             topicReadGoodsVOS.add(topicReadGoodsVO);
         }
-//        AdminTopicReadVO adminTopicReadVO = new AdminTopicReadVO();
-//        adminTopicReadVO.setTopic(marketTopic);
+
 //        将商品列表封装成前端所需要的信息
         adminTopicReadVO.setGoodsList(topicReadGoodsVOS);
 
@@ -156,8 +155,12 @@ public class AdminTopicServiceImpl implements AdminTopicService {
      */
     @Override
     public void topicDelete(MarketTopic marketTopic) {
+        MarketTopic deleteMarketTopic = new MarketTopic();
 
-        marketTopicMapper.deleteByPrimaryKey(marketTopic.getId());
+        deleteMarketTopic.setDeleted(true);
+        deleteMarketTopic.setId(marketTopic.getId());
+
+        marketTopicMapper.updateByPrimaryKeySelective(deleteMarketTopic);
     }
 
     /**
@@ -174,10 +177,20 @@ public class AdminTopicServiceImpl implements AdminTopicService {
         MarketTopicExample.Criteria or = marketTopicExample.or();
 
         or.andIdIn(idList);
+        MarketTopic marketTopic = new MarketTopic();
+        marketTopic.setDeleted(true);
 
-        marketTopicMapper.deleteByExample(marketTopicExample);
+        marketTopicMapper.updateByExampleSelective(marketTopic,marketTopicExample);
     }
 
+
+    /**
+     * 更新专题信息
+     * @param marketTopic 更新的专题信息
+     * @return com.cskaoyan.bean.MarketTopic
+     * @author xyg2597@163.com
+     * @since 2022/06/27 23:19
+     */
     @Override
     public MarketTopic topicUpdate(MarketTopic marketTopic) {
         //        有选择的插入到数据库中
