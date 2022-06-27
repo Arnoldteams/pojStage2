@@ -36,7 +36,6 @@ public class AdminRoleController {
     @RequestMapping("list")
     public BaseRespVo adminRoleList(BaseParam param,String name){
         CommonData<MarketRole> data =  adminRoleService.queryAllRoles(param,name);
-        int i = 1/0;
         return BaseRespVo.ok(data);
     }
 
@@ -98,6 +97,7 @@ public class AdminRoleController {
      */
     @GetMapping("/permissions")
     public BaseRespVo adminRolePermissions(Integer roleId) {
+
         MarketSystemPermissionsVo permissions = adminRoleService.queryAllRolePermissions(roleId);
         return BaseRespVo.ok(permissions);
     }

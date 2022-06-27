@@ -11,8 +11,6 @@ import java.util.Date;
 
 /**
  *  应用程序的统一异常处理，发生异常时，提示“功能尚未开放”
- *  日志文件路径在配置文件中读取
- *  开发期间可以注释掉
  * @since 2022/06/27 08:31
  * @author Gzy
  */
@@ -24,13 +22,15 @@ public class PostExceptionHandler {
 
     /**
      * @description: 异常统一处理，并打印日志
+     * 日志文件路径在配置文件中读取
+     * 开发期间可以注释掉
      * @parameter: [e] 发生的异常
      * @return: com.cskaoyan.bean.BaseRespVo
      * @author: 帅关
      * @createTime: 2022/6/27 13:47
      */
-    @ExceptionHandler(Exception.class)
-    @ResponseBody
+    // @ExceptionHandler(Exception.class)
+    // @ResponseBody
     public BaseRespVo allExceptionHandle(Exception e) throws Exception {
         File logFile = new File(logPath);
         try(FileOutputStream out = new FileOutputStream(logFile, true);

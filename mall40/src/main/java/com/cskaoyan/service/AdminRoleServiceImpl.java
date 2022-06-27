@@ -136,7 +136,12 @@ public class AdminRoleServiceImpl implements AdminRoleService{
         permissionsVo.setSystemPermissions(permissions);
 
         // 查询角色权限
-        List<String> apis = permissionMapper.selectPermissionApiById(id);
+        List<String> apis;
+        if(id == 1){
+            apis = permissionMapper.selectAllPermissionApi();
+        }else{
+            apis = permissionMapper.selectPermissionApiById(id);
+        }
         permissionsVo.setAssignedPermissions(apis);
         return permissionsVo;
     }

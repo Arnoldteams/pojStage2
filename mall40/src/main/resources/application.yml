@@ -38,6 +38,7 @@ logging:
   level:
     com.cskaoyan.mapper: debug
 
+# 配置异常日志路径
 com:
   cskaoyan:
     logPath: D://log.txt

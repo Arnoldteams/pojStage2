@@ -12,6 +12,7 @@ import com.cskaoyan.mapper.MarketGoodsMapper;
 import com.cskaoyan.mapper.MarketTopicMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;

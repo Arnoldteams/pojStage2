@@ -255,4 +255,9 @@
     select permission from market_permission
     where role_id = #{roleId}
   </select>
+
+  <select id="selectAllPermissionApi" resultType="java.lang.String">
+    select id from market_permission_table
+    where type = 3;
+    </select>
 </mapper>

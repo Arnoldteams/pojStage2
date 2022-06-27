@@ -42,4 +42,6 @@ public interface MarketPermissionMapper {
     List<String> selectPermissionApiById(@Param("roleId") Integer roleId);
 
     List<String> selectAllPermissionApiById(@Param("roleId") Integer roleId);
+
+    List<String> selectAllPermissionApi();
 }
