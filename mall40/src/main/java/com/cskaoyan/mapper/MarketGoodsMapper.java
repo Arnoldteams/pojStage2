@@ -2,8 +2,13 @@ package com.cskaoyan.mapper;
 
 import com.cskaoyan.bean.MarketGoods;
 import com.cskaoyan.bean.MarketGoodsExample;
+import com.cskaoyan.bean.bo.adminGoodsCreateBo.AdminGoodsCreateGoodsBo;
+import com.cskaoyan.bean.vo.adminGoodsCatAndBrand.BrandListEntity;
+import com.cskaoyan.bean.vo.adminGoodsCatAndBrand.CategoryListEntity;
+import com.cskaoyan.bean.vo.adminGoodsCatAndBrand.ChildrenEntity;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface MarketGoodsMapper {
@@ -34,4 +39,10 @@ public interface MarketGoodsMapper {
     int updateByPrimaryKeyWithBLOBs(MarketGoods record);
 
     int updateByPrimaryKey(MarketGoods record);
+
+    List<CategoryListEntity> selectAllDadCat();
+
+    List<ChildrenEntity> selectAddSonCat(@Param("value") Integer value);
+
+    List<BrandListEntity> selectAllBrand();
 }

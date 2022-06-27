@@ -24,4 +24,11 @@ public interface AdminStorageService {
      * @return: void
      */
     void updateStorageById(MarketStorage marketStorage);
+
+    /**
+     * @author: Sssd
+     * @description: 图片上传功能
+     * @param marketStorage 图片对象
+     */
+    void addAdminStorage(MarketStorage marketStorage);
 }

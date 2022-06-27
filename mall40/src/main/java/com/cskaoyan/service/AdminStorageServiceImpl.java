@@ -7,6 +7,7 @@ import com.cskaoyan.mapper.MarketStorageMapper;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,13 +23,12 @@ public class AdminStorageServiceImpl implements AdminStorageService {
     @Autowired
     MarketStorageMapper marketStorageMapper;
 
-
     @Override
     public List<MarketStorage> queryAllStorage(BaseParam baseParam) {
         MarketStorageExample example = new MarketStorageExample();
         example.setOrderByClause(baseParam.getSort() + " " + baseParam.getOrder());
 
-        PageHelper.startPage(baseParam.getPage(),baseParam.getLimit());
+        PageHelper.startPage(baseParam.getPage(), baseParam.getLimit());
         List<MarketStorage> marketStorages = marketStorageMapper.selectByExample(example);
 
         return marketStorages;
@@ -37,5 +37,14 @@ public class AdminStorageServiceImpl implements AdminStorageService {
     @Override
     public void updateStorageById(MarketStorage marketStorage) {
         marketStorageMapper.updateByPrimaryKey(marketStorage);
+    }
+
+    /**
+     * @param marketStorage 图片对象
+     * @author: Sssd
+     */
+    @Override
+    public void addAdminStorage(MarketStorage marketStorage) {
+        marketStorageMapper.insertStorage(marketStorage);
     }
 }
