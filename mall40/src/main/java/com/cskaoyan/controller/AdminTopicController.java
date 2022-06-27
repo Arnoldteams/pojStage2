@@ -7,6 +7,7 @@ import com.cskaoyan.bean.bo.AdminTopicCreateBO;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.AdminTopicReadVO;
+import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminTopicService;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,7 @@ public class AdminTopicController {
      * @since 2022/06/25 23:14
      */
     @RequestMapping("create")
+    @LogAnnotation("添加专题信息")
     public BaseRespVo topicCreate(@RequestBody AdminTopicCreateBO adminTopicCreateBO) {
 
         MarketTopic marketTopic = new MarketTopic();
@@ -101,6 +103,7 @@ public class AdminTopicController {
      * @since 2022/06/27 10:46
      */
     @PostMapping("update")
+    @LogAnnotation("更新专题信息")
     public BaseRespVo topicUpdate(@RequestBody MarketTopic marketTopic){
 
         MarketTopic marketTopicVo = adminTopicService.topicUpdate(marketTopic);
@@ -116,6 +119,7 @@ public class AdminTopicController {
      * @since 2022/06/26 14:36
      */
     @PostMapping("delete")
+    @LogAnnotation("删除指定专题")
     public BaseRespVo topicDelete(@RequestBody MarketTopic marketTopic){
 
         adminTopicService.topicDelete(marketTopic);
@@ -130,6 +134,7 @@ public class AdminTopicController {
      * @since 2022/06/26 14:44
      */
     @PostMapping("batch-delete")
+    @LogAnnotation(value = "批量删除专题信息",result = "删除成功")
     public BaseRespVo topicBatchDelete(@RequestBody Map idList){
 
         List<Integer> ids = (List<Integer>) idList.get("ids");
