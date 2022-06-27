@@ -58,7 +58,7 @@ public class AdminAdminController {
             return BaseRespVo.invalidAdminUsername();
         }
 //        判断密码长度,长度小于六直接返回
-        if (!adminCreateBO.getPassword().matches("\\w{6}")) {
+        if (!adminCreateBO.getPassword().matches("\\w{6,20}")) {
             return BaseRespVo.lessPassword();
         }
 
@@ -81,7 +81,7 @@ public class AdminAdminController {
             return BaseRespVo.invalidAdminUsername();
         }
 //        判断密码长度,长度小于六直接返回
-        if (!marketAdmin.getPassword().matches("\\w{6}")) {
+        if (!marketAdmin.getPassword().matches("\\w{6,20}")) {
             return BaseRespVo.lessPassword();
         }
 

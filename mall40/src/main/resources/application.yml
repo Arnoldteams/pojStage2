@@ -28,6 +28,8 @@ spring:
 mybatis:
   configuration:
     cache-enabled: true
+#    typeHandler的包目录位置
+  type-handlers-package: com.cskaoyan.handler
 
 # 配置自动分页
 pagehelper:
@@ -42,3 +44,4 @@ logging:
 com:
   cskaoyan:
     logPath: D://log.txt
+
