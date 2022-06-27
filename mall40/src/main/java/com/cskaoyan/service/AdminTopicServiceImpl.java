@@ -87,8 +87,9 @@ public class AdminTopicServiceImpl implements AdminTopicService {
         marketTopic.setAddTime(date);
         marketTopic.setUpdateTime(date);
         marketTopicMapper.insertSelective(marketTopic);
+        MarketTopic selectMarketTopic = marketTopicMapper.selectByPrimaryKey(marketTopic.getId());
 
-        return marketTopic;
+        return selectMarketTopic;
     }
 
     /**
