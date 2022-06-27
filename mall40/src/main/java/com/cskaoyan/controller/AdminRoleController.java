@@ -2,17 +2,19 @@ package com.cskaoyan.controller;
 
 import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.MarketRole;
-import com.cskaoyan.bean.MarketRolesSetPermissionsBo;
 import com.cskaoyan.bean.bo.AdminPermissionsBo;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.AdminOptionsVo;
 import com.cskaoyan.bean.vo.MarketSystemPermissionsVo;
+import com.cskaoyan.bean.vo.PermissionsVo;
 import com.cskaoyan.service.AdminRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletContext;
 import java.util.List;
+
 
 /**
  * 系统管理-角色管理
@@ -24,6 +26,8 @@ import java.util.List;
 @RequestMapping("/admin/role")
 public class AdminRoleController {
 
+    @Autowired
+    ServletContext context;
     @Autowired
     AdminRoleService adminRoleService;
 
@@ -43,6 +47,7 @@ public class AdminRoleController {
 
     /**
      * @description: 系统管理-角色管理-删除角色
+     * 获取所有管理员赋予的角色信息
      * @parameter: [role] 要删除的角色信息
      * @return: com.cskaoyan.bean.BaseRespVo
      * @author: 帅关
@@ -50,10 +55,10 @@ public class AdminRoleController {
      */
     @RequestMapping("/delete")
     public BaseRespVo adminRoleDelete(@RequestBody MarketRole role){
-        if(role.getId() == 1 || role.getId() == 2){
+
+        if(adminRoleService.deleteRole(role) == 0){
             return BaseRespVo.AuthNotEnough("角色存在管理員權限，不能刪除！");
         }
-        adminRoleService.deleteRole(role);
         return BaseRespVo.ok(null);
     }
 
@@ -98,8 +103,15 @@ public class AdminRoleController {
      */
     @GetMapping("/permissions")
     public BaseRespVo adminRolePermissions(Integer roleId) {
-
-        MarketSystemPermissionsVo permissions = adminRoleService.queryAllRolePermissions(roleId);
+        List<PermissionsVo> systemPermissions;
+        MarketSystemPermissionsVo permissions = new MarketSystemPermissionsVo();
+        if((systemPermissions = (List<PermissionsVo>) context.getAttribute("systemPermissions")) == null){
+            systemPermissions = adminRoleService.queryAllRolePermissions();
+            context.setAttribute("systemPermissions",systemPermissions);
+        }
+        List<String> assignedPermissions = adminRoleService.selectRoleApiById(roleId);
+        permissions.setSystemPermissions(systemPermissions);
+        permissions.setAssignedPermissions(assignedPermissions);
         return BaseRespVo.ok(permissions);
     }
 

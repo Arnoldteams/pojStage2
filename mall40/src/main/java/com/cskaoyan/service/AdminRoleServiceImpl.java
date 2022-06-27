@@ -5,6 +5,7 @@ import com.cskaoyan.bean.bo.AdminPermissionsBo;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.*;
+import com.cskaoyan.mapper.MarketAdminMapper;
 import com.cskaoyan.mapper.MarketPermissionMapper;
 import com.cskaoyan.mapper.MarketRoleMapper;
 import com.github.pagehelper.PageHelper;
@@ -26,6 +27,8 @@ public class AdminRoleServiceImpl implements AdminRoleService{
     MarketRoleMapper roleMapper;
     @Autowired
     MarketPermissionMapper permissionMapper;
+    @Autowired
+    MarketAdminMapper adminMapper;
 
     /**
      * @description: 显示所有-搜索 角色
@@ -72,6 +75,24 @@ public class AdminRoleServiceImpl implements AdminRoleService{
      */
     @Override
     public int deleteRole(MarketRole role) {
+        String id = String.valueOf(role.getId());
+        StringBuilder sb = new StringBuilder();
+        // 获取所有管理员的角色信息
+        String[] lists = adminMapper.selectAllRoleId();
+
+        // 分解角色id成字符串
+        for (String list : lists) {
+            int length = list.length();
+            sb.append(list, 1, length-1).append(",");
+        }
+        String[] split = sb.toString().split(",");
+
+        // 判断要删除的roleId是否有被
+        for (String s : split) {
+            if(s.equals(id)){
+                return 0;
+            }
+        }
         role.setDeleted(true);
         return roleMapper.updateByPrimaryKey(role);
     }
@@ -108,7 +129,7 @@ public class AdminRoleServiceImpl implements AdminRoleService{
      * @createTime: 2022/6/26 13:24
      */
     @Override
-    public MarketSystemPermissionsVo queryAllRolePermissions(Integer id) {
+    public List<PermissionsVo> queryAllRolePermissions() {
         // 读第一层
         List<PermissionsVo> permissions = permissionMapper.queryAllPermissions();
         Iterator<PermissionsVo> permissionIterator = permissions.iterator();
@@ -127,18 +148,25 @@ public class AdminRoleServiceImpl implements AdminRoleService{
             }
             permission.setChildren(children);
         }
-        MarketSystemPermissionsVo permissionsVo = new MarketSystemPermissionsVo();
-        permissionsVo.setSystemPermissions(permissions);
 
-        // 查询角色权限
+        return permissions;
+    }
+
+    /**
+     * @description: 获取角色权限
+     * @parameter: [id]
+     * @return: java.util.List<java.lang.String>
+     * @author: 帅关
+     * @createTime: 2022/6/27 21:57
+     */
+    public List<String> selectRoleApiById(Integer id){
         List<String> apis;
         if(id == 1){
             apis = permissionMapper.selectAllPermissionApi();
         }else{
             apis = permissionMapper.selectPermissionApiById(id);
         }
-        permissionsVo.setAssignedPermissions(apis);
-        return permissionsVo;
+        return apis;
     }
 
     /**
@@ -148,6 +176,7 @@ public class AdminRoleServiceImpl implements AdminRoleService{
      * @author: 帅关
      * @createTime: 2022/6/26 18:37
      */
+
     @Override
     public void updateRolePermissions(AdminPermissionsBo adminPermissions) {
 
@@ -169,10 +198,8 @@ public class AdminRoleServiceImpl implements AdminRoleService{
         Date date = new Date();
         for (String string : union) {
             or = example.or();
-            // 更新指定角色id的权限
-            or.andRoleIdEqualTo(adminPermissions.getRoleId());
-            // 更新指定角色的指定权限
-            or.andPermissionEqualTo(string);
+            // 更新指定角色id的权限,更新指定角色的指定权限
+            or.andRoleIdEqualTo(adminPermissions.getRoleId()).andPermissionEqualTo(string);
         }
         marketPermission.setUpdateTime(date);
         marketPermission.setDeleted(false);
@@ -187,8 +214,7 @@ public class AdminRoleServiceImpl implements AdminRoleService{
         for (String string : strings) {
             or = example.or();
             // 更新指定角色的指定权限
-            or.andPermissionEqualTo(string);
-            or.andRoleIdEqualTo(adminPermissions.getRoleId());
+            or.andPermissionEqualTo(string).andRoleIdEqualTo(adminPermissions.getRoleId());
         }
         marketPermission2.setDeleted(true);
         marketPermission2.setUpdateTime(date);

@@ -2,7 +2,6 @@ package com.cskaoyan.handler;
 
 import com.cskaoyan.bean.BaseRespVo;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,10 +38,13 @@ public class PostExceptionHandler {
             StringWriter stringWriter = new StringWriter();
             PrintWriter printWriter = new PrintWriter(stringWriter)
         ){
+            // 设置异常发生时间
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd : hh-mm-ss");
             String dateStr = sdf.format(new Date());
+            // 获取异常信息
             e.printStackTrace(printWriter);
             out.write((dateStr + "\r\n" + stringWriter.toString() + "\r\n\r\n").getBytes());
+            // 返回提示信息
             return BaseRespVo.AuthNotEnough("功能尚未開放！");
         }catch (Exception exp){
             exp.printStackTrace();

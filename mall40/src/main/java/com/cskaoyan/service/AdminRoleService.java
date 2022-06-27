@@ -8,6 +8,9 @@ import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.AdminOptionsVo;
 import com.cskaoyan.bean.vo.MarketSystemPermissionsVo;
+import com.cskaoyan.bean.vo.PermissionsVo;
+
+import java.util.List;
 
 /**
  *  系统管理-角色管理
@@ -27,11 +30,14 @@ public interface AdminRoleService {
     // 创建新角色
     int createRole(MarketRole role);
 
-    // 查询所有权限
-    MarketSystemPermissionsVo queryAllRolePermissions(Integer id);
-
     // 更新角色权限
     void updateRolePermissions(AdminPermissionsBo adminPermissions);
+
+    // 查询所有权限
+    List<PermissionsVo> queryAllRolePermissions();
+
+    // 按Id查询角色权限
+    List<String> selectRoleApiById(Integer id);
 
     // 查询所有角色信息
     CommonData<AdminOptionsVo> queryAllRolesWithNoInfo();
