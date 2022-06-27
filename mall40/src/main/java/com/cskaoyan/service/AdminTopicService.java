@@ -29,4 +29,7 @@ public interface AdminTopicService {
 
 //    批量删除专题信息
     void topicBatchDelete(List<Integer> idList);
+
+//    编辑专题信息
+    MarketTopic topicUpdate(MarketTopic marketTopic);
 }
