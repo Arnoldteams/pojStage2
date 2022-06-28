@@ -2,7 +2,10 @@ package com.cskaoyan.configuration.realm;
 
 import com.cskaoyan.bean.MarketAdmin;
 import com.cskaoyan.bean.MarketAdminExample;
+import com.cskaoyan.bean.MarketUser;
+import com.cskaoyan.bean.MarketUserExample;
 import com.cskaoyan.mapper.MarketAdminMapper;
+import com.cskaoyan.mapper.MarketUserMapper;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -28,6 +31,9 @@ public class CustomRealm extends AuthorizingRealm {
     @Autowired
     MarketAdminMapper marketAdminMapper;
 
+    @Autowired
+    MarketUserMapper marketUserMapper;
+
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
 
@@ -50,7 +56,18 @@ public class CustomRealm extends AuthorizingRealm {
             }
         } else if ("wx".equals(type)) {
             //查询user表中的信息
+            MarketUserExample marketUserExample = new MarketUserExample();
+            marketUserExample.createCriteria().andUsernameEqualTo(username);
+            List<MarketUser> marketUsers = marketUserMapper.selectByExample(marketUserExample);
+            if (marketUsers.size() == 1) {
+                //说明数据库中有一条对应的信息
+                MarketUser marketUser = marketUsers.get(0);
 
+                // 构造认证信息时，可以放入你需要的用户信息，而你放入的用户信息，可以作为Principals
+                // 放入这个信息，是为了取出这个信息
+                // 第二个参数credentials，是真实（正确）的密码，会和AuthenticationToken中的password做比较
+                return new SimpleAuthenticationInfo(marketUser,marketUser.getPassword(),getName());
+            }
         }
 
         return null;
