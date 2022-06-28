@@ -90,7 +90,6 @@ public class AdminOrderController {
         return BaseRespVo.ok(null);
     }
 
-
     /**
      * @author: ZY
      * @createTime: 2022/06/27 08:41:35
@@ -103,7 +102,6 @@ public class AdminOrderController {
         AdminOrderDetailVO adminOrderDetailVO = adminOrderService.detailOrderList(id);
         return BaseRespVo.ok(adminOrderDetailVO);
     }
-
 
     /**
      * @author: ZY
