@@ -5,6 +5,7 @@ import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.MarketIssue;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.service.AdminIssueService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +48,9 @@ public class AdminIssueController {
      */
     @RequestMapping("create")
     public BaseRespVo create(@RequestBody MarketIssue marketIssue) {
+        if (StringUtils.isEmpty(marketIssue.getQuestion()) || StringUtils.isEmpty(marketIssue.getAnswer())) {
+            return BaseRespVo.errParam();
+        }
         MarketIssue data =
                 marketIssueService.addMarketIssue(marketIssue.getQuestion(), marketIssue.getAnswer());
         return BaseRespVo.ok(data);
