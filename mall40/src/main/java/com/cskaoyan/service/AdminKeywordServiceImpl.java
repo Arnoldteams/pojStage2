@@ -5,6 +5,7 @@ import com.cskaoyan.bean.MarketKeywordExample;
 import com.cskaoyan.bean.bo.AdminKeywordBO;
 import com.cskaoyan.mapper.MarketKeywordMapper;
 import com.github.pagehelper.PageHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,11 +27,15 @@ public class AdminKeywordServiceImpl implements AdminKeywordService {
     public List<MarketKeyword> queryAllKeywordList(AdminKeywordBO adminKeywordBO) {
 
         MarketKeywordExample example = new MarketKeywordExample();
-        if(adminKeywordBO.getKeyword() != null){
-            MarketKeywordExample.Criteria or = example.or();
-            or.andKeywordLike("%"+adminKeywordBO.getKeyword()+"%"); // 查找条件为关键词
-
+        MarketKeywordExample.Criteria criteria = example.createCriteria();
+        if(!StringUtils.isEmpty(adminKeywordBO.getKeyword())){
+            criteria.andKeywordLike("%" + adminKeywordBO.getKeyword() + "%");// 查找条件为关键词
         }
+        if(!StringUtils.isEmpty(adminKeywordBO.getUrl())){
+            criteria.andUrlLike("%"+adminKeywordBO.getUrl()+"%"); // 查找条件为关键词
+        }
+
+        criteria.andDeletedEqualTo(false); // 显示没有删除的数据
 
         example.setOrderByClause(adminKeywordBO.getSort()+" "+adminKeywordBO.getOrder());
 
@@ -49,6 +54,7 @@ public class AdminKeywordServiceImpl implements AdminKeywordService {
         marketKeyword.setIsDefault(adminKeywordBO.getIsDefault());
 
         marketKeyword.setSortOrder(100);
+        marketKeyword.setDeleted(false);
 
         marketKeywordMapper.insert(marketKeyword);
         return marketKeyword;
@@ -61,6 +67,9 @@ public class AdminKeywordServiceImpl implements AdminKeywordService {
 
     @Override
     public void deleteKeywordById(MarketKeyword marketKeyword) {
-        marketKeywordMapper.deleteByPrimaryKey(marketKeyword.getId());
+
+        marketKeyword.setDeleted(true);
+
+        marketKeywordMapper.updateByPrimaryKey(marketKeyword);
     }
 }

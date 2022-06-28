@@ -34,14 +34,14 @@ public class AdminIssueServiceImpl implements AdminIssueService {
      */
     @Override
     public CommonData<MarketIssue> queryMarketIssue(BasePageInfo basePageInfo, String question) {
+        PageHelper.startPage(basePageInfo.getPage(), basePageInfo.getLimit());
         List<MarketIssue> marketIssueList;
-        if (question == null ||"".equals(question)) {
-            marketIssueList = marketIssueMapper.selectAllMarketIssue();
+        if (question == null || "".equals(question)) {
+            marketIssueList = marketIssueMapper.selectAllMarketIssue(basePageInfo.getSort(),basePageInfo.getOrder());
         } else {
             question = "%" + question + "%";
-            marketIssueList = marketIssueMapper.selectByPrimaryWords(basePageInfo.getSort(),basePageInfo.getOrder(),question);
+            marketIssueList = marketIssueMapper.selectByPrimaryWords(basePageInfo.getSort(), basePageInfo.getOrder(), question);
         }
-        PageHelper.startPage(basePageInfo.getPage(), basePageInfo.getLimit());
         PageInfo<MarketIssue> marketIssuePageInfo = new PageInfo<>(marketIssueList);
         return CommonData.data(marketIssuePageInfo);
     }
@@ -63,7 +63,7 @@ public class AdminIssueServiceImpl implements AdminIssueService {
         marketIssue.setQuestion(question);
         marketIssue.setUpdateTime(new Date());
         marketIssue.setDeleted(false);
-        marketIssueMapper.insert(marketIssue);
+        marketIssueMapper.insertSelective(marketIssue);
         return marketIssue;
     }
 
@@ -71,19 +71,18 @@ public class AdminIssueServiceImpl implements AdminIssueService {
     /**
      * @author: ZY
      * @createTime: 2022/06/25 22:15:34
-     * @description: 商场管理-通用问题-删除问题(物理删除和逻辑删除）
+     * @description: 商场管理-通用问题-删除问题
      * @param: marketIssue
      * @return: void
      */
-    @Override
-    public void deleteMarketIssue(MarketIssue marketIssue) {
-        Integer id = marketIssue.getId();
-        marketIssueMapper.deleteByPrimaryKey(id);
-    }
-
+//    @Override
+//    public void deleteMarketIssue(MarketIssue marketIssue) {
+//        Integer id = marketIssue.getId();
+//        marketIssueMapper.deleteByPrimaryKey(id);
+//    }
     @Override
     public void updateMarketIssueStatus(MarketIssue marketIssue) {
-       marketIssueMapper.updateMarketIssueStatus(marketIssue);
+        marketIssueMapper.updateMarketIssueStatus(marketIssue);
     }
 
     /**
@@ -96,7 +95,7 @@ public class AdminIssueServiceImpl implements AdminIssueService {
     @Override
     public MarketIssue updateMarketIssue(MarketIssue marketIssue) {
         marketIssue.setUpdateTime(new Date());
-       marketIssueMapper.updateByPrimaryKeySelective(marketIssue);
+        marketIssueMapper.updateByPrimaryKeySelective(marketIssue);
         return marketIssue;
     }
 

@@ -1,5 +1,6 @@
 package com.cskaoyan.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
@@ -18,8 +19,10 @@ public class MarketAdmin {
 
     private String avatar;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date addTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date updateTime;
 
     private Boolean deleted;
@@ -30,7 +33,7 @@ public class MarketAdmin {
     // 做新增 Integer[] → String → varchar      输入映射
     // varchar ↔ Integer[]
     // private Integer[] roleIds;
-    private String roleIds;
+    private Integer[] roleIds;
 
 
 }

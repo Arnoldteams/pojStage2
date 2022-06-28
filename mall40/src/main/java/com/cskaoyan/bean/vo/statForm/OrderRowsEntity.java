@@ -14,10 +14,10 @@ import java.util.Date;
 
 @Data
 public class OrderRowsEntity {
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private double amount;
     private Integer orders;
     private Integer customers;
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date day;
     private double pcr;
 }

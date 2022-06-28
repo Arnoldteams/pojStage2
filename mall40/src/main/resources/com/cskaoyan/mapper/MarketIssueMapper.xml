@@ -109,7 +109,7 @@
       )
 
   </insert>
-  <insert id="insertSelective" parameterType="com.cskaoyan.bean.MarketIssue">
+  <insert id="insertSelective" parameterType="com.cskaoyan.bean.MarketIssue" useGeneratedKeys="true" keyProperty="id">
     insert into market_issue
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -227,18 +227,20 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <!--以下是我新增的方法-->
+  <!--新增方法-->
   <select id="selectByPrimaryWords" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>
     from market_issue
-    where question like #{question} order by ${sort} ${order}
+    where question like #{question} and deleted=0
+    order by ${sort} ${order} ,id desc
   </select>
 
   <select id="selectAllMarketIssue" resultMap="BaseResultMap">
       select
       <include refid="Base_Column_List"/>
-      from market_issue
+      from market_issue where deleted=0
+      order by ${sort} ${order} ,id desc
     </select>
 
   <update id="updateMarketIssueStatus">

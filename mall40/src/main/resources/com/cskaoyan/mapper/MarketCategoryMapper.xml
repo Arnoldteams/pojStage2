@@ -92,7 +92,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from market_category
     where id = #{id,jdbcType=INTEGER}
@@ -110,12 +110,12 @@
   <insert id="insert" parameterType="com.cskaoyan.bean.MarketCategory">
     insert into market_category (id, name, keywords, 
       `desc`, pid, icon_url, 
-      pic_url, level, sort_order, 
+      pic_url, level, sort_order,
       add_time, update_time, deleted
       )
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{keywords,jdbcType=VARCHAR}, 
-      #{desc,jdbcType=VARCHAR}, #{pid,jdbcType=INTEGER}, #{iconUrl,jdbcType=VARCHAR}, 
-      #{picUrl,jdbcType=VARCHAR}, #{level,jdbcType=VARCHAR}, #{sortOrder,jdbcType=TINYINT}, 
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{keywords,jdbcType=VARCHAR},
+      #{desc,jdbcType=VARCHAR}, #{pid,jdbcType=INTEGER}, #{iconUrl,jdbcType=VARCHAR},
+      #{picUrl,jdbcType=VARCHAR}, #{level,jdbcType=VARCHAR}, #{sortOrder,jdbcType=TINYINT},
       #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{deleted,jdbcType=BIT}
       )
   </insert>
@@ -321,6 +321,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
+
   <select id="selectL1Category" resultType="com.cskaoyan.bean.AdminCategoryOne">
     select id as value,name as label from market_category where pid = #{pid} and deleted = 0;
   </select>
@@ -332,4 +333,9 @@
   <select id="selectL2CategoryByLevelAndPid" resultMap="BaseResultMap">
     select * from market_category where level = #{l2} and pid = #{id} and deleted = 0;
   </select>
+
+  <select id="selectCatIds" resultType="java.lang.Integer">
+    select id from market_category where pid = #{id}
+    </select>
 </mapper>
+

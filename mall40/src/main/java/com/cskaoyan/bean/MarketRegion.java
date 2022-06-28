@@ -11,6 +11,8 @@ public class MarketRegion {
 
     private Integer code;
 
+
+
     public Integer getId() {
         return id;
     }

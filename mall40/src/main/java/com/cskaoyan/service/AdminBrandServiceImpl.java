@@ -9,8 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
+
 import java.util.Date;
+import java.util.EmptyStackException;
 import java.util.List;
 
 /**
@@ -28,15 +29,17 @@ public class AdminBrandServiceImpl implements AdminBrandService{
     @Override
     public List<MarketBrand> queryAllBrand(BaseParam baseParam, String id, String name) {
         MarketBrandExample example = new MarketBrandExample();
+        MarketBrandExample.Criteria criteria = example.createCriteria();
         if (!StringUtils.isEmpty(id)){
-            MarketBrandExample.Criteria or = example.or();
-            or.andIdEqualTo(Integer.parseInt(id));
+            criteria.andIdEqualTo(Integer.parseInt(id));
         }
         if (!StringUtils.isEmpty(name)){
-            MarketBrandExample.Criteria or = example.or();
-            or.andNameLike("%"+name+"%");
+            criteria.andNameLike("%"+name+"%");
         }
+
         // example.createCriteria().andDeletedEqualTo(false);
+
+        criteria.andDeletedEqualTo(false); // 显示没有删除的数据
 
         example.setOrderByClause(baseParam.getSort() + " " + baseParam.getOrder());
 

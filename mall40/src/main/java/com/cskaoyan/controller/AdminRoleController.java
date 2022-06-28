@@ -2,16 +2,19 @@ package com.cskaoyan.controller;
 
 import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.MarketRole;
-import com.cskaoyan.bean.MarketRolesSetPermissionsBo;
+import com.cskaoyan.bean.bo.AdminPermissionsBo;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
+import com.cskaoyan.bean.vo.AdminOptionsVo;
+import com.cskaoyan.bean.vo.MarketSystemPermissionsVo;
+import com.cskaoyan.bean.vo.PermissionsVo;
 import com.cskaoyan.service.AdminRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import javax.servlet.ServletContext;
+import java.util.List;
+
 
 /**
  * 系统管理-角色管理
@@ -24,6 +27,8 @@ import java.util.Date;
 public class AdminRoleController {
 
     @Autowired
+    ServletContext context;
+    @Autowired
     AdminRoleService adminRoleService;
 
     /**
@@ -35,13 +40,14 @@ public class AdminRoleController {
      */
     @RequestMapping("list")
     public BaseRespVo adminRoleList(BaseParam param,String name){
-        CommonData<MarketRole> data =  adminRoleService.QueryAllRoles(param,name);
+        CommonData<MarketRole> data =  adminRoleService.queryAllRoles(param,name);
         return BaseRespVo.ok(data);
     }
 
 
     /**
      * @description: 系统管理-角色管理-删除角色
+     * 获取所有管理员赋予的角色信息
      * @parameter: [role] 要删除的角色信息
      * @return: com.cskaoyan.bean.BaseRespVo
      * @author: 帅关
@@ -49,10 +55,11 @@ public class AdminRoleController {
      */
     @RequestMapping("/delete")
     public BaseRespVo adminRoleDelete(@RequestBody MarketRole role){
-        if(adminRoleService.deleteRole(role) == 1){
-            return BaseRespVo.ok(null);
+
+        if(adminRoleService.deleteRole(role) == 0){
+            return BaseRespVo.AuthNotEnough("角色存在管理員權限，不能刪除！");
         }
-        return BaseRespVo.invalidData("角色删除失败！");
+        return BaseRespVo.ok(null);
     }
 
     /**
@@ -64,10 +71,8 @@ public class AdminRoleController {
      */
     @RequestMapping("/update")
     public BaseRespVo adminRoleUpdate(@RequestBody MarketRole role){
-        if(adminRoleService.updateRole(role) == 1){
-            return BaseRespVo.ok(null);
-        }
-        return BaseRespVo.invalidData("角色删除失败！");
+        adminRoleService.updateRole(role);
+        return BaseRespVo.ok(null);
     }
 
 
@@ -96,12 +101,47 @@ public class AdminRoleController {
      * @author: 帅关
      * @createTime: 2022/6/25 22:57
      */
-    // @RequestMapping("/permissions")
-    // public BaseRespVo adminRolePermissions(@RequestBody MarketRolesSetPermissionsBo rolePermissions){
-    //     if(adminRoleService.updateRolePermissions()==1){
-    //         return BaseRespVo.ok(null);
-    //     }
-    //     return BaseRespVo.invalidData("授权失败！");
-    // }
+    @GetMapping("/permissions")
+    public BaseRespVo adminRolePermissions(Integer roleId) {
+        List<PermissionsVo> systemPermissions;
+        MarketSystemPermissionsVo permissions = new MarketSystemPermissionsVo();
+        if((systemPermissions = (List<PermissionsVo>) context.getAttribute("systemPermissions")) == null){
+            systemPermissions = adminRoleService.queryAllRolePermissions();
+            context.setAttribute("systemPermissions",systemPermissions);
+        }
+        List<String> assignedPermissions = adminRoleService.selectRoleApiById(roleId);
+        permissions.setSystemPermissions(systemPermissions);
+        permissions.setAssignedPermissions(assignedPermissions);
+        return BaseRespVo.ok(permissions);
+    }
 
+    /**
+     * @description: 更新角色权限
+     * @parameter: [adminPermissions]
+     * @return: com.cskaoyan.bean.BaseRespVo
+     * @author: 帅关
+     * @createTime: 2022/6/26 17:41
+     */
+    @PostMapping("/permissions")
+    public BaseRespVo adminRolePermissions(@RequestBody AdminPermissionsBo adminPermissions){
+        if(adminPermissions.getRoleId() == 1){
+            return BaseRespVo.AuthNotEnough("不能修改超級管理員！");
+        }
+        adminRoleService.updateRolePermissions(adminPermissions);
+        return BaseRespVo.ok(null);
+    }
+
+
+    /**
+     * @description: 管理员用户界面显示彩色小标签
+     * @parameter: []
+     * @return: com.cskaoyan.bean.BaseRespVo
+     * @author: 帅关
+     * @createTime: 2022/6/27 15:50
+     */
+    @RequestMapping("/options")
+    public BaseRespVo adminRoleOptions(){
+        CommonData<AdminOptionsVo> data = adminRoleService.queryAllRolesWithNoInfo();
+        return BaseRespVo.ok(data);
+    }
 }

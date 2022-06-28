@@ -7,12 +7,14 @@ import com.cskaoyan.bean.bo.AdminTopicCreateBO;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.AdminTopicReadVO;
+import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminTopicService;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -57,20 +59,21 @@ public class AdminTopicController {
      * @since 2022/06/25 23:14
      */
     @RequestMapping("create")
+    @LogAnnotation("添加专题信息")
     public BaseRespVo topicCreate(@RequestBody AdminTopicCreateBO adminTopicCreateBO) {
 
         MarketTopic marketTopic = new MarketTopic();
 
-        marketTopic.setContent(adminTopicCreateBO.getContent());
-        marketTopic.setTitle(adminTopicCreateBO.getTitle());
-        marketTopic.setSubtitle(adminTopicCreateBO.getSubtitle());
-        marketTopic.setPrice(adminTopicCreateBO.getPrice());
-        marketTopic.setPicUrl(adminTopicCreateBO.getPicUrl());
-        marketTopic.setReadCount(adminTopicCreateBO.getReadCount());
-        marketTopic.setGoods(Arrays.toString(adminTopicCreateBO.getGoods()));
+        MarketTopic createMarketTopic = AdminTopicCreateBO.toCreateMarkTopic(marketTopic, adminTopicCreateBO);
+        BigDecimal price;
+        try {
+            price = new BigDecimal(adminTopicCreateBO.getPrice());
+        }catch (Exception e){
+            return BaseRespVo.invalidPrice();
+        }
+        createMarketTopic.setPrice(price);
 
-
-        MarketTopic marketTopicVo = adminTopicService.topicCreate(marketTopic);
+        MarketTopic marketTopicVo = adminTopicService.topicCreate(createMarketTopic);
 
         return BaseRespVo.ok(marketTopicVo);
 
@@ -93,6 +96,22 @@ public class AdminTopicController {
     }
 
     /**
+     * 更新专题信息
+     * @param marketTopic
+     * @return com.cskaoyan.bean.BaseRespVo
+     * @author xyg2597@163.com
+     * @since 2022/06/27 10:46
+     */
+    @PostMapping("update")
+    @LogAnnotation("更新专题信息")
+    public BaseRespVo topicUpdate(@RequestBody MarketTopic marketTopic){
+
+        MarketTopic marketTopicVo = adminTopicService.topicUpdate(marketTopic);
+
+        return BaseRespVo.ok(marketTopicVo);
+    }
+
+    /**
      * 删除专题信息
      * @param marketTopic 接收需要删除的专题信息
      * @return com.cskaoyan.bean.BaseRespVo 返回删除成功的信息
@@ -100,6 +119,7 @@ public class AdminTopicController {
      * @since 2022/06/26 14:36
      */
     @PostMapping("delete")
+    @LogAnnotation("删除指定专题")
     public BaseRespVo topicDelete(@RequestBody MarketTopic marketTopic){
 
         adminTopicService.topicDelete(marketTopic);
@@ -114,6 +134,7 @@ public class AdminTopicController {
      * @since 2022/06/26 14:44
      */
     @PostMapping("batch-delete")
+    @LogAnnotation(value = "批量删除专题信息",successResult = "删除成功")
     public BaseRespVo topicBatchDelete(@RequestBody Map idList){
 
         List<Integer> ids = (List<Integer>) idList.get("ids");

@@ -28,4 +28,5 @@ public interface MarketGoodsAttributeMapper {
     int updateByPrimaryKeySelective(MarketGoodsAttribute record);
 
     int updateByPrimaryKey(MarketGoodsAttribute record);
+
 }

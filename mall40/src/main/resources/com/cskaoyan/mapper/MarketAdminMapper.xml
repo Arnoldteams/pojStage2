@@ -115,7 +115,7 @@
       #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{deleted,jdbcType=BIT}, 
       #{roleIds,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.cskaoyan.bean.MarketAdmin">
+  <insert id="insertSelective" parameterType="com.cskaoyan.bean.MarketAdmin" useGeneratedKeys="true" keyProperty="id">
     insert into market_admin
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -305,5 +305,9 @@
 
   <select id="selectUserTotal" resultType="java.lang.Integer">
       select count(id) from market_user
+  </select>
+
+  <select id="selectAllRoleId" resultType="java.lang.String">
+    select role_ids from market_admin
   </select>
 </mapper>

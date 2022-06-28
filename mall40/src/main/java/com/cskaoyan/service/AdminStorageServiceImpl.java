@@ -8,6 +8,7 @@ import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,22 +24,22 @@ public class AdminStorageServiceImpl implements AdminStorageService {
     @Autowired
     MarketStorageMapper marketStorageMapper;
 
-
     @Override
     public List<MarketStorage> queryAllStorage(BaseParam baseParam,String key,String name) {
         MarketStorageExample example = new MarketStorageExample();
+        MarketStorageExample.Criteria criteria = example.createCriteria();
         if (!StringUtils.isEmpty(key)){
-            MarketStorageExample.Criteria or = example.or();
-            or.andKeyLike("%"+key+"%");
+            criteria.andKeyLike("%"+key+"%");
         }
         if (!StringUtils.isEmpty(name)){
-            MarketStorageExample.Criteria or = example.or();
-            or.andNameLike("%"+name+"%");
+            criteria.andNameLike("%"+name+"%");
         }
+
+        criteria.andDeletedEqualTo(false); // 显示没有删除的数据
 
         example.setOrderByClause(baseParam.getSort() + " " + baseParam.getOrder());
 
-        PageHelper.startPage(baseParam.getPage(),baseParam.getLimit());
+        PageHelper.startPage(baseParam.getPage(), baseParam.getLimit());
         List<MarketStorage> marketStorages = marketStorageMapper.selectByExample(example);
 
         return marketStorages;
@@ -49,8 +50,21 @@ public class AdminStorageServiceImpl implements AdminStorageService {
         marketStorageMapper.updateByPrimaryKey(marketStorage);
     }
 
+
+    /**
+     * @param marketStorage 图片对象
+     * @author: Sssd
+     */
+    @Override
+    public void addAdminStorage(MarketStorage marketStorage) {
+        marketStorage.setDeleted(false);
+        marketStorageMapper.insertStorage(marketStorage);
+    }
+
     @Override
     public void deleteKeywordById(MarketStorage marketStorage) {
-        marketStorageMapper.deleteByPrimaryKey(marketStorage.getId());
+        marketStorage.setDeleted(true);
+        marketStorageMapper.updateByPrimaryKey(marketStorage);
+
     }
 }

@@ -28,6 +28,10 @@ spring:
 mybatis:
   configuration:
     cache-enabled: true
+  # Sssd typeHandler 哦欸之
+  type-handlers-package: com.cskaoyan.typehandler
+
+
 
 # 配置自动分页
 pagehelper:
@@ -37,3 +41,9 @@ pagehelper:
 logging:
   level:
     com.cskaoyan.mapper: debug
+
+# 配置异常日志路径
+com:
+  cskaoyan:
+    logPath: D://log.txt
+

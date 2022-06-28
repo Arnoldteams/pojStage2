@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * 管理员管理接口
- *
  * @author xyg2597@163.com
  * @since 2022/06/26 15:43
  */
@@ -59,7 +58,7 @@ public class AdminAdminController {
             return BaseRespVo.invalidAdminUsername();
         }
 //        判断密码长度,长度小于六直接返回
-        if (!adminCreateBO.getPassword().matches("\\w{6}")) {
+        if (!adminCreateBO.getPassword().matches("\\w{6,20}")) {
             return BaseRespVo.lessPassword();
         }
 
@@ -82,7 +81,7 @@ public class AdminAdminController {
             return BaseRespVo.invalidAdminUsername();
         }
 //        判断密码长度,长度小于六直接返回
-        if (!marketAdmin.getPassword().matches("\\w{6}")) {
+        if (!marketAdmin.getPassword().matches("\\w{6,20}")) {
             return BaseRespVo.lessPassword();
         }
 

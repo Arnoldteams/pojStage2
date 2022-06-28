@@ -2,6 +2,11 @@ package com.cskaoyan.mapper;
 
 import com.cskaoyan.bean.MarketOrder;
 import com.cskaoyan.bean.MarketOrderExample;
+
+import com.cskaoyan.bean.MarketUser;
+import com.cskaoyan.bean.bo.AdminOrderRefundBO;
+import com.cskaoyan.bean.bo.AdminOrderShipBO;
+
 import com.cskaoyan.bean.vo.statForm.OrderRowsEntity;
 import org.apache.ibatis.annotations.Param;
 
@@ -30,6 +35,17 @@ public interface MarketOrderMapper {
 
     int updateByPrimaryKey(MarketOrder record);
 
+
+    void updateOrderStatus(AdminOrderShipBO adminOrderShipBO);
+
+
+    MarketOrder selectOrder(Integer id);
+
+    MarketUser selectUser(Integer id);
+
     List<OrderRowsEntity> countOrderByAddTime();
+
+
+    void updateOrderRefund(AdminOrderRefundBO adminOrderRefundBO);
 
 }

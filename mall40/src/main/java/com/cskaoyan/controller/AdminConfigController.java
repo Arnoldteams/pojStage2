@@ -6,6 +6,7 @@ import com.cskaoyan.bean.vo.AdminConfigVO;
 import com.cskaoyan.service.AdminConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -20,6 +21,9 @@ public class AdminConfigController {
 
     @Autowired
     AdminConfigService adminConfigService;
+
+
+
 
     /**
      * @author: 于艳帆

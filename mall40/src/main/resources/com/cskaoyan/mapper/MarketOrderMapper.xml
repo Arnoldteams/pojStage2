@@ -621,7 +621,42 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="countOrderByAddTime" resultType="com.cskaoyan.bean.vo.statForm.OrderRowsEntity">
-    select add_time as day,count(*) as orders,sum(order_price) as amount,count(user_id) as customers, avg(order_price) as pcr from market_order group by add_time
+  <!--新增方法-->
+  <update id="updateOrderStatus">
+    update market_order
+    set
+    order_status=301,ship_sn=#{shipSn},ship_channel=#{shipChannel},ship_time=curtime()
+    where id = #{orderId}
+  </update>
+
+  <select id="selectOrder" resultMap="com.cskaoyan.mapper.MarketOrderMapper.BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from market_order
+    where id=#{id}
     </select>
+
+  <select id="selectUser" resultType="com.cskaoyan.bean.MarketUser">
+   select
+   market_user.avatar,
+   market_user.nickname
+   from market_user
+   left join market_order
+   on market_user.id=market_order.user_id
+   where market_order.id=#{id}
+  </select>
+
+
+  <select id="countOrderByAddTime" resultType="com.cskaoyan.bean.vo.statForm.OrderRowsEntity">
+    select convert(add_time,date) as day,count(*) as orders,sum(order_price) as amount,count(user_id) as customers, avg(order_price) as pcr from market_order group by convert(add_time,date )
+    </select>
+
+
+
+  <update id="updateOrderRefund">
+    update market_order
+    set
+    refund_amount=#{refundMoney},refund_time=curtime(),order_status=203
+    where id=#{orderId}
+  </update>
 </mapper>
