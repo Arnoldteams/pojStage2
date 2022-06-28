@@ -113,6 +113,7 @@ public class AdminStorageController {
         adminStorageVO.setPages(pages);
         adminStorageVO.setList(list);
 
+
         resp.setData(adminStorageVO);
         return resp;
     }

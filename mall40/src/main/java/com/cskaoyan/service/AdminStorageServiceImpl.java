@@ -35,6 +35,8 @@ public class AdminStorageServiceImpl implements AdminStorageService {
             criteria.andNameLike("%"+name+"%");
         }
 
+        criteria.andDeletedEqualTo(false); // 显示没有删除的数据
+
         example.setOrderByClause(baseParam.getSort() + " " + baseParam.getOrder());
 
         PageHelper.startPage(baseParam.getPage(), baseParam.getLimit());
@@ -55,12 +57,14 @@ public class AdminStorageServiceImpl implements AdminStorageService {
      */
     @Override
     public void addAdminStorage(MarketStorage marketStorage) {
+        marketStorage.setDeleted(false);
         marketStorageMapper.insertStorage(marketStorage);
     }
 
     @Override
     public void deleteKeywordById(MarketStorage marketStorage) {
-        marketStorageMapper.deleteByPrimaryKey(marketStorage.getId());
+        marketStorage.setDeleted(true);
+        marketStorageMapper.updateByPrimaryKey(marketStorage);
 
     }
 }

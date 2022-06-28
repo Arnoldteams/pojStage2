@@ -48,6 +48,8 @@ public class AdminConfigServiceImpl implements AdminConfigService {
     public Map<String, String> getAllSystemMap() {
 
         MarketSystemExample example = new MarketSystemExample();
+        MarketSystemExample.Criteria criteria = example.createCriteria();
+        criteria.andDeletedEqualTo(false); // 显示没有删除的数据
 
         HashMap<String, String> hashMap = new HashMap<>();
         for (MarketSystem marketSystem : marketSystemMapper.selectByExample(example)) {

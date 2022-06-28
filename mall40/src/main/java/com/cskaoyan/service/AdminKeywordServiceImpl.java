@@ -35,6 +35,8 @@ public class AdminKeywordServiceImpl implements AdminKeywordService {
             criteria.andUrlLike("%"+adminKeywordBO.getUrl()+"%"); // 查找条件为关键词
         }
 
+        criteria.andDeletedEqualTo(false); // 显示没有删除的数据
+
         example.setOrderByClause(adminKeywordBO.getSort()+" "+adminKeywordBO.getOrder());
 
         PageHelper.startPage(adminKeywordBO.getPage(), adminKeywordBO.getLimit());
@@ -52,6 +54,7 @@ public class AdminKeywordServiceImpl implements AdminKeywordService {
         marketKeyword.setIsDefault(adminKeywordBO.getIsDefault());
 
         marketKeyword.setSortOrder(100);
+        marketKeyword.setDeleted(false);
 
         marketKeywordMapper.insert(marketKeyword);
         return marketKeyword;
@@ -64,6 +67,9 @@ public class AdminKeywordServiceImpl implements AdminKeywordService {
 
     @Override
     public void deleteKeywordById(MarketKeyword marketKeyword) {
-        marketKeywordMapper.deleteByPrimaryKey(marketKeyword.getId());
+
+        marketKeyword.setDeleted(true);
+
+        marketKeywordMapper.updateByPrimaryKey(marketKeyword);
     }
 }

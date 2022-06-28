@@ -34,6 +34,7 @@ public class AdminBrandServiceImpl implements AdminBrandService{
         if (!StringUtils.isEmpty(name)){
             criteria.andNameLike("%"+name+"%");
         }
+        criteria.andDeletedEqualTo(false); // 显示没有删除的数据
 
         example.setOrderByClause(baseParam.getSort() + " " + baseParam.getOrder());
 
