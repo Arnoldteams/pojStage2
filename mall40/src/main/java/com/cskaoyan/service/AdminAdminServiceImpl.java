@@ -36,7 +36,8 @@ public class AdminAdminServiceImpl implements AdminAdminService {
 
     /**
      * 回显管理员列表
-     * @param info 分页信息
+     *
+     * @param info     分页信息
      * @param username 查询管理员名称
      * @return com.cskaoyan.bean.vo.AdminListVO
      * @author xyg2597@163.com
@@ -101,7 +102,17 @@ public class AdminAdminServiceImpl implements AdminAdminService {
         marketAdmin.setRoleIds(adminCreateBO.getRoleIds());
         marketAdmin.setUsername(adminCreateBO.getUsername());
 
-        session.setAttribute("log",adminCreateBO.getUsername());
+        session.setAttribute("log", adminCreateBO.getUsername());
+
+        MarketAdminExample marketAdminExample = new MarketAdminExample();
+        MarketAdminExample.Criteria criteria = marketAdminExample.createCriteria();
+        criteria.andUsernameEqualTo(marketAdmin.getUsername());
+        List<MarketAdmin> marketAdmins = marketAdminMapper.selectByExample(marketAdminExample);
+
+        if (marketAdmins.size() != 0) {
+            return null;
+        }
+
         marketAdminMapper.insertSelective(marketAdmin);
 
 
@@ -117,13 +128,24 @@ public class AdminAdminServiceImpl implements AdminAdminService {
      * @since 2022/06/26 19:26
      */
     @Override
-    public void adminUpdate(MarketAdmin marketAdmin) {
+    public String adminUpdate(MarketAdmin marketAdmin) {
 
         marketAdmin.setUpdateTime(new Date());
 
-        session.setAttribute("log",marketAdmin.getUsername());
+        session.setAttribute("log", marketAdmin.getUsername());
+
+        MarketAdminExample marketAdminExample = new MarketAdminExample();
+        MarketAdminExample.Criteria criteria = marketAdminExample.createCriteria();
+        criteria.andUsernameEqualTo(marketAdmin.getUsername());
+
+        List<MarketAdmin> marketAdmins = marketAdminMapper.selectByExample(marketAdminExample);
+
+        if(marketAdmins.size() == 0){
+            return null;
+        }
         marketAdminMapper.updateByPrimaryKeySelective(marketAdmin);
 
+        return "update";
     }
 
 
@@ -142,7 +164,7 @@ public class AdminAdminServiceImpl implements AdminAdminService {
         deleteMarketAdmin.setDeleted(true);
         deleteMarketAdmin.setId(marketAdmin.getId());
 
-        session.setAttribute("log",marketAdmin.getUsername());
+        session.setAttribute("log", marketAdmin.getUsername());
         marketAdminMapper.updateByPrimaryKeySelective(deleteMarketAdmin);
 
     }

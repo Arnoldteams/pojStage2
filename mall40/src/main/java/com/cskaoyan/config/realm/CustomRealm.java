@@ -50,6 +50,7 @@ public class CustomRealm extends AuthorizingRealm {
             }
         } else if ("wx".equals(type)) {
             //查询user表中的信息
+
         }
 
         return null;

@@ -2,6 +2,7 @@ package com.cskaoyan.controller;
 
 import com.cskaoyan.bean.*;
 import com.cskaoyan.config.realm.MarketToken;
+import com.cskaoyan.handler.LogAnnotation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -30,17 +31,17 @@ import java.util.Map;
 public class AuthController {
 
 
-
     /**
      * Shiro
      * 如果参数比较少，类型比较简单的话，使用map来接收也可以
      */
     @PostMapping("login")
+    @LogAnnotation("登录")
     public BaseRespVo login(@RequestBody Map map) {
 //        $2a$10$.rEfyBb/GURD9P2p0fRg/OAJGloGNDkJS4lY0cQHeqDgsbdTylBpu
 
-        String username = (String)map.get("username");
-        String password = (String)map.get("password");
+        String username = (String) map.get("username");
+        String password = (String) map.get("password");
 
         //在这里要执行登录，Subject.login
         // → Subject只能作为局部变量，不能作为全局变量
@@ -55,12 +56,16 @@ public class AuthController {
             e.printStackTrace();
         }
 
-        // 判断是否认证成功
+        // 判断是否认证成功,失败返回认证失败
         boolean authenticated = subject.isAuthenticated();
+        if (!authenticated) {
+            return BaseRespVo.unAuthc();
+        }
+
         // 可以获得session信息，也可以获得其sessionId
         Session session = subject.getSession();
 
-        session.setAttribute("username",username);
+        session.setAttribute("username", username);
         // 获得Principal信息 → realm的doGetAuthorizationInfo方法构造的认证信息里的第一个参数
         MarketAdmin primaryPrincipal = (MarketAdmin) subject.getPrincipals().getPrimaryPrincipal();
 
@@ -77,7 +82,6 @@ public class AuthController {
         //响应sessionId信息给到前端，前端发送请求的时候，通过请求头携带了session的id信息
         return BaseRespVo.ok(loginUserData);
     }
-
 
 
     @RequestMapping("info")

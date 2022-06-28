@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +32,9 @@ public class AdminTopicController {
 
     @Autowired
     AdminTopicService adminTopicService;
+
+    @Autowired
+    HttpSession session;
 
     /**
      * 根据条件获得专题信息
@@ -69,6 +73,7 @@ public class AdminTopicController {
         try {
             price = new BigDecimal(adminTopicCreateBO.getPrice());
         }catch (Exception e){
+            session.setAttribute("log",adminTopicCreateBO.getTitle());
             return BaseRespVo.invalidPrice();
         }
         createMarketTopic.setPrice(price);

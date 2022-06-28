@@ -11,6 +11,8 @@ import com.cskaoyan.service.AdminAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+
 
 /**
  * 管理员管理接口
@@ -24,6 +26,9 @@ public class AdminAdminController {
 
     @Autowired
     AdminAdminService adminAdminService;
+
+    @Autowired
+    HttpSession session;
 
     /**
      * 获得所有管理员
@@ -56,10 +61,12 @@ public class AdminAdminController {
 
 //        判断管理员名称是否符合
         if (!adminCreateBO.getUsername().matches("\\w{6,15}")) {
+            session.setAttribute("log",adminCreateBO.getUsername());
             return BaseRespVo.invalidAdminUsername();
         }
 //        判断密码长度,长度小于六直接返回
         if (!adminCreateBO.getPassword().matches("\\w{6,20}")) {
+            session.setAttribute("log",adminCreateBO.getUsername());
             return BaseRespVo.lessPassword();
         }
 
@@ -71,6 +78,10 @@ public class AdminAdminController {
 
         AdminCreateVO adminCreateVO = adminAdminService.adminCreate(adminCreateBO);
 
+        if(adminCreateVO == null){
+            return BaseRespVo.invalidUsername("管理员名称重复");
+        }
+
         return BaseRespVo.ok(adminCreateVO);
     }
 
@@ -80,10 +91,12 @@ public class AdminAdminController {
     public BaseRespVo adminUpdate(@RequestBody MarketAdmin marketAdmin) {
 //        判断管理员名称是否符合
         if (!marketAdmin.getUsername().matches("\\w{6,15}")) {
+            session.setAttribute("log",marketAdmin.getUsername());
             return BaseRespVo.invalidAdminUsername();
         }
 //        判断密码长度,长度小于六直接返回
         if (!marketAdmin.getPassword().matches("\\w{6,20}")) {
+            session.setAttribute("log",marketAdmin.getUsername());
             return BaseRespVo.lessPassword();
         }
 
@@ -93,7 +106,10 @@ public class AdminAdminController {
         marketAdmin.setPassword(encodingPassword);
 
 
-        adminAdminService.adminUpdate(marketAdmin);
+        String adminUpdate = adminAdminService.adminUpdate(marketAdmin);
+        if(adminUpdate == null){
+            return BaseRespVo.invalidUsername("管理员名称重复");
+        }
 
         AdminCreateVO adminCreateVO = AdminCreateVO.setAdminUpdateVO(marketAdmin);
         return BaseRespVo.ok(adminCreateVO);

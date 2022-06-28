@@ -22,7 +22,7 @@ public interface AdminAdminService {
     AdminCreateVO adminCreate(AdminCreateBO adminCreateBO);
 
 //    修改管理员信息
-    void adminUpdate(MarketAdmin marketAdmin);
+    String adminUpdate(MarketAdmin marketAdmin);
 
 //    删除指定管理员
     void adminDelete(MarketAdmin marketAdmin);

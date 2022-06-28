@@ -61,6 +61,7 @@ public class PostExceptionHandler {
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseBody
+    @LogAnnotation(value = "编辑专题信息",successResult = "专题编辑成功")
     public BaseRespVo JsonExceptionHandle(HttpMessageNotReadableException e){
         return BaseRespVo.invalidPrice();
     }
