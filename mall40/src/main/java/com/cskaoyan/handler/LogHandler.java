@@ -104,8 +104,8 @@ public class LogHandler {
             marketLog.setResult(log + successResult);
         } else {
             marketLog.setStatus(false);
-            if (StringUtils.isEmpty(log + unSuccessResult)) {
-                marketLog.setResult(proceed.getErrmsg());
+            if (StringUtils.isEmpty(unSuccessResult)) {
+                marketLog.setResult(log +proceed.getErrmsg());
             } else {
                 marketLog.setResult(log + unSuccessResult);
             }
