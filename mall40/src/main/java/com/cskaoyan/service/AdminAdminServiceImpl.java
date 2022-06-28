@@ -11,10 +11,12 @@ import com.cskaoyan.mapper.MarketAdminMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.realm.Realm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 /**
@@ -29,6 +31,17 @@ public class AdminAdminServiceImpl implements AdminAdminService {
     @Autowired
     MarketAdminMapper marketAdminMapper;
 
+    @Autowired
+    HttpSession session;
+
+    /**
+     * 回显管理员列表
+     * @param info 分页信息
+     * @param username 查询管理员名称
+     * @return com.cskaoyan.bean.vo.AdminListVO
+     * @author xyg2597@163.com
+     * @since 2022/06/28 14:21
+     */
     @Override
     public AdminListVO adminList(BaseParam info, String username) {
 
@@ -43,6 +56,8 @@ public class AdminAdminServiceImpl implements AdminAdminService {
         if (!StringUtils.isEmpty(username)) {
             or.andUsernameLike("%" + username + "%");
         }
+
+        or.andDeletedEqualTo(false);
 
 //        查询对应的管理员
         List<MarketAdmin> marketAdmins = marketAdminMapper.selectByExample(marketAdminExample);
@@ -86,6 +101,7 @@ public class AdminAdminServiceImpl implements AdminAdminService {
         marketAdmin.setRoleIds(adminCreateBO.getRoleIds());
         marketAdmin.setUsername(adminCreateBO.getUsername());
 
+        session.setAttribute("log",adminCreateBO.getUsername());
         marketAdminMapper.insertSelective(marketAdmin);
 
 
@@ -105,6 +121,7 @@ public class AdminAdminServiceImpl implements AdminAdminService {
 
         marketAdmin.setUpdateTime(new Date());
 
+        session.setAttribute("log",marketAdmin.getUsername());
         marketAdminMapper.updateByPrimaryKeySelective(marketAdmin);
 
     }
@@ -125,6 +142,7 @@ public class AdminAdminServiceImpl implements AdminAdminService {
         deleteMarketAdmin.setDeleted(true);
         deleteMarketAdmin.setId(marketAdmin.getId());
 
+        session.setAttribute("log",marketAdmin.getUsername());
         marketAdminMapper.updateByPrimaryKeySelective(deleteMarketAdmin);
 
     }

@@ -45,7 +45,7 @@ public class AdminTopicCreateBO {
         marketTopic.setSubtitle(adminTopicCreateBO.getSubtitle());
         marketTopic.setPicUrl(adminTopicCreateBO.getPicUrl());
         marketTopic.setReadCount(adminTopicCreateBO.getReadCount());
-        marketTopic.setGoods(Arrays.toString(adminTopicCreateBO.getGoods()));
+        marketTopic.setGoods(adminTopicCreateBO.getGoods());
         return marketTopic;
     }
 

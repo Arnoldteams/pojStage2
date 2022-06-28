@@ -59,7 +59,7 @@ public class AdminTopicController {
      * @since 2022/06/25 23:14
      */
     @RequestMapping("create")
-    @LogAnnotation("添加专题信息")
+    @LogAnnotation(value = "添加专题信息",successResult = "专题添加成功")
     public BaseRespVo topicCreate(@RequestBody AdminTopicCreateBO adminTopicCreateBO) {
 
         MarketTopic marketTopic = new MarketTopic();
@@ -103,7 +103,7 @@ public class AdminTopicController {
      * @since 2022/06/27 10:46
      */
     @PostMapping("update")
-    @LogAnnotation("更新专题信息")
+    @LogAnnotation(value = "更新专题信息",successResult = "专题修改成功")
     public BaseRespVo topicUpdate(@RequestBody MarketTopic marketTopic){
 
         MarketTopic marketTopicVo = adminTopicService.topicUpdate(marketTopic);
@@ -119,7 +119,7 @@ public class AdminTopicController {
      * @since 2022/06/26 14:36
      */
     @PostMapping("delete")
-    @LogAnnotation("删除指定专题")
+    @LogAnnotation(value = "删除指定专题", successResult = "专题删除成功")
     public BaseRespVo topicDelete(@RequestBody MarketTopic marketTopic){
 
         adminTopicService.topicDelete(marketTopic);
@@ -134,7 +134,7 @@ public class AdminTopicController {
      * @since 2022/06/26 14:44
      */
     @PostMapping("batch-delete")
-    @LogAnnotation(value = "批量删除专题信息",successResult = "删除成功")
+    @LogAnnotation(value = "批量删除专题信息",successResult = "专题删除成功")
     public BaseRespVo topicBatchDelete(@RequestBody Map idList){
 
         List<Integer> ids = (List<Integer>) idList.get("ids");

@@ -20,7 +20,7 @@ public class MarketTopic {
 
     private Integer sortOrder;
 
-    private String goods;
+    private Integer[] goods;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date addTime;
@@ -88,12 +88,17 @@ public class MarketTopic {
         this.sortOrder = sortOrder;
     }
 
-    public String getGoods() {
+    public Integer[] getGoods() {
         return goods;
     }
 
-    public void setGoods(String goods) {
-        this.goods = goods == null ? null : goods.trim();
+//    public void setGoods(String goods) {
+//        this.goods = goods == null ? null : goods.trim();
+//    }
+
+
+    public void setGoods(Integer[] goods) {
+        this.goods = goods;
     }
 
     public Date getAddTime() {

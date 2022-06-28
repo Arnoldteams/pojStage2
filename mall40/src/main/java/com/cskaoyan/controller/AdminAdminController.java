@@ -6,6 +6,7 @@ import com.cskaoyan.bean.bo.AdminCreateBO;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.vo.AdminCreateVO;
 import com.cskaoyan.bean.vo.AdminListVO;
+import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,6 @@ public class AdminAdminController {
 
     /**
      * 获得所有管理员
-     *
      * @param info     分页信息
      * @param username 根据管理员名称
      * @return com.cskaoyan.bean.BaseRespVo 传给浏览器的信息
@@ -51,6 +51,7 @@ public class AdminAdminController {
      * @since 2022/06/26 17:31
      */
     @PostMapping({"create"})
+    @LogAnnotation(value = "创建管理员",successResult = "管理员创建成功")
     public BaseRespVo adminCreate(@RequestBody AdminCreateBO adminCreateBO) {
 
 //        判断管理员名称是否符合
@@ -75,6 +76,7 @@ public class AdminAdminController {
 
 
     @PostMapping("update")
+    @LogAnnotation(value = "修改管理员信息",successResult = "管理员修改成功")
     public BaseRespVo adminUpdate(@RequestBody MarketAdmin marketAdmin) {
 //        判断管理员名称是否符合
         if (!marketAdmin.getUsername().matches("\\w{6,15}")) {
@@ -104,6 +106,7 @@ public class AdminAdminController {
      * @since 2022/06/26 20:20
      */
     @PostMapping("delete")
+    @LogAnnotation(value = "删除管理员",successResult = "管理员删除成功")
     public BaseRespVo adminDelete(@RequestBody MarketAdmin marketAdmin){
 
         adminAdminService.adminDelete(marketAdmin);
