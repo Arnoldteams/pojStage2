@@ -3,6 +3,7 @@ package com.cskaoyan.controller;
 import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.MarketStorage;
 import com.cskaoyan.bean.param.BaseParam;
+import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.AdminBrandVO;
 import com.cskaoyan.bean.vo.AdminStorageVO;
 import com.cskaoyan.service.AdminBrandService;
@@ -39,24 +40,10 @@ public class AdminBrandController {
      */
     @GetMapping("list")
     public BaseRespVo<AdminBrandVO> list(BaseParam baseParam, String id, String name) {
-        BaseRespVo<AdminBrandVO> resp = new BaseRespVo<>();
 
-        AdminBrandVO adminBrandVO = new AdminBrandVO();
+        CommonData<MarketBrand> data = adminBrandService.queryAllBrand(baseParam, id, name);
 
-        List<MarketBrand> list = adminBrandService.queryAllBrand(baseParam, id, name);
-
-        Integer limit = baseParam.getLimit();
-        Integer pages = list.size() / limit + 1;
-
-        adminBrandVO.setPage(baseParam.getPage());
-        adminBrandVO.setLimit(limit);
-        adminBrandVO.setTotal(list.size());
-        adminBrandVO.setPages(pages);
-        adminBrandVO.setList(list);
-
-        resp.setData(adminBrandVO);
-
-        return resp;
+        return BaseRespVo.ok(data);
     }
 
 }

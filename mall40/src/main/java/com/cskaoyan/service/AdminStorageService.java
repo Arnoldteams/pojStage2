@@ -2,6 +2,7 @@ package com.cskaoyan.service;
 
 import com.cskaoyan.bean.MarketStorage;
 import com.cskaoyan.bean.param.BaseParam;
+import com.cskaoyan.bean.param.CommonData;
 
 import java.util.List;
 
@@ -12,9 +13,8 @@ public interface AdminStorageService {
      * @createTime: 2022-06-26 16:38:43
      * @description: 获取Storage表所有数据
      * @param: baseParam - [BaseParam]
-     * @return: java.util.List<com.cskaoyan.bean.MarketStorage>
      */
-    List<MarketStorage> queryAllStorage(BaseParam baseParam,String key,String name);
+    CommonData<MarketStorage> queryAllStorage(BaseParam baseParam, String key, String name);
 
     /**
      * @author: 于艳帆

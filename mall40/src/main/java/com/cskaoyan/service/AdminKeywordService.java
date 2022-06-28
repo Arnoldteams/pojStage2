@@ -2,6 +2,7 @@ package com.cskaoyan.service;
 
 import com.cskaoyan.bean.MarketKeyword;
 import com.cskaoyan.bean.bo.AdminKeywordBO;
+import com.cskaoyan.bean.param.CommonData;
 
 import java.util.List;
 
@@ -13,9 +14,8 @@ public interface AdminKeywordService {
      * @createTime: 2022-06-26 09:04:19
      * @description: 根据分页信息查询keyword表的全部数据
      * @param: adminKeywordBO - [AdminKeywordBO]
-     * @return: java.util.List<com.cskaoyan.bean.MarketKeyword>
      */
-    List<MarketKeyword> queryAllKeywordList(AdminKeywordBO adminKeywordBO);
+    CommonData<MarketKeyword> queryAllKeywordList(AdminKeywordBO adminKeywordBO);
 
     /**
      * @author: 于艳帆

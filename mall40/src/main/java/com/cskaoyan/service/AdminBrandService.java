@@ -2,6 +2,7 @@ package com.cskaoyan.service;
 
 import com.cskaoyan.bean.MarketBrand;
 import com.cskaoyan.bean.param.BaseParam;
+import com.cskaoyan.bean.param.CommonData;
 
 import java.util.List;
 
@@ -14,8 +15,7 @@ public interface AdminBrandService {
      * @param: baseParam - [BaseParam]
      * @param: id - [Integer]
      * @param: name - [String]
-     * @return: java.util.List<com.cskaoyan.bean.MarketBrand>
      */
 
-    List<MarketBrand> queryAllBrand(BaseParam baseParam, String id, String name);
+    CommonData<MarketBrand> queryAllBrand(BaseParam baseParam, String id, String name);
 }
