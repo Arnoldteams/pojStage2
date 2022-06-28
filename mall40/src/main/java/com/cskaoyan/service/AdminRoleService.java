@@ -25,7 +25,7 @@ public interface AdminRoleService {
     int deleteRole(MarketRole role);
 
     // 更新指定角色信息
-    int updateRole(MarketRole role);
+    void updateRole(MarketRole role);
 
     // 创建新角色
     int createRole(MarketRole role);

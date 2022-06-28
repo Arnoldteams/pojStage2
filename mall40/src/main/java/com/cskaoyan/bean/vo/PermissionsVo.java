@@ -1,5 +1,6 @@
 package com.cskaoyan.bean.vo;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,7 +10,9 @@ import java.util.List;
  */
 
 
-public class PermissionsVo {
+public class PermissionsVo implements Serializable {
+    private static final long serialVersionUID = 2L;
+
 
     private  Integer key;
     private String id;

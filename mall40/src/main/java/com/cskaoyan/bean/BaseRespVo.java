@@ -60,6 +60,13 @@ public class BaseRespVo<T> {
         return baseRespVo;
     }
 
+    public static <T> BaseRespVo invalidUsername(String Msg) {
+        BaseRespVo baseRespVo = new BaseRespVo();
+        baseRespVo.setErrno(601);
+        baseRespVo.setErrmsg(Msg);
+        return baseRespVo;
+    }
+
     public static <T> BaseRespVo invalidPrice() {
         BaseRespVo baseRespVo = new BaseRespVo();
         baseRespVo.setErrno(402);

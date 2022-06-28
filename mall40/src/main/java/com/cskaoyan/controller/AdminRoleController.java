@@ -39,8 +39,8 @@ public class AdminRoleController {
      * @createTime: 2022/6/25 20:17
      */
     @RequestMapping("list")
-    public BaseRespVo adminRoleList(BaseParam param,String name){
-        CommonData<MarketRole> data =  adminRoleService.queryAllRoles(param,name);
+    public BaseRespVo adminRoleList(BaseParam param, String name) {
+        CommonData<MarketRole> data = adminRoleService.queryAllRoles(param, name);
         return BaseRespVo.ok(data);
     }
 
@@ -54,9 +54,9 @@ public class AdminRoleController {
      * @createTime: 2022/6/25 21:37
      */
     @RequestMapping("/delete")
-    public BaseRespVo adminRoleDelete(@RequestBody MarketRole role){
+    public BaseRespVo adminRoleDelete(@RequestBody MarketRole role) {
 
-        if(adminRoleService.deleteRole(role) == 0){
+        if (adminRoleService.deleteRole(role) == 0) {
             return BaseRespVo.AuthNotEnough("角色存在管理員權限，不能刪除！");
         }
         return BaseRespVo.ok(null);
@@ -70,7 +70,7 @@ public class AdminRoleController {
      * @createTime: 2022/6/25 22:22
      */
     @RequestMapping("/update")
-    public BaseRespVo adminRoleUpdate(@RequestBody MarketRole role){
+    public BaseRespVo adminRoleUpdate(@RequestBody MarketRole role) {
         adminRoleService.updateRole(role);
         return BaseRespVo.ok(null);
     }
@@ -84,14 +84,14 @@ public class AdminRoleController {
      * @createTime: 2022/6/25 22:25
      */
     @RequestMapping("/create")
-    public BaseRespVo adminRoleCreate(@RequestBody MarketRole role){
+    public BaseRespVo adminRoleCreate(@RequestBody MarketRole role) {
 
         // 跑到Bean类去赋值啦，这里看着很清爽
         MarketRole newRole = MarketRole.getMarketWithSomeInfo(role);
-        if(adminRoleService.createRole(newRole) == 1){
-            return BaseRespVo.ok(newRole);
+        if(adminRoleService.createRole(role) == 0){
+            return BaseRespVo.invalidUsername("角色名重复！");
         }
-        return BaseRespVo.invalidData("角色创建失败！");
+        return BaseRespVo.ok(newRole);
     }
 
     /**
@@ -105,11 +105,11 @@ public class AdminRoleController {
     public BaseRespVo adminRolePermissions(Integer roleId) {
         List<PermissionsVo> systemPermissions;
         MarketSystemPermissionsVo permissions = new MarketSystemPermissionsVo();
-        if((systemPermissions = (List<PermissionsVo>) context.getAttribute("systemPermissions")) == null){
-            systemPermissions = adminRoleService.queryAllRolePermissions();
-            context.setAttribute("systemPermissions",systemPermissions);
-        }
+        // 获取所有可选权限
+        systemPermissions = adminRoleService.queryAllRolePermissions();
+        // 获取指定id角色的权限
         List<String> assignedPermissions = adminRoleService.selectRoleApiById(roleId);
+        // 封装对象
         permissions.setSystemPermissions(systemPermissions);
         permissions.setAssignedPermissions(assignedPermissions);
         return BaseRespVo.ok(permissions);
@@ -123,8 +123,8 @@ public class AdminRoleController {
      * @createTime: 2022/6/26 17:41
      */
     @PostMapping("/permissions")
-    public BaseRespVo adminRolePermissions(@RequestBody AdminPermissionsBo adminPermissions){
-        if(adminPermissions.getRoleId() == 1){
+    public BaseRespVo adminRolePermissions(@RequestBody AdminPermissionsBo adminPermissions) {
+        if (adminPermissions.getRoleId() == 1) {
             return BaseRespVo.AuthNotEnough("不能修改超級管理員！");
         }
         adminRoleService.updateRolePermissions(adminPermissions);
@@ -140,7 +140,7 @@ public class AdminRoleController {
      * @createTime: 2022/6/27 15:50
      */
     @RequestMapping("/options")
-    public BaseRespVo adminRoleOptions(){
+    public BaseRespVo adminRoleOptions() {
         CommonData<AdminOptionsVo> data = adminRoleService.queryAllRolesWithNoInfo();
         return BaseRespVo.ok(data);
     }
