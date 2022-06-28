@@ -63,7 +63,7 @@ public class AdminIssueServiceImpl implements AdminIssueService {
         marketIssue.setQuestion(question);
         marketIssue.setUpdateTime(new Date());
         marketIssue.setDeleted(false);
-        marketIssueMapper.insert(marketIssue);
+        marketIssueMapper.insertSelective(marketIssue);
         return marketIssue;
     }
 

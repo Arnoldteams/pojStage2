@@ -34,6 +34,7 @@ public class AdminFootprintServiceImpl implements AdminFootprintService {
         if (goodsId != null) {
             or.andGoodsIdEqualTo(goodsId);
         }
+        or.andDeletedEqualTo(false);
         example.setOrderByClause(pageInfo.getSort() + " " + pageInfo.getOrder());
         List<MarketFootprint> list = footprintMapper.selectByExample(example);
         PageInfo<MarketFootprint> info = new PageInfo<>(list);

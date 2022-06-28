@@ -20,12 +20,15 @@
             <if test="user!=null and user.userId!=null and user.userId!='' ">
                 id=#{user.userId}
             </if>
+            <if test="true">
+                deleted=0
+            </if>
         </where>
         order by ${sort} ${order}
     </select>
 
     <select id="selectUserById" resultType="com.cskaoyan.bean.vo.userManager.UserEntity">
-        select add_time as addTime,avatar,deleted,gender,id,last_login_ip as lastLoginIp,last_login_time as lastLoginTime,mobile,nickname,password,session_key as sessionKey,status,update_time as updateTime,user_Level as userLevel,username,weixin_openid as weixinOpenid from market_user where id=#{id}
+        select add_time as addTime,avatar,deleted,gender,id,last_login_ip as lastLoginIp,last_login_time as lastLoginTime,mobile,nickname,password,session_key as sessionKey,status,update_time as updateTime,user_Level as userLevel,username,weixin_openid as weixinOpenid from market_user where id=#{id} and deleted=0
     </select>
 
     <update id="updateUser">

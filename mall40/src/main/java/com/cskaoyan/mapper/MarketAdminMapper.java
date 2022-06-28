@@ -35,4 +35,7 @@ public interface MarketAdminMapper {
     Integer selectOrderTotal();
     Integer selectProductTotal();
     Integer selectUserTotal();
+
+    /*以下是删除角色所需的查询所有角色id的方法*/
+    String[] selectAllRoleId();
 }

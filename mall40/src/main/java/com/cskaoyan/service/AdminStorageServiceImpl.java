@@ -27,14 +27,15 @@ public class AdminStorageServiceImpl implements AdminStorageService {
     @Override
     public List<MarketStorage> queryAllStorage(BaseParam baseParam,String key,String name) {
         MarketStorageExample example = new MarketStorageExample();
+        MarketStorageExample.Criteria criteria = example.createCriteria();
         if (!StringUtils.isEmpty(key)){
-            MarketStorageExample.Criteria or = example.or();
-            or.andKeyLike("%"+key+"%");
+            criteria.andKeyLike("%"+key+"%");
         }
         if (!StringUtils.isEmpty(name)){
-            MarketStorageExample.Criteria or = example.or();
-            or.andNameLike("%"+name+"%");
+            criteria.andNameLike("%"+name+"%");
         }
+
+        criteria.andDeletedEqualTo(false); // 显示没有删除的数据
 
         example.setOrderByClause(baseParam.getSort() + " " + baseParam.getOrder());
 
@@ -56,12 +57,14 @@ public class AdminStorageServiceImpl implements AdminStorageService {
      */
     @Override
     public void addAdminStorage(MarketStorage marketStorage) {
+        marketStorage.setDeleted(false);
         marketStorageMapper.insertStorage(marketStorage);
     }
 
     @Override
     public void deleteKeywordById(MarketStorage marketStorage) {
-        marketStorageMapper.deleteByPrimaryKey(marketStorage.getId());
+        marketStorage.setDeleted(true);
+        marketStorageMapper.updateByPrimaryKey(marketStorage);
 
     }
 }

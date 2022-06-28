@@ -6,6 +6,7 @@ import com.cskaoyan.bean.bo.userManager.AdminUserListBO;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.userManager.AdminUserListVO;
 import com.cskaoyan.bean.vo.userManager.UserEntity;
+import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.*;
 import com.cskaoyan.bean.BasePageInfo;
 import com.cskaoyan.bean.BaseRespVo;
@@ -91,6 +92,7 @@ public class AdminController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("user/update")
+    @LogAnnotation(value = "修改用户",successResult = "成功",unSuccessResult = "修改失败",comment = "。。。")
     public BaseRespVo update(@RequestBody UserEntity user) {
         userService.updateUser(user);
         return BaseRespVo.ok(1);
@@ -145,9 +147,17 @@ public class AdminController {
         CommonData<MarketFeedback> data = feedbackService.queryFeedback(username,id,pageInfo);
         return BaseRespVo.ok(data);    }
 
+
     @Autowired
     AdminService marketAdminService;
 
+    /**
+    * @author: ZY
+    * @createTime: 2022/06/27 23:24:51
+    * @description: 商城首页
+    * @param:
+    * @return: com.cskaoyan.bean.BaseRespVo
+            */
     @RequestMapping("dashboard")
     public BaseRespVo dashboard() {
         DashBoardVO data = marketAdminService.queryAllCount();

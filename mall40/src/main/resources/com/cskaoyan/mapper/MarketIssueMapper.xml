@@ -109,7 +109,7 @@
       )
 
   </insert>
-  <insert id="insertSelective" parameterType="com.cskaoyan.bean.MarketIssue">
+  <insert id="insertSelective" parameterType="com.cskaoyan.bean.MarketIssue" useGeneratedKeys="true" keyProperty="id">
     insert into market_issue
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

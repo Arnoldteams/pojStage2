@@ -4,11 +4,13 @@ import com.cskaoyan.bean.BasePageInfo;
 import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.MarketOrder;
 import com.cskaoyan.bean.bo.AdminOrderListBO;
+import com.cskaoyan.bean.bo.AdminOrderRefundBO;
 import com.cskaoyan.bean.bo.AdminOrderShipBO;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.AdminOrderChannelVO;
 import com.cskaoyan.bean.vo.AdminOrderDetailVO;
 import com.cskaoyan.service.AdminOrderService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +34,7 @@ public class AdminOrderController {
     /**
      * @author: ZY
      * @createTime: 2022/06/26 17:14:18
-     * @description: 订单首页的物流公司
+     * @description: 商场管理-订单首页-物流公司
      * @param:
      * @return: com.cskaoyan.bean.BaseRespVo
      */
@@ -80,8 +82,8 @@ public class AdminOrderController {
      */
     @RequestMapping("ship")
     public BaseRespVo ship(@RequestBody AdminOrderShipBO adminOrderShipBO) {
-        if (adminOrderShipBO.getShipChannel() == null || "".equals(adminOrderShipBO.getShipChannel())
-                || adminOrderShipBO.getShipSn() == null || "".equals(adminOrderShipBO.getShipSn())) {
+        if (StringUtils.isEmpty(adminOrderShipBO.getShipChannel()) ||
+                StringUtils.isEmpty(adminOrderShipBO.getShipSn())) {
             return BaseRespVo.errParam();
         }
         adminOrderService.changeOrderStatus(adminOrderShipBO);
@@ -114,4 +116,20 @@ public class AdminOrderController {
     public BaseRespVo delete(Integer orderId) {
         return BaseRespVo.unableDelete();
     }
+
+
+    /**
+     * @author: ZY
+     * @createTime: 2022/06/27 21:25:09
+     * @description: 商场管理-订单管理-退款
+     * @param: orderId
+     * @param: refundMoney
+     * @return: com.cskaoyan.bean.BaseRespVo
+     */
+    @RequestMapping("refund")
+    public BaseRespVo refund(@RequestBody AdminOrderRefundBO adminOrderRefundBO) {
+        adminOrderService.refundOrderMoney(adminOrderRefundBO);
+        return BaseRespVo.ok(null);
+    }
+
 }

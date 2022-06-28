@@ -121,7 +121,11 @@ public class AdminAdminServiceImpl implements AdminAdminService {
     @Override
     public void adminDelete(MarketAdmin marketAdmin) {
 
-        marketAdminMapper.deleteByPrimaryKey(marketAdmin.getId());
+        MarketAdmin deleteMarketAdmin = new MarketAdmin();
+        deleteMarketAdmin.setDeleted(true);
+        deleteMarketAdmin.setId(marketAdmin.getId());
+
+        marketAdminMapper.updateByPrimaryKeySelective(deleteMarketAdmin);
 
     }
 }
