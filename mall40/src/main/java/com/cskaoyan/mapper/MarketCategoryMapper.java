@@ -1,6 +1,8 @@
 package com.cskaoyan.mapper;
 
+import com.cskaoyan.bean.AdminCategoryOne;
 import com.cskaoyan.bean.MarketCategory;
+import com.cskaoyan.bean.MarketCategoryChildren;
 import com.cskaoyan.bean.MarketCategoryExample;
 import org.apache.ibatis.annotations.Param;
 
@@ -28,4 +30,14 @@ public interface MarketCategoryMapper {
     int updateByPrimaryKeySelective(MarketCategory record);
 
     int updateByPrimaryKey(MarketCategory record);
+
+
+    List<AdminCategoryOne> selectL1Category(@Param("pid") Integer pid);
+
+    List<MarketCategoryChildren> selectL1CategoryByPid(@Param("l1") String l1);
+
+    List<MarketCategory> selectL2CategoryByLevelAndPid(@Param("l2") String l2, @Param("id") Integer id);
+
+    List<Integer> selectCatIds(@Param("id") Integer id);
 }
+

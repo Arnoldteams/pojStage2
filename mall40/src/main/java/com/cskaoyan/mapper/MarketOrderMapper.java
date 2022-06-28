@@ -4,6 +4,8 @@ import com.cskaoyan.bean.MarketOrder;
 import com.cskaoyan.bean.MarketOrderExample;
 
 import com.cskaoyan.bean.MarketUser;
+import com.cskaoyan.bean.bo.AdminOrderRefundBO;
+import com.cskaoyan.bean.bo.AdminOrderReplyBO;
 import com.cskaoyan.bean.bo.AdminOrderShipBO;
 
 import com.cskaoyan.bean.vo.statForm.OrderRowsEntity;
@@ -44,5 +46,11 @@ public interface MarketOrderMapper {
 
     List<OrderRowsEntity> countOrderByAddTime();
 
+
+    void updateOrderRefund(AdminOrderRefundBO adminOrderRefundBO);
+
+    String selectAdminComment(Integer commentId);
+
+    void updateOrderComment(AdminOrderReplyBO adminOrderReplyBO);
 
 }

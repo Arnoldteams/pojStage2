@@ -1,6 +1,7 @@
 package com.cskaoyan.controller;
 
 import com.cskaoyan.bean.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 // import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
@@ -19,6 +21,9 @@ import java.util.Map;
 @RequestMapping("admin/auth")
 public class AuthController {
 
+    @Autowired
+    HttpServletRequest request;
+
     /**
      * Shiro
      * 如果参数比较少，类型比较简单的话，使用map来接收也可以
@@ -28,6 +33,8 @@ public class AuthController {
         String username = (String)map.get("username");
         String password = (String)map.get("password");
 
+        request.getSession().setAttribute("username",username);
+        System.out.println("登录-------------"+request.getSession().toString());
 
         LoginUserData loginUserData = new LoginUserData();
         AdminInfoBean adminInfo = new AdminInfoBean();

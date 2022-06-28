@@ -3,6 +3,7 @@ package com.cskaoyan.mapper;
 import com.cskaoyan.bean.MarketOrderGoods;
 import com.cskaoyan.bean.MarketOrderGoodsExample;
 import com.cskaoyan.bean.vo.statForm.GoodsRowsEntity;
+import com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -32,4 +33,5 @@ public interface MarketOrderGoodsMapper {
 
     List<GoodsRowsEntity> countOrderGoodsByAddTime();
 
+    List<AdminOrderDetailGoodsVO> selectOrderGoods(@Param("id") Integer id);
 }

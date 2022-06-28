@@ -77,7 +77,12 @@ public class AdminStorageController {
 
         // 将文件存入本地映射的静态资源文件中
         try {
-            file.transferTo(new File(staticLocation.replace("file:", "") + newName));
+            File newFile = new File(staticLocation.replace("file:", "") + newName);
+            // 如果父级目录不存在则创建
+            if (!newFile.getParentFile().exists()) {
+                newFile.getParentFile().mkdirs();
+            }
+            file.transferTo(newFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -112,6 +117,7 @@ public class AdminStorageController {
         adminStorageVO.setTotal(list.size());
         adminStorageVO.setPages(pages);
         adminStorageVO.setList(list);
+
 
         resp.setData(adminStorageVO);
         return resp;

@@ -1,6 +1,7 @@
 package com.cskaoyan.bean.bo.adminGoodsCreateBo;
 
 
+import com.cskaoyan.bean.MarketGoods;
 import com.cskaoyan.bean.MarketGoodsAttribute;
 import com.cskaoyan.bean.MarketGoodsProduct;
 import com.cskaoyan.bean.MarketGoodsSpecification;
@@ -17,12 +18,12 @@ import java.util.List;
 
 public class AdminGoodsCreateBo {
 
-    private AdminGoodsCreateGoodsBo goods;
+    private MarketGoods goods;
 
-    private List<AdminGoodsCreateSpecificationBo> specifications;
+    private List<MarketGoodsSpecification> specifications;
 
-    private List<AdminGoodsCreateProductBo> products;
+    private List<MarketGoodsProduct> products;
 
-    private List<AdminGoodsCreateAttributeBo> attributes;
+    private List<MarketGoodsAttribute> attributes;
 
 }

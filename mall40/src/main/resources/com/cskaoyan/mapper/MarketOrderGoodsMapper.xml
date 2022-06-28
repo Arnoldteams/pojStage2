@@ -354,4 +354,11 @@
   <select id="countOrderGoodsByAddTime" resultType="com.cskaoyan.bean.vo.statForm.GoodsRowsEntity">
     select convert(add_time,date ) as day,count(*) as orders, sum(number) as products,sum(price) as amount from market_order_goods group by convert(add_time,date )
     </select>
+
+  <select id="selectOrderGoods" resultType="com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO">
+    select id,order_id as orderId,goods_id as goodsId,goods_name as goodsName,goods_sn as goodsSn,
+    product_id as produceId,number,price,specifications,pic_url as picUrl,comment,add_time as addTime,
+    update_time as updateTime,deleted
+     from market_order_goods where id = #{id}
+  </select>
 </mapper>

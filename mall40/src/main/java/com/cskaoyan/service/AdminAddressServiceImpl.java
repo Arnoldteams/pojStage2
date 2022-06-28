@@ -40,6 +40,7 @@ public class AdminAddressServiceImpl implements AdminAddressService {
         if (userId !=null){
             or.andIdEqualTo(userId);
         }
+        or.andDeletedEqualTo(false);
         String orderByClause = pageInfo.getSort()+" " +pageInfo.getOrder();
         example.setOrderByClause(orderByClause);
         List<MarketAddress> addressList =addressMapper.selectByExample(example);

@@ -12,24 +12,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * 处理数据库的输入输出映射
- * @author xyg2597@163.com
- * @since 2022/06/27 16:58
- */
-@MappedTypes(Integer[].class)
+
+//字符串和字符数组的转化
+@MappedTypes(String[].class)
 @MappedJdbcTypes(JdbcType.VARCHAR)
-public class MybatisTypeHandler implements TypeHandler<Integer[]> {
+public class StringTypeHandler implements TypeHandler<String[]> {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
     // 输入映射过程
     // insert into market_user (id,username,password,role_ids) values (?,?,?,?)
     @Override
-    public void setParameter(PreparedStatement preparedStatement, int index, Integer[] integers, JdbcType jdbcType) throws SQLException {
+    public void setParameter(PreparedStatement preparedStatement, int index, String[] strings, JdbcType jdbcType) throws SQLException {
         String value = null;
         try {
-            value = objectMapper.writeValueAsString(integers);
+            value = objectMapper.writeValueAsString(strings);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -39,35 +36,35 @@ public class MybatisTypeHandler implements TypeHandler<Integer[]> {
 
     // 输出映射过程
     @Override
-    public Integer[] getResult(ResultSet resultSet, String columName) throws SQLException {
+    public String[] getResult(ResultSet resultSet, String columName) throws SQLException {
         // 获得结果
         String result = resultSet.getString(columName);
         return transfer(result);
     }
 
     @Override
-    public Integer[] getResult(ResultSet resultSet, int index) throws SQLException {
+    public String[] getResult(ResultSet resultSet, int index) throws SQLException {
         // 获得结果
         String result = resultSet.getString(index);
         return transfer(result);
     }
 
     @Override
-    public Integer[] getResult(CallableStatement callableStatement, int i) throws SQLException {
+    public String[] getResult(CallableStatement callableStatement, int i) throws SQLException {
         // 获得结果
         String result = callableStatement.getString(i);
         return transfer(result);
     }
 
-    private Integer[] transfer(String result) {
-        Integer[] integers = new Integer[0];
+    private String[] transfer(String result) {
+        String[] strings = new String[0];
         // 使用jackson将字符串转换Integer[]
         try {
-            integers = objectMapper.readValue(result, Integer[].class);
+            strings = objectMapper.readValue(result, String[].class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        return integers;
+        return strings;
     }
 }
 
