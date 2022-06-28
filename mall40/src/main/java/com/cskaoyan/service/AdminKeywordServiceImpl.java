@@ -2,9 +2,12 @@ package com.cskaoyan.service;
 
 import com.cskaoyan.bean.MarketKeyword;
 import com.cskaoyan.bean.MarketKeywordExample;
+import com.cskaoyan.bean.MarketStorage;
 import com.cskaoyan.bean.bo.AdminKeywordBO;
+import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.mapper.MarketKeywordMapper;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +27,7 @@ public class AdminKeywordServiceImpl implements AdminKeywordService {
     MarketKeywordMapper marketKeywordMapper;
 
     @Override
-    public List<MarketKeyword> queryAllKeywordList(AdminKeywordBO adminKeywordBO) {
+    public CommonData<MarketKeyword> queryAllKeywordList(AdminKeywordBO adminKeywordBO) {
 
         MarketKeywordExample example = new MarketKeywordExample();
         MarketKeywordExample.Criteria criteria = example.createCriteria();
@@ -35,12 +38,17 @@ public class AdminKeywordServiceImpl implements AdminKeywordService {
             criteria.andUrlLike("%"+adminKeywordBO.getUrl()+"%"); // 查找条件为关键词
         }
 
+        criteria.andDeletedEqualTo(false); // 显示没有删除的数据
+
         example.setOrderByClause(adminKeywordBO.getSort()+" "+adminKeywordBO.getOrder());
 
         PageHelper.startPage(adminKeywordBO.getPage(), adminKeywordBO.getLimit());
         List<MarketKeyword> marketKeywords = marketKeywordMapper.selectByExample(example);
 
-        return marketKeywords;
+        // 配置分页工具
+        PageHelper.startPage(adminKeywordBO.getPage(),adminKeywordBO.getLimit());
+        PageInfo<MarketKeyword> pageInfo = new PageInfo<>(marketKeywords);
+        return CommonData.data(pageInfo);
     }
 
     @Override
@@ -52,6 +60,7 @@ public class AdminKeywordServiceImpl implements AdminKeywordService {
         marketKeyword.setIsDefault(adminKeywordBO.getIsDefault());
 
         marketKeyword.setSortOrder(100);
+        marketKeyword.setDeleted(false);
 
         marketKeywordMapper.insert(marketKeyword);
         return marketKeyword;
@@ -64,6 +73,9 @@ public class AdminKeywordServiceImpl implements AdminKeywordService {
 
     @Override
     public void deleteKeywordById(MarketKeyword marketKeyword) {
-        marketKeywordMapper.deleteByPrimaryKey(marketKeyword.getId());
+
+        marketKeyword.setDeleted(true);
+
+        marketKeywordMapper.updateByPrimaryKey(marketKeyword);
     }
 }

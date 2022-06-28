@@ -119,7 +119,7 @@
       #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{deleted,jdbcType=BIT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.cskaoyan.bean.MarketAd">
+  <insert id="insertSelective" parameterType="com.cskaoyan.bean.MarketAd" useGeneratedKeys="true" keyProperty="id">
     insert into market_ad
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

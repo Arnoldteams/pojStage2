@@ -5,6 +5,7 @@ import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.MarketOrder;
 import com.cskaoyan.bean.bo.AdminOrderListBO;
 import com.cskaoyan.bean.bo.AdminOrderRefundBO;
+import com.cskaoyan.bean.bo.AdminOrderReplyBO;
 import com.cskaoyan.bean.bo.AdminOrderShipBO;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.AdminOrderChannelVO;
@@ -90,7 +91,6 @@ public class AdminOrderController {
         return BaseRespVo.ok(null);
     }
 
-
     /**
      * @author: ZY
      * @createTime: 2022/06/27 08:41:35
@@ -103,7 +103,6 @@ public class AdminOrderController {
         AdminOrderDetailVO adminOrderDetailVO = adminOrderService.detailOrderList(id);
         return BaseRespVo.ok(adminOrderDetailVO);
     }
-
 
     /**
      * @author: ZY
@@ -129,6 +128,26 @@ public class AdminOrderController {
     @RequestMapping("refund")
     public BaseRespVo refund(@RequestBody AdminOrderRefundBO adminOrderRefundBO) {
         adminOrderService.refundOrderMoney(adminOrderRefundBO);
+        return BaseRespVo.ok(null);
+    }
+
+
+    /**
+    * @author: ZY
+    * @createTime: 2022/06/28 14:26:32
+    * @description:商品管理-商品评论-回复
+    * @param: adminOrderReplyBO
+    * @return: com.cskaoyan.bean.BaseRespVo
+            */
+    @RequestMapping("reply")
+    public BaseRespVo reply(@RequestBody AdminOrderReplyBO adminOrderReplyBO) {
+        if (!StringUtils.isEmpty(adminOrderService.queryAdminComment(adminOrderReplyBO.getCommentId()))) {
+            return BaseRespVo.hasReplied(null);
+        }
+        if (StringUtils.isEmpty(adminOrderReplyBO.getContent())) {
+            return BaseRespVo.errParam();
+        }
+        adminOrderService.replyOrderComment(adminOrderReplyBO);
         return BaseRespVo.ok(null);
     }
 

@@ -1,8 +1,10 @@
 package com.cskaoyan.controller;
 
 import com.cskaoyan.bean.BaseRespVo;
+import com.cskaoyan.bean.MarketBrand;
 import com.cskaoyan.bean.MarketKeyword;
 import com.cskaoyan.bean.bo.AdminKeywordBO;
+import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.AdminKeywordVO;
 import com.cskaoyan.service.AdminKeywordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,22 +37,10 @@ public class AdminKeywordController {
     @GetMapping("list")
     public BaseRespVo<AdminKeywordVO> list(AdminKeywordBO adminKeywordBO) {
 
-        BaseRespVo<AdminKeywordVO> resp = new BaseRespVo<>();
-        AdminKeywordVO adminKeywordVO = new AdminKeywordVO();
-        List<MarketKeyword> list = adminKeywordService.queryAllKeywordList(adminKeywordBO);
 
-        Integer limit = adminKeywordBO.getLimit();
-        Integer pages = list.size() / limit + 1;
+        CommonData<MarketKeyword> data = adminKeywordService.queryAllKeywordList(adminKeywordBO);
 
-        adminKeywordVO.setPage(adminKeywordBO.getPage());
-        adminKeywordVO.setLimit(limit);
-        adminKeywordVO.setTotal(list.size());
-        adminKeywordVO.setPages(pages);
-        adminKeywordVO.setList(list);
-
-        resp.setData(adminKeywordVO);
-        resp.setErrmsg("成功");
-        return resp;
+        return BaseRespVo.ok(data);
     }
 
     /**

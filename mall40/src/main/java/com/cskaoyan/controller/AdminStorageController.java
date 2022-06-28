@@ -1,9 +1,11 @@
 package com.cskaoyan.controller;
 
 import com.cskaoyan.bean.BaseRespVo;
+import com.cskaoyan.bean.MarketBrand;
 import com.cskaoyan.bean.MarketKeyword;
 import com.cskaoyan.bean.MarketStorage;
 import com.cskaoyan.bean.param.BaseParam;
+import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.AdminStorageVO;
 import com.cskaoyan.service.AdminStorageService;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -77,7 +79,12 @@ public class AdminStorageController {
 
         // 将文件存入本地映射的静态资源文件中
         try {
-            file.transferTo(new File(staticLocation.replace("file:", "") + newName));
+            File newFile = new File(staticLocation.replace("file:", "") + newName);
+            // 如果父级目录不存在则创建
+            if (!newFile.getParentFile().exists()) {
+                newFile.getParentFile().mkdirs();
+            }
+            file.transferTo(newFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -99,22 +106,10 @@ public class AdminStorageController {
      */
     @GetMapping("list")
     public BaseRespVo<AdminStorageVO> list(BaseParam baseParam,String key,String name) {
-        BaseRespVo<AdminStorageVO> resp = new BaseRespVo<>();
-        AdminStorageVO adminStorageVO = new AdminStorageVO();
 
-        List<MarketStorage> list = adminStorageService.queryAllStorage(baseParam,key,name);
+        CommonData<MarketStorage> data = adminStorageService.queryAllStorage(baseParam,key,name);
 
-        Integer limit = baseParam.getLimit();
-        Integer pages = list.size() / limit + 1;
-
-        adminStorageVO.setPage(baseParam.getPage());
-        adminStorageVO.setLimit(limit);
-        adminStorageVO.setTotal(list.size());
-        adminStorageVO.setPages(pages);
-        adminStorageVO.setList(list);
-
-        resp.setData(adminStorageVO);
-        return resp;
+        return BaseRespVo.ok(data);
     }
 
     /**

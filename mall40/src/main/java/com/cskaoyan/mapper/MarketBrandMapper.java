@@ -28,4 +28,6 @@ public interface MarketBrandMapper {
     int updateByPrimaryKeySelective(MarketBrand record);
 
     int updateByPrimaryKey(MarketBrand record);
+
+    void deleteByPrimaryKeyUseUpdate(@Param("id") Integer id);
 }

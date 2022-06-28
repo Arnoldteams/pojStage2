@@ -28,4 +28,6 @@ public interface MarketRoleMapper {
     int updateByPrimaryKeySelective(MarketRole record);
 
     int updateByPrimaryKey(MarketRole record);
+
+    List<String> selectAllRoleName();
 }
