@@ -7,10 +7,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 // import javax.validation.Valid;
 import java.util.ArrayList;
@@ -19,7 +16,7 @@ import java.util.Map;
 //shiro整合之后，在做具体的开发
 //响应结果都是JSON，Controller组件上我们都用@RestController注解
 @RestController
-@RequestMapping("admin/auth")
+@RequestMapping("admin")
 public class AuthController {
 
 
@@ -27,7 +24,7 @@ public class AuthController {
      * Shiro
      * 如果参数比较少，类型比较简单的话，使用map来接收也可以
      */
-    @PostMapping("login")
+    @PostMapping("auth/login")
     @LogAnnotation("登录")
     public BaseRespVo login(@RequestBody Map map) {
 //        $2a$10$.rEfyBb/GURD9P2p0fRg/OAJGloGNDkJS4lY0cQHeqDgsbdTylBpu
@@ -74,7 +71,7 @@ public class AuthController {
     }
 
 
-    @RequestMapping("info")
+    @RequestMapping("auth/info")
     public BaseRespVo info(String token) {
 
 
@@ -97,15 +94,23 @@ public class AuthController {
 
     /**
      * 后台管理登出
+     *
      * @return com.cskaoyan.bean.BaseRespVo
      * @author xyg2597@163.com
      * @since 2022/06/28 20:01
      */
-    @PostMapping("logout")
-    public BaseRespVo logout(){
+    @PostMapping("auth/logout")
+    public BaseRespVo logout() {
 
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
         return BaseRespVo.ok();
     }
+
+    @GetMapping("profile/nnotice")
+    public BaseRespVo nNotice() {
+        return BaseRespVo.ok(0);
+    }
+
+
 }
