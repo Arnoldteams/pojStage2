@@ -2,9 +2,12 @@ package com.cskaoyan.service;
 
 import com.cskaoyan.bean.MarketGoods;
 import com.cskaoyan.bean.bo.adminGoodsCreateBo.AdminGoodsCreateBo;
+import com.cskaoyan.bean.bo.adminGoodsDeleteBo.AdminGoodsDeleteBo;
+import com.cskaoyan.bean.bo.adminGoodsUpdateBo.AdminGoodsUpdateBo;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.adminGoodsCatAndBrand.AdminGoodsCatAndBrandVo;
+import com.cskaoyan.bean.vo.adminGoodsDetailVo.AdminGoodsDetailVo;
 
 /**
  * @author: 无敌帅的 Sssd
@@ -30,4 +33,23 @@ public interface AdminGoodsService {
      * @param bo 传入的 bo 类参数
      */
     void addGoods(AdminGoodsCreateBo bo);
+
+    /**
+     * @author: Sssd
+     * @param id 商品 id
+     */
+    AdminGoodsDetailVo qurryGoodById(Integer id);
+
+    /**
+     * @author: Sssd
+     * @description: 编辑商品
+     */
+    void modifyGoods(AdminGoodsUpdateBo bo);
+
+    /**
+     * @author: Sssd
+     * @description: 删除商品
+     */
+    void deleteGoods(AdminGoodsDeleteBo bo);
+
 }

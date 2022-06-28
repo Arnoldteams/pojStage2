@@ -28,4 +28,6 @@ public interface MarketCategoryMapper {
     int updateByPrimaryKeySelective(MarketCategory record);
 
     int updateByPrimaryKey(MarketCategory record);
+
+    List<Integer> selectCatIds(@Param("id") Integer id);
 }

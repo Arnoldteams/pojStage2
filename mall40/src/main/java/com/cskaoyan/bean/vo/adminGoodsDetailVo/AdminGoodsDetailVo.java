@@ -1,5 +1,4 @@
-package com.cskaoyan.bean.bo.adminGoodsCreateBo;
-
+package com.cskaoyan.bean.vo.adminGoodsDetailVo;
 
 import com.cskaoyan.bean.MarketGoods;
 import com.cskaoyan.bean.MarketGoodsAttribute;
@@ -10,20 +9,21 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * @description: 商品模块 - 增加商品功能 - 参数接收
+ * @description:
  * @author: 无敌帅的 Sssd
- * @date: 2022年06月27日 8:09
+ * @date: 2022年06月27日 21:15
  */
 @Data
+public class AdminGoodsDetailVo {
 
-public class AdminGoodsCreateBo {
+    private List<Integer> categoryIds;
 
     private MarketGoods goods;
+
+    private List<MarketGoodsAttribute> attributes;
 
     private List<MarketGoodsSpecification> specifications;
 
     private List<MarketGoodsProduct> products;
-
-    private List<MarketGoodsAttribute> attributes;
 
 }
