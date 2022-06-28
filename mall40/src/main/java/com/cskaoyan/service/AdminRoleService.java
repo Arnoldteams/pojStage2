@@ -42,4 +42,7 @@ public interface AdminRoleService {
     // 查询所有角色信息
     CommonData<AdminOptionsVo> queryAllRolesWithNoInfo();
 
+    // 根据角色Id获取角色Name
+    String selectRoleNameById(Integer id);
+
 }

@@ -43,4 +43,6 @@ public interface MarketPermissionMapper {
     List<String> selectAllPermissionApi();
 
     List<AdminOptionsVo> selectAllPermission();
+
+    String selectNameById(@Param("id") Integer id);
 }

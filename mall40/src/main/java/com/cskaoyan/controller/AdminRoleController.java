@@ -8,11 +8,13 @@ import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.AdminOptionsVo;
 import com.cskaoyan.bean.vo.MarketSystemPermissionsVo;
 import com.cskaoyan.bean.vo.PermissionsVo;
+import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 
@@ -30,6 +32,8 @@ public class AdminRoleController {
     ServletContext context;
     @Autowired
     AdminRoleService adminRoleService;
+    @Autowired
+    HttpSession session;
 
     /**
      * @description: 系统管理-角色管理-展示所有角色
@@ -53,12 +57,14 @@ public class AdminRoleController {
      * @author: 帅关
      * @createTime: 2022/6/25 21:37
      */
+    @LogAnnotation("删除角色信息")
     @RequestMapping("/delete")
     public BaseRespVo adminRoleDelete(@RequestBody MarketRole role) {
-
         if (adminRoleService.deleteRole(role) == 0) {
+            session.setAttribute("log",role.getName());
             return BaseRespVo.AuthNotEnough("角色存在管理員權限，不能刪除！");
         }
+        session.setAttribute("log",role.getName());
         return BaseRespVo.ok(null);
     }
 
@@ -69,9 +75,11 @@ public class AdminRoleController {
      * @author: 帅关
      * @createTime: 2022/6/25 22:22
      */
+    @LogAnnotation("更新角色信息")
     @RequestMapping("/update")
     public BaseRespVo adminRoleUpdate(@RequestBody MarketRole role) {
         adminRoleService.updateRole(role);
+        session.setAttribute("log",role.getName());
         return BaseRespVo.ok(null);
     }
 
@@ -83,14 +91,17 @@ public class AdminRoleController {
      * @author: 帅关
      * @createTime: 2022/6/25 22:25
      */
+    @LogAnnotation("创建角色信息")
     @RequestMapping("/create")
     public BaseRespVo adminRoleCreate(@RequestBody MarketRole role) {
 
         // 跑到Bean类去赋值啦，这里看着很清爽
         MarketRole newRole = MarketRole.getMarketWithSomeInfo(role);
         if(adminRoleService.createRole(role) == 0){
+            session.setAttribute("log",role.getName());
             return BaseRespVo.invalidUsername("角色名重复！");
         }
+        session.setAttribute("log",role.getName());
         return BaseRespVo.ok(newRole);
     }
 
@@ -122,11 +133,15 @@ public class AdminRoleController {
      * @author: 帅关
      * @createTime: 2022/6/26 17:41
      */
+    @LogAnnotation("更新角色权限")
     @PostMapping("/permissions")
     public BaseRespVo adminRolePermissions(@RequestBody AdminPermissionsBo adminPermissions) {
+        String roleName = adminRoleService.selectRoleNameById(adminPermissions.getRoleId());
         if (adminPermissions.getRoleId() == 1) {
+            session.setAttribute("log",roleName);
             return BaseRespVo.AuthNotEnough("不能修改超級管理員！");
         }
+        session.setAttribute("log",roleName);
         adminRoleService.updateRolePermissions(adminPermissions);
         return BaseRespVo.ok(null);
     }

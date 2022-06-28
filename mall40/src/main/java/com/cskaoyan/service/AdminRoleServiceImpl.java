@@ -291,4 +291,9 @@ public class AdminRoleServiceImpl implements AdminRoleService {
         PageHelper.startPage(1, pageInfo.getSize());
         return CommonData.data(pageInfo);
     }
+
+    @Override
+    public String selectRoleNameById(Integer id) {
+        return permissionMapper.selectNameById(id);
+    }
 }

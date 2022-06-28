@@ -25,6 +25,8 @@ spring:
   redis:
     host: 43.138.55.158
     port: 6379
+    lettuce:
+      shutdown-timeout: 0
 
 
 # 配置Mybatis
