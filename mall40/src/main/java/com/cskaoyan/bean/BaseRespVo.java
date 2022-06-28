@@ -93,4 +93,11 @@ public class BaseRespVo<T> {
         baseRespVo.setErrmsg(Msg);
         return baseRespVo;
     }
+
+    public static <T> BaseRespVo hasReplied(String Msg) {
+        BaseRespVo baseRespVo = new BaseRespVo();
+        baseRespVo.setErrno(622);
+        baseRespVo.setErrmsg("订单商品已回复");
+        return baseRespVo;
+    }
 }
