@@ -35,6 +35,7 @@ public class AdminHistoryServiceImpl implements AdminHistoryService {
         if (keyword != null) {
             or.andKeywordLike("%" + keyword + "%");
         }
+        or.andDeletedEqualTo(false);
         example.setOrderByClause(pageInfo.getSort() + " " + pageInfo.getOrder());
         List<MarketSearchHistory> data = searchHistoryMapper.selectByExample(example);
         PageInfo<MarketSearchHistory> info = new PageInfo<>(data);
