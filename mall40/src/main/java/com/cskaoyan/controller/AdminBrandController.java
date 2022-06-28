@@ -7,9 +7,7 @@ import com.cskaoyan.bean.vo.AdminBrandVO;
 import com.cskaoyan.bean.vo.AdminStorageVO;
 import com.cskaoyan.service.AdminBrandService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.cskaoyan.bean.MarketBrand;
 
@@ -59,4 +57,42 @@ public class AdminBrandController {
         return resp;
     }
 
+    /**
+     * @author: sprinkle
+     * @createTime: 2022-06-27 13:55:26
+     * @description: 根据MarketBrand类的成员变量更新数据库里的一条数据
+     * @param: MarketBrand - [MarketBrand] MarketBrand类的成员变量
+     * @return: com.cskaoyan.bean.BaseRespVo
+     */
+    @PostMapping("update")
+    public BaseRespVo update(@RequestBody MarketBrand marketBrand) {
+        MarketBrand brand = adminBrandService.updateOneBrand(marketBrand);
+        return BaseRespVo.ok(brand);
+    }
+
+    /**
+     * @author: sprinkle
+     * @createTime: 2022-06-27 16:45:24
+     * @description: 根据MarketBrand类的成员变量删除数据库里的一条数据
+     * @param: MarketBrand - [MarketBrand] MarketBrand类的成员变量
+     * @return: com.cskaoyan.bean.BaseRespVo
+     */
+    @PostMapping("delete")
+    public BaseRespVo delete(@RequestBody MarketBrand marketBrand) {
+        adminBrandService.deleteOneBrand(marketBrand);
+        return BaseRespVo.ok();
+    }
+
+    /**
+     * @author: sprinkle
+     * @createTime: 2022-06-27 16:45:24
+     * @description: 根据MarketBrand类的成员变量创建数据库里的一条数据
+     * @param: MarketBrand - [MarketBrand] MarketBrand类的成员变量
+     * @return: com.cskaoyan.bean.BaseRespVo
+     */
+    @PostMapping("create")
+    public BaseRespVo create(@RequestBody MarketBrand marketBrand) {
+        MarketBrand brand = adminBrandService.createOneBrand(marketBrand);
+        return BaseRespVo.ok(brand);
+    }
 }

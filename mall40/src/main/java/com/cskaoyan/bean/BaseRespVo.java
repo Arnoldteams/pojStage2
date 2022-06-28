@@ -18,6 +18,12 @@ public class BaseRespVo<T> {
         return baseRespVo;
     }
 
+    public static <T> BaseRespVo ok() {
+        BaseRespVo baseRespVo = new BaseRespVo();
+        baseRespVo.setErrno(0);
+        return baseRespVo;
+    }
+
     public static <T> BaseRespVo invalidData(String msg) {
         BaseRespVo baseRespVo = new BaseRespVo();
         baseRespVo.setErrno(504);
