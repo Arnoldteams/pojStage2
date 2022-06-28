@@ -1,4 +1,4 @@
-package com.cskaoyan.config.realm;
+package com.cskaoyan.configuration.realm;
 
 import lombok.Data;
 import org.apache.shiro.authc.UsernamePasswordToken;

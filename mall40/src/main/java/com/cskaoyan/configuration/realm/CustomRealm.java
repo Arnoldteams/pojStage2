@@ -1,4 +1,4 @@
-package com.cskaoyan.config.realm;
+package com.cskaoyan.configuration.realm;
 
 import com.cskaoyan.bean.MarketAdmin;
 import com.cskaoyan.bean.MarketAdminExample;

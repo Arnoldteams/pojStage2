@@ -75,6 +75,9 @@ public class LogHandler {
 
 
         String log = (String) session.getAttribute("log");
+        if(log == null){
+            log = "";
+        }
 
 
         marketLog.setAction(action);

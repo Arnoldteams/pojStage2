@@ -1,26 +1,18 @@
 package com.cskaoyan.controller;
 
 import com.cskaoyan.bean.*;
-import com.cskaoyan.config.realm.MarketToken;
+import com.cskaoyan.configuration.realm.MarketToken;
 import com.cskaoyan.handler.LogAnnotation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 // import javax.validation.Valid;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 

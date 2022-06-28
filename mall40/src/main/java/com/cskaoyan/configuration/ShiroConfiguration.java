@@ -1,6 +1,6 @@
-package com.cskaoyan.config;
+package com.cskaoyan.configuration;
 
-import com.cskaoyan.config.realm.CustomRealm;
+import com.cskaoyan.configuration.realm.CustomRealm;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -25,12 +25,6 @@ public class ShiroConfiguration {
     public ShiroFilterFactoryBean shiroFilter(DefaultWebSecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-
-        //提供Filter链 → 配置的内容类似于之前的HandlerInterceptor
-        // 1、Filter是谁 → anon、authc、perms
-        // 2、Filter的作用范围是什么 → 建立请求URL和Filter之间的映射关系
-        // 3、Filter之间的顺序 → 书写顺序
-
 
         // 通常anon ← authc ← perms
         // 通常anon写在最前面
