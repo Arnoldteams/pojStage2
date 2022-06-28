@@ -6,6 +6,7 @@ import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.AdminBrandVO;
 import com.cskaoyan.bean.vo.AdminStorageVO;
+import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminBrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -51,6 +52,7 @@ public class AdminBrandController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @PostMapping("update")
+    @LogAnnotation(value = "更新品牌制造商", comment = "来自sprinkle")
     public BaseRespVo update(@RequestBody MarketBrand marketBrand) {
         MarketBrand brand = adminBrandService.updateOneBrand(marketBrand);
         return BaseRespVo.ok(brand);
@@ -64,6 +66,7 @@ public class AdminBrandController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @PostMapping("delete")
+    @LogAnnotation(value = "删除品牌制造商", comment = "来自sprinkle")
     public BaseRespVo delete(@RequestBody MarketBrand marketBrand) {
         adminBrandService.deleteOneBrand(marketBrand);
         return BaseRespVo.ok();
@@ -77,6 +80,7 @@ public class AdminBrandController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @PostMapping("create")
+    @LogAnnotation(value = "增加品牌制造商", comment = "来自sprinkle")
     public BaseRespVo create(@RequestBody MarketBrand marketBrand) {
         MarketBrand brand = adminBrandService.createOneBrand(marketBrand);
         return BaseRespVo.ok(brand);
