@@ -53,14 +53,12 @@ public class AuthController {
             // realm.doGetAuthenticationInfo
             subject.login(authenticationToken);
         } catch (AuthenticationException e) {
-            e.printStackTrace();
+            return BaseRespVo.invalidAuth("用户名或密码不正确");
+//            e.printStackTrace();
         }
 
-        // 判断是否认证成功,失败返回认证失败
+        // 判断是否认证成功
         boolean authenticated = subject.isAuthenticated();
-        if (!authenticated) {
-            return BaseRespVo.unAuthc();
-        }
 
         // 可以获得session信息，也可以获得其sessionId
         Session session = subject.getSession();
@@ -103,5 +101,19 @@ public class AuthController {
 
 
         return BaseRespVo.ok(infoData);
+    }
+
+    /**
+     * 后台管理登出
+     * @return com.cskaoyan.bean.BaseRespVo
+     * @author xyg2597@163.com
+     * @since 2022/06/28 20:01
+     */
+    @PostMapping("logout")
+    public BaseRespVo logout(){
+
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        return BaseRespVo.ok();
     }
 }

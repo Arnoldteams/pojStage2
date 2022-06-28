@@ -107,4 +107,11 @@ public class BaseRespVo<T> {
         baseRespVo.setErrmsg("订单商品已回复");
         return baseRespVo;
     }
+
+    public static <T> BaseRespVo invalidAuth(String Msg) {
+        BaseRespVo baseRespVo = new BaseRespVo();
+        baseRespVo.setErrno(605);
+        baseRespVo.setErrmsg(Msg);
+        return baseRespVo;
+    }
 }
