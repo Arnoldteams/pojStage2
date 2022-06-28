@@ -3,10 +3,12 @@ package com.cskaoyan.service;
 import com.cskaoyan.bean.*;
 import com.cskaoyan.bean.bo.AdminOrderListBO;
 import com.cskaoyan.bean.bo.AdminOrderRefundBO;
+import com.cskaoyan.bean.bo.AdminOrderReplyBO;
 import com.cskaoyan.bean.bo.AdminOrderShipBO;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.AdminOrderDetailVO;
 import com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO;
+import com.cskaoyan.mapper.MarketCommentMapper;
 import com.cskaoyan.mapper.MarketOrderGoodsMapper;
 import com.cskaoyan.mapper.MarketOrderMapper;
 import com.github.pagehelper.PageHelper;
@@ -31,6 +33,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
     @Autowired
     MarketOrderGoodsMapper marketOrderGoodsMapper;
+
+    @Autowired
+    MarketCommentMapper marketCommentMapper;
 
     /**
      * @author: ZY
@@ -107,5 +112,23 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         marketOrderMapper.updateOrderRefund(adminOrderRefundBO);
     }
 
+
+    /**
+     * @author: ZY
+     * @createTime: 2022/06/28 14:22:15
+     * @description: 商品管理-商品评论-回复
+     * @param: commentId
+     * @return: java.lang.String
+     */
+    @Override
+    public String queryAdminComment(Integer commentId) {
+        String adminComment = marketOrderMapper.selectAdminComment(commentId);
+        return adminComment;
+    }
+
+    @Override
+    public void replyOrderComment(AdminOrderReplyBO adminOrderReplyBO) {
+        marketOrderMapper.updateOrderComment(adminOrderReplyBO);
+    }
 
 }

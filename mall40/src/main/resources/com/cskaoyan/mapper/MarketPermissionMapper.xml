@@ -262,6 +262,6 @@
     </select>
 
   <select id="selectAllPermission" resultType="com.cskaoyan.bean.vo.AdminOptionsVo">
-    select id as value, name as label from market_role
+    select id as value, name as label from market_role where deleted = 0
     </select>
 </mapper>
