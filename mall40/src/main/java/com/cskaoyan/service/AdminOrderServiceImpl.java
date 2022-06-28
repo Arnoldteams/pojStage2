@@ -2,14 +2,16 @@ package com.cskaoyan.service;
 
 import com.cskaoyan.bean.*;
 import com.cskaoyan.bean.bo.AdminOrderListBO;
+import com.cskaoyan.bean.bo.AdminOrderRefundBO;
 import com.cskaoyan.bean.bo.AdminOrderShipBO;
 import com.cskaoyan.bean.param.CommonData;
-import com.cskaoyan.bean.param.User;
 import com.cskaoyan.bean.vo.AdminOrderDetailVO;
+import com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO;
 import com.cskaoyan.mapper.MarketOrderGoodsMapper;
 import com.cskaoyan.mapper.MarketOrderMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,16 +45,17 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         PageHelper.startPage(basePageInfo.getPage(), basePageInfo.getLimit());
         MarketOrderExample example = new MarketOrderExample();
         MarketOrderExample.Criteria criteria = example.createCriteria();
-        if (adminOrderListBO.getStart() != null && adminOrderListBO.getEnd() != null) {
+        if (adminOrderListBO.getStart() != null && adminOrderListBO.getEnd() != null
+                && !"".equals(adminOrderListBO.getStart()) && !"".equals(adminOrderListBO.getEnd())) {
             criteria.andAddTimeBetween(adminOrderListBO.getStart(), adminOrderListBO.getEnd());
         }
-        if (adminOrderListBO.getOrderStatusArray() != null) {
+        if (adminOrderListBO.getOrderStatusArray() != null && !"".equals(adminOrderListBO.getOrderStatusArray())) {
             criteria.andOrderStatusIn(adminOrderListBO.getOrderStatusArray());
         }
-        if (adminOrderListBO.getUserId() != null) {
+        if (adminOrderListBO.getUserId() != null && !"".equals(adminOrderListBO.getUserId())) {
             criteria.andUserIdEqualTo(adminOrderListBO.getUserId());
         }
-        if (adminOrderListBO.getOrderSn() != null) {
+        if (adminOrderListBO.getOrderSn() != null && !"".equals(adminOrderListBO.getOrderSn())) {
             criteria.andOrderSnEqualTo(adminOrderListBO.getOrderSn());
         }
         example.setOrderByClause(basePageInfo.getSort() + " " + basePageInfo.getOrder());
@@ -86,18 +89,23 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     public AdminOrderDetailVO detailOrderList(Integer id) {
         MarketOrder marketOrder = marketOrderMapper.selectOrder(id);
         MarketUser marketUser = marketOrderMapper.selectUser(id);
-
-        MarketOrderGoodsExample example = new MarketOrderGoodsExample();
-        MarketOrderGoodsExample.Criteria criteria = example.createCriteria();
-        criteria.andOrderIdEqualTo(id);
-        List<MarketOrderGoods> orderGoods = marketOrderGoodsMapper.selectByExample(example);
-
+        List<AdminOrderDetailGoodsVO> orderGoods = marketOrderGoodsMapper.selectOrderGoods(id);
         AdminOrderDetailVO adminOrderDetailVO = new AdminOrderDetailVO(marketOrder, orderGoods, marketUser);
         return adminOrderDetailVO;
-
     }
 
 
+    /**
+     * @author: ZY
+     * @createTime: 2022/06/27 22:12:26
+     * @description: 商场管理-订单管理-退款
+     * @param: adminOrderRefundBO
+     * @return: void
+     */
+    @Override
+    public void refundOrderMoney(AdminOrderRefundBO adminOrderRefundBO) {
+        marketOrderMapper.updateOrderRefund(adminOrderRefundBO);
+    }
 
 
 }

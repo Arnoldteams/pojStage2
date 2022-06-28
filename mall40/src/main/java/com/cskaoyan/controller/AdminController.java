@@ -145,9 +145,17 @@ public class AdminController {
         CommonData<MarketFeedback> data = feedbackService.queryFeedback(username,id,pageInfo);
         return BaseRespVo.ok(data);    }
 
+
     @Autowired
     AdminService marketAdminService;
 
+    /**
+    * @author: ZY
+    * @createTime: 2022/06/27 23:24:51
+    * @description: 商城首页
+    * @param:
+    * @return: com.cskaoyan.bean.BaseRespVo
+            */
     @RequestMapping("dashboard")
     public BaseRespVo dashboard() {
         DashBoardVO data = marketAdminService.queryAllCount();
