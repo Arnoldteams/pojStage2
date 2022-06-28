@@ -82,7 +82,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, desc, tag, total, discount, min, limit, type, status, goods_type, goods_value, 
+    id, name, `desc`, tag, total, discount, `min`, `limit`, type, status, goods_type , goods_value,
     code, time_type, days, start_time, end_time, add_time, update_time, deleted
   </sql>
   <select id="selectByExample" parameterType="com.cskaoyan.bean.MarketCouponExample" resultMap="BaseResultMap">
@@ -115,10 +115,10 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.cskaoyan.bean.MarketCoupon">
-    insert into market_coupon (id, name, desc, 
+  <insert id="insert" parameterType="com.cskaoyan.bean.MarketCoupon" useGeneratedKeys="true" keyProperty="id">
+    insert into market_coupon (id, name, `desc`,
       tag, total, discount, 
-      min, limit, type, 
+      `min`, `limit`, type,
       status, goods_type, goods_value, 
       code, time_type, days, 
       start_time, end_time, add_time, 
@@ -141,7 +141,7 @@
         name,
       </if>
       <if test="desc != null">
-        desc,
+        `desc`,
       </if>
       <if test="tag != null">
         tag,
@@ -153,10 +153,10 @@
         discount,
       </if>
       <if test="min != null">
-        min,
+        `min`,
       </if>
       <if test="limit != null">
-        limit,
+        `limit`,
       </if>
       <if test="type != null">
         type,
@@ -365,7 +365,7 @@
         name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="desc != null">
-        desc = #{desc,jdbcType=VARCHAR},
+        `desc` = #{desc,jdbcType=VARCHAR},
       </if>
       <if test="tag != null">
         tag = #{tag,jdbcType=VARCHAR},
@@ -377,10 +377,10 @@
         discount = #{discount,jdbcType=DECIMAL},
       </if>
       <if test="min != null">
-        min = #{min,jdbcType=DECIMAL},
+        `min` = #{min,jdbcType=DECIMAL},
       </if>
       <if test="limit != null">
-        limit = #{limit,jdbcType=SMALLINT},
+        `limit` = #{limit,jdbcType=SMALLINT},
       </if>
       <if test="type != null">
         type = #{type,jdbcType=SMALLINT},
@@ -424,12 +424,12 @@
   <update id="updateByPrimaryKey" parameterType="com.cskaoyan.bean.MarketCoupon">
     update market_coupon
     set name = #{name,jdbcType=VARCHAR},
-      desc = #{desc,jdbcType=VARCHAR},
+      `desc` = #{desc,jdbcType=VARCHAR},
       tag = #{tag,jdbcType=VARCHAR},
       total = #{total,jdbcType=INTEGER},
       discount = #{discount,jdbcType=DECIMAL},
-      min = #{min,jdbcType=DECIMAL},
-      limit = #{limit,jdbcType=SMALLINT},
+      `min` = #{min,jdbcType=DECIMAL},
+      `limit` = #{limit,jdbcType=SMALLINT},
       type = #{type,jdbcType=SMALLINT},
       status = #{status,jdbcType=SMALLINT},
       goods_type = #{goodsType,jdbcType=SMALLINT},
