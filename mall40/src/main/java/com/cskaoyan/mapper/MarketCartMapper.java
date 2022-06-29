@@ -41,4 +41,5 @@ public interface MarketCartMapper {
     void updateCartGoodsDeleted(@Param("userId") Integer userId, @Param("productIds") List<Integer> productIds);
 
     Integer selectCartGoodsCount(@Param("userId") Integer userId);
+
 }

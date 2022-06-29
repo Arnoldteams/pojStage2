@@ -1,11 +1,10 @@
 package com.cskaoyan.service;
 
-import com.cskaoyan.bean.MarketAddress;
-import com.cskaoyan.bean.MarketCart;
-import com.cskaoyan.bean.MarketCoupon;
-import com.cskaoyan.bean.MarketOrder;
+import com.cskaoyan.bean.*;
 import com.cskaoyan.bean.bo.wxOrder.*;
 import com.cskaoyan.bean.param.CommonData;
+import com.cskaoyan.bean.vo.wxOrder.WxOrderDetailChildVo;
+import com.cskaoyan.bean.vo.wxOrder.WxOrderDetailVo;
 import com.cskaoyan.bean.vo.wxOrder.WxOrderListChildVO;
 import com.cskaoyan.bean.vo.wxOrder.WxOrderSubmitVO;
 import com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO;
@@ -118,6 +117,24 @@ public class WxOrderServiceImpl implements WxOrderService {
     @Override
     public void addOrderComment(WxOrderListCommentBO wxOrderListCommentBO) {
         wxOrderMapper.insertOrderComment(wxOrderListCommentBO);
+    }
+
+    @Override
+    public WxOrderDetailVo selectOrderDetailByOrderId(Integer orderId) {
+        // 查询订单
+        WxOrderDetailChildVo child = wxOrderMapper.selectOrderInfoByOrderId(orderId);
+        WxOrderListHandleOption handler = (WxOrderListHandleOption) OrderStatusHandleConvert.getInstance().get(child.getOrderStatus());
+        String statusText = (String) OrderStatusContentConvert.getInstance().get(orderId);
+        child.setHandleOption(handler);
+        child.setOrderStatusText(statusText);
+
+        // 查询商品
+        List<AdminOrderDetailGoodsVO> list = wxOrderMapper.selectAllOrderGoodsByOrderId(orderId);
+        WxOrderDetailVo detailVo = new WxOrderDetailVo();
+        detailVo.setOrderGoods(list);
+        detailVo.setOrderInfo(child);
+        detailVo.setExpressInfo(new ArrayList<>());
+        return detailVo;
     }
 
 }

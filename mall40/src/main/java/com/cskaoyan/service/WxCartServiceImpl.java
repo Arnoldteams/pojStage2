@@ -109,8 +109,10 @@ public class WxCartServiceImpl implements WxCartService {
     public WxCartIndexVo queryAllCartGoods() {
         // 获取所有购物车商品
         MarketCartExample example = new MarketCartExample();
+        Integer userId = getUserId();
         example.createCriteria()
-                .andDeletedEqualTo(false);
+                .andDeletedEqualTo(false)
+                .andUserIdEqualTo(userId);
 
         List<MarketCart> marketCarts = cartMapper.selectByExample(example);
 
@@ -244,9 +246,10 @@ public class WxCartServiceImpl implements WxCartService {
         WxCartCheckedVo wxCartCheckedVo = new WxCartCheckedVo();
         wxCartCheckedVo.setCheckedGoodsList(marketCarts);
         wxCartCheckedVo.setCheckedAddress(address);
-        wxCartCheckedVo.setAddressId(address.getId());
-        wxCartCheckedVo.setUserCouponId(cartCheckBo.getUserCouponId());
-        wxCartCheckedVo.setCouponId(cartCheckBo.getCouponId());
+        if(address != null){
+            wxCartCheckedVo.setAddressId(address.getId());
+        }
+
         wxCartCheckedVo.setAvailableCouponLength(10);
 
         // 获取运费信息
@@ -260,12 +263,23 @@ public class WxCartServiceImpl implements WxCartService {
         wxCartCheckedVo.setOrderTotalPrice(goodsPrice+freightPrice);
 
         // 获得优惠信息
+        Integer couponPrice = 0;
         Integer actualPrice = orderPrice;
         if(cartCheckBo.getCouponId() > 0 && cartCheckBo.getUserCouponId() > 0){
-            Integer couponPrice = couponMapper.selectDiscountByCouponId(cartCheckBo.getCouponId());
+            wxCartCheckedVo.setUserCouponId(cartCheckBo.getUserCouponId());
+            wxCartCheckedVo.setCouponId(cartCheckBo.getCouponId());
+            couponPrice = couponMapper.selectDiscountByCouponId(cartCheckBo.getCouponId());
             wxCartCheckedVo.setCouponPrice(couponPrice);
-            actualPrice = orderPrice - couponPrice;
+
+        }else{
+            wxCartCheckedVo.setUserCouponId(-1);
+            wxCartCheckedVo.setCouponId(-1);
         }
+
+        // 获取优惠券信息
+
+
+        actualPrice = orderPrice - couponPrice;
         wxCartCheckedVo.setActualPrice(actualPrice);
         return wxCartCheckedVo;
     }
@@ -295,22 +309,10 @@ public class WxCartServiceImpl implements WxCartService {
      * @createTime: 2022/6/29 11:16
      */
     private Integer getUserId() {
-        Integer userId;
-        if ((userId = (Integer) session.getAttribute("userId")) != null) {
-            return userId;
-        }
+
         // 获取当前登录的用户信息
         Subject subject = SecurityUtils.getSubject();
-        if (!subject.isAuthenticated()) {
-            return 0;
-        }
         MarketUser user = (MarketUser) subject.getPrincipal();
-        String username = user.getUsername();
-        // 查询userId
-        userId = userMapper.selectUserIdByName(username);
-        session.setAttribute("userId", userId);
-        return userId;
+        return user.getId();
     }
-
-
 }
