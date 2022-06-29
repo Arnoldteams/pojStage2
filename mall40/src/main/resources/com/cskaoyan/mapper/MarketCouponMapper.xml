@@ -444,4 +444,8 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectDiscountByCouponId" resultType="java.lang.Integer">
+    select discount from market_coupon where id = #{couponId}
+    </select>
 </mapper>

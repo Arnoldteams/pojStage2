@@ -121,7 +121,7 @@
       #{checked,jdbcType=BIT}, #{picUrl,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{deleted,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="com.cskaoyan.bean.MarketCart">
+  <insert id="insertSelective" parameterType="com.cskaoyan.bean.MarketCart" useGeneratedKeys="true" keyProperty="id">
     insert into market_cart
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -360,6 +360,24 @@
     </select>
 
   <update id="updateCartInfo">
-    update market_cart set number = number + ${number} where id = #{cartId}
+    update market_cart set number = number + ${number},update_time = #{date} where id = #{cartId}
   </update>
+
+  <update id="updateCartGoodsChecked">
+    <foreach collection="productIds" item="product">
+      update market_cart set checked = #{checked}
+      where user_id = #{userId} and product_id = #{product};
+    </foreach>
+    </update>
+
+  <update id="updateCartGoodsDeleted">
+    <foreach collection="productIds" item="product">
+      update market_cart set deleted = true
+      where user_id = #{userId} and product_id = #{product};
+    </foreach>
+  </update>
+
+  <select id="selectCartGoodsCount" resultType="integer">
+    select count(id) from market_cart where user_id = #{userId} and deleted = 0
+  </select>
 </mapper>

@@ -47,6 +47,7 @@ public class ShiroConfiguration {
 
         filterChainDefinitionMap.put("/wx/**", "anon");
         filterChainDefinitionMap.put("/admin/auth/noAuthc", "anon");
+        filterChainDefinitionMap.put("/wx/cart/goodscount", "anon");
 
         filterChainDefinitionMap.put("/wx/order/**", "anon");
 

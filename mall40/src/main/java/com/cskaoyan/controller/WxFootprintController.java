@@ -7,9 +7,9 @@ import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.WxFootprintVO;
 import com.cskaoyan.service.WxFootprintService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * @Author: 于艳帆
@@ -37,6 +37,14 @@ public class WxFootprintController {
         CommonData<WxFootprintVO> data = service.queryAllFootprint(baseParam);
 
         return BaseRespVo.ok(data);
+    }
+
+    @PostMapping("delete")
+    public BaseRespVo delete(@RequestBody Map<String,String> map){
+
+        service.deleteById(Integer.parseInt(map.get("id")));
+
+        return BaseRespVo.ok();
     }
 
 }
