@@ -293,6 +293,13 @@ public class AdminRoleServiceImpl implements AdminRoleService {
         return CommonData.data(pageInfo);
     }
 
+    /**
+     * @description: 根据角色id获取角色name
+     * @parameter: [id]
+     * @return: java.lang.String
+     * @author: 帅关
+     * @createTime: 2022/6/29 16:20
+     */
     @Override
     public String selectRoleNameById(Integer id) {
         return permissionMapper.selectNameById(id);

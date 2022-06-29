@@ -42,8 +42,9 @@ public class WxFeedbackServiceImpl implements WxFeedbackService {
         marketFeedback.setUserId(user.getId());
         marketFeedback.setUsername(user.getUsername());
 
-        marketFeedback.setAddTime(new Date());
-        marketFeedback.setUpdateTime(new Date());
+        Date date = new Date();
+        marketFeedback.setAddTime(date);
+        marketFeedback.setUpdateTime(date);
         marketFeedback.setDeleted(false);
         marketFeedback.setMobile(wxFeedBackBo.getMobile());
         marketFeedback.setFeedType(wxFeedBackBo.getFeedType());

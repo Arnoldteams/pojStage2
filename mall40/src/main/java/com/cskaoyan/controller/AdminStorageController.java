@@ -30,7 +30,7 @@ import java.util.UUID;
  * @Description: 系统管理-对象存储业务（CRUD）
  */
 @RestController
-@RequestMapping("admin/storage")
+@RequestMapping("/admin/storage")
 public class AdminStorageController {
 
     @Autowired
@@ -105,6 +105,7 @@ public class AdminStorageController {
      */
     @GetMapping("list")
     public BaseRespVo list(BaseParam baseParam,String key,String name) {
+
 
         CommonData<MarketStorage> data = adminStorageService.queryAllStorage(baseParam,key,name);
 

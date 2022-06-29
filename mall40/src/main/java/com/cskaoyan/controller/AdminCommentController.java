@@ -5,6 +5,7 @@ import com.cskaoyan.bean.MarketComment;
 import com.cskaoyan.bean.bo.adminCommitDeleteBo.AdminCommentDeleteBo;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
+import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +40,7 @@ public class AdminCommentController {
      * @author: Sssd
      * @description: 删除商品评论
      */
+    @LogAnnotation(value = "删除商品评论", comment = "比帅关帅一点的 Sssd 删除了商品评论")
     @RequestMapping("delete")
     public BaseRespVo adminCommentDelete(@RequestBody AdminCommentDeleteBo bo) {
         adminCommentService.delelteCommontById(bo);

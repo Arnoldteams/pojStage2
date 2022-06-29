@@ -350,5 +350,14 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectAddressInfoByUserId" resultType="com.cskaoyan.bean.MarketAddress">
+    select id,name,user_id as userId,province,city,county,
+    address_detail as addressDetail,area_code as areaCode,
+    tel,is_default as isDefault,add_time as addTime,
+    update_time as updateTime,deleted
+    from market_address
+    where user_id = #{userId}
+    </select>
 </mapper>
 

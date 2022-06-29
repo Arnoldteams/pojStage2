@@ -10,11 +10,11 @@ import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.adminGoodsCatAndBrand.AdminGoodsCatAndBrandVo;
 import com.cskaoyan.bean.vo.adminGoodsDetailVo.AdminGoodsDetailVo;
+import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminGoodsService;
-import com.fasterxml.jackson.databind.ser.Serializers;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 
 /**
  * @description: 商品模块
@@ -39,6 +39,15 @@ public class AdminGoodsController {
      */
     @RequestMapping("list")
     public BaseRespVo adminGoodsList(BaseParam baseParam, Integer goodsSn, String name, Integer goodsId) {
+        if (baseParam.getPage() == null) {
+            baseParam.setPage(0);
+        }
+        if (baseParam.getOrder() == null) {
+            baseParam.setOrder("");
+        }
+        if (baseParam.getSort() == null) {
+            baseParam.setSort("");
+        }
         CommonData<MarketGoods> data = adminGoodsService.qurryAllGoods(baseParam, goodsSn, name, goodsId);
         return BaseRespVo.ok(data);
     }
@@ -57,6 +66,7 @@ public class AdminGoodsController {
      * @author: 重新振作的Sssd
      * @description: 商品上架
      */
+    @LogAnnotation(value = "增加商品", comment = "帅气的 Sssd 增加商品")
     @PostMapping("create")
     public BaseRespVo adminGoodsCreate(@RequestBody AdminGoodsCreateBo bo) {
         adminGoodsService.addGoods(bo);
@@ -64,8 +74,8 @@ public class AdminGoodsController {
     }
 
     /**
-     * @author: 很兴奋的 Sssd
      * @param id 商品 id
+     * @author: 很兴奋的 Sssd
      * @description: 显示商品详情
      */
     @RequestMapping("detail")
@@ -75,10 +85,11 @@ public class AdminGoodsController {
     }
 
     /**
-     * @author: 很兴奋的 Sssd
      * @param bo 请求参数
+     * @author: 很兴奋的 Sssd
      * @description: 修改商品信息
      */
+    @LogAnnotation(value = "修改商品信息", comment = "帅气的 Sssd 修改商品信息")
     @PostMapping("update")
     public BaseRespVo adminGoodsUpdate(@RequestBody AdminGoodsUpdateBo bo) {
         adminGoodsService.modifyGoods(bo);
@@ -89,6 +100,7 @@ public class AdminGoodsController {
      * @author: 炒鸡兴奋的 Sssd
      * @description: 删除商品
      */
+    @LogAnnotation(value = "删除商品", comment = "帅气的 Sssd 删除商品")
     @PostMapping("delete")
     public BaseRespVo adminGoodsDelete(@RequestBody AdminGoodsDeleteBo bo) {
         adminGoodsService.deleteGoods(bo);

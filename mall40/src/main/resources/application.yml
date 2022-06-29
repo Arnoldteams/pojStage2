@@ -18,7 +18,7 @@ spring:
       static-locations: file:d:/spring/
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mydb?useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://localhost:3306/mydb?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
     username: root
     password: 123456
     type: com.alibaba.druid.pool.DruidDataSource
@@ -54,3 +54,13 @@ com:
     logPath: D://log.txt
 
 
+# sms
+aliyun:
+  accessKeyId: LTAI4Fr5gfYhcVjLMqeRGbuT
+  accessKeySecret: IrkcHu6dZyrjPZRushgO76P5392HJ1
+  oss:
+    bucket: cskaoyan
+    endPoint: oss-cn-beijing.aliyuncs.com
+  sms:
+    signName: stone4j
+    templateCode: SMS_173765187

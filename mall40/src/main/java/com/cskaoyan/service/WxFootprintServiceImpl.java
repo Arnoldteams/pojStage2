@@ -48,4 +48,18 @@ public class WxFootprintServiceImpl implements WxFootprintService{
 
         return CommonData.data(pageInfo);
     }
+
+    @Override
+    public void deleteById(Integer id) {
+
+        MarketFootprint newDate = new MarketFootprint();
+
+        // 删除的id对应行，标志位true
+        newDate.setId(id);
+        newDate.setDeleted(true);
+
+        mapper.updateByPrimaryKeySelective(newDate);
+    }
+
+
 }

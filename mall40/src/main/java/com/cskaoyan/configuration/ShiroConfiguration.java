@@ -33,6 +33,7 @@ public class ShiroConfiguration {
         LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         // map中key    → 请求url
         // map中value  → filter名称
+
 //        后台匿名请求
         filterChainDefinitionMap.put("/admin/auth/login", "anon");
         filterChainDefinitionMap.put("/admin/auth/logout", "anon");
@@ -46,6 +47,7 @@ public class ShiroConfiguration {
 
         filterChainDefinitionMap.put("/wx/**", "anon");
         filterChainDefinitionMap.put("/admin/auth/noAuthc", "anon");
+        filterChainDefinitionMap.put("/wx/cart/goodscount", "anon");
 
         filterChainDefinitionMap.put("/wx/order/**", "anon");
 
@@ -55,6 +57,7 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/admin/**", "authc");
         /*在开发的时候关闭，测试的时候打开*/
 //        filterChainDefinitionMap.put("/wx/**", "authc");
+
 
 
         // 含义就是访问/admin/user/list这个请求需要的权限是aaa

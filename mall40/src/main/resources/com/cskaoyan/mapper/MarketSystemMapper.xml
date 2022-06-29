@@ -225,4 +225,8 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectKeyValueByKeyName" resultType="java.lang.Integer">
+    select key_value from market_system where key_name = #{keyName}
+    </select>
 </mapper>

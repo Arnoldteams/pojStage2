@@ -1,11 +1,16 @@
 package com.cskaoyan.controller;
 
-import com.cskaoyan.bean.*;
+import com.cskaoyan.bean.AdminInfoBean;
+import com.cskaoyan.bean.BaseRespVo;
+import com.cskaoyan.bean.LoginUserData;
+import com.cskaoyan.bean.MarketUser;
 import com.cskaoyan.configuration.realm.MarketToken;
+import com.cskaoyan.service.WxAuthorService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -15,11 +20,22 @@ import java.util.Map;
  * @since 2022/06/28 22:37
  */
 @RestController
-@RequestMapping("wx/")
-public class WXAuthController {
+@RequestMapping("wx/auth")
+public class WxAuthController {
+
+    @Autowired
+    WxAuthorService wxAuthorService;
 
 
-    @PostMapping("auth/login")
+
+    /**
+     * 用户登录
+     * @param map
+     * @return com.cskaoyan.bean.BaseRespVo
+     * @author xyg2597@163.com
+     * @since 2022/06/29 20:27
+     */
+    @PostMapping("login")
     public BaseRespVo login(@RequestBody Map map) {
         String username = (String) map.get("username");
         String password = (String) map.get("password");
@@ -62,8 +78,13 @@ public class WXAuthController {
         return BaseRespVo.ok(loginUserData);
     }
 
-
-    @PostMapping("auth/logout")
+    /**
+     * 用户登出
+     * @return com.cskaoyan.bean.BaseRespVo
+     * @author xyg2597@163.com
+     * @since 2022/06/29 20:27
+     */
+    @PostMapping("logout")
     public BaseRespVo logout() {
 
         Subject subject = SecurityUtils.getSubject();
@@ -71,9 +92,6 @@ public class WXAuthController {
         return BaseRespVo.ok();
     }
 
-    @GetMapping("user/index")
-    public BaseRespVo userIndex() {
-        return null;
-    }
+
 
 }
