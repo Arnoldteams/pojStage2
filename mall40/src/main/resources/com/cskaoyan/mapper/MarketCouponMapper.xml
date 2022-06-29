@@ -274,7 +274,7 @@
         name = #{record.name,jdbcType=VARCHAR},
       </if>
       <if test="record.desc != null">
-        desc = #{record.desc,jdbcType=VARCHAR},
+        `desc` = #{record.desc,jdbcType=VARCHAR},
       </if>
       <if test="record.tag != null">
         tag = #{record.tag,jdbcType=VARCHAR},
@@ -286,10 +286,10 @@
         discount = #{record.discount,jdbcType=DECIMAL},
       </if>
       <if test="record.min != null">
-        min = #{record.min,jdbcType=DECIMAL},
+        `min` = #{record.min,jdbcType=DECIMAL},
       </if>
       <if test="record.limit != null">
-        limit = #{record.limit,jdbcType=SMALLINT},
+        `limit` = #{record.limit,jdbcType=SMALLINT},
       </if>
       <if test="record.type != null">
         type = #{record.type,jdbcType=SMALLINT},
@@ -444,4 +444,8 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectDiscountByCouponId" resultType="java.lang.Integer">
+    select discount from market_coupon where id = #{couponId}
+    </select>
 </mapper>

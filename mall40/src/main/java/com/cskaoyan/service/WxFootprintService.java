@@ -14,4 +14,7 @@ public interface WxFootprintService {
      * @return: com.cskaoyan.bean.param.CommonData<com.cskaoyan.bean.vo.WxFootprintVO>
      */
     CommonData<WxFootprintVO> queryAllFootprint(BaseParam baseParam);
+
+
+    void deleteById(Integer id);
 }

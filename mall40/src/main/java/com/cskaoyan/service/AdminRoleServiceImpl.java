@@ -14,7 +14,6 @@ import com.cskaoyan.bean.vo.PermissionsVo;
 import com.cskaoyan.mapper.MarketAdminMapper;
 import com.cskaoyan.mapper.MarketPermissionMapper;
 import com.cskaoyan.mapper.MarketRoleMapper;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -293,6 +292,13 @@ public class AdminRoleServiceImpl implements AdminRoleService {
         return CommonData.data(pageInfo);
     }
 
+    /**
+     * @description: 根据角色id获取角色name
+     * @parameter: [id]
+     * @return: java.lang.String
+     * @author: 帅关
+     * @createTime: 2022/6/29 16:20
+     */
     @Override
     public String selectRoleNameById(Integer id) {
         return permissionMapper.selectNameById(id);

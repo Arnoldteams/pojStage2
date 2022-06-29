@@ -711,7 +711,7 @@
   </update>
 
   <update id="updateUserOrderStatusConfirm">
-      update market_order set order_status=401
+      update market_order set order_status=401,confirm_time=curtime()
      where id=#{orderId}
   </update>
 
@@ -729,28 +729,29 @@
       select id,order_id as orderId,goods_id as goodsId,goods_name as goodsName,goods_sn as goodsSn,
     product_id as produceId,number,price,specifications,pic_url as picUrl,comment,add_time as addTime,
     update_time as updateTime,deleted
-     from market_order_goods where order_id = #{orderId} and goods_id=#{goodsId}
+     from market_order_goods
+      where order_id = #{orderId} and goods_id=#{goodsId}
   </select>
 
-  <insert id="insertOrderComment">
-    <!--insert into market_comment values-->
-    <!--(null,0,0,#{content},null,null,#{hasPicture},#{})-->
+  <insert id="insertOrderComment" >
+    insert into market_comment values
+    (null,0,0,#{wxOrderListCommentBO.content},null,
+    #{userId},#{wxOrderListCommentBO.hasPicture},#{picUrls},#{wxOrderListCommentBO.star},curtime(),null,0)
   </insert>
 
 
-
-  <select id="selectAllorderListByUerId" resultMap="BaseResultMap">
+  <select id="selectAllorderListByUserId" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from market_order
-    where id=#{userId}
+    where user_id=#{userId}
   </select>
 
   <select id="selectOrderListByStatusByUserId" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from market_order
-    where id=#{userId} and order_status=#{orderStatus}
+    where user_id=#{userId} and order_status=#{orderStatus}
   </select>
 
   <select id="selectAllOrderGoodsByOrderId" resultType="com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO">
@@ -760,6 +761,19 @@
   </select>
 
   <select id="selectHandleOption" resultType="com.cskaoyan.bean.bo.wxOrder.WxOrderListHandleOption">
+
+  </select>
+
+  <select id="selectOrderInfoByOrderId" resultType="com.cskaoyan.bean.vo.wxOrder.WxOrderDetailChildVo">
+      select consignee,address,add_time as addTime,order_sn as orderSn,
+      actual_price as actualPrice,mobile,message,aftersale_status as aftersaleStatus,
+      goods_price as goodsPrice,coupon_price as couponPrice,id,freight_price,
+      order_status as orderStatus
+      from market_order
+      where id =#{orderId}
+    </select>
+
+  <select id="selectOrderGoodsInfoByOrderId" resultType="com.cskaoyan.bean.MarketOrderGoods">
 
   </select>
 </mapper>

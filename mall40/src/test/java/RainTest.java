@@ -7,14 +7,16 @@ import com.cskaoyan.bean.vo.WxFootprintVO;
 import com.cskaoyan.mapper.MarketFootprintMapper;
 
 
+
 import com.cskaoyan.mapper.MarketKeywordMapper;
+import com.cskaoyan.service.FileService;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Map;
 
 /**
  * @Author: 于艳帆
@@ -23,38 +25,32 @@ import java.util.Map;
  * @Description:
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = MarketApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = MarketApplication.class)
 public class RainTest {
 
+    @Autowired
+    FileService fileService;
 
     @Autowired
     MarketKeywordMapper marketKeywordMapper;
 
-    @Autowired
-    MarketFootprintMapper marketFootprintMapper;
-
 
     @Test
-    public void test01(){
-        for (WxFootprintVO wxFootprintVO : marketFootprintMapper.selectFootprintInfoByUserId(4)) {
-            System.out.println(wxFootprintVO);
+    public void test2(){
+        for (int i = 0; i < 10; i++) {
+            String s = RandomStringUtils.randomNumeric(6);
+            System.out.println(s);
         }
 
     }
 
     @Test
-    public void queryAll() {
-        for (MarketKeyword marketKeyword : marketKeywordMapper.selectByExample(null)) {
-            System.out.println(marketKeyword.getKeyword());
-        }
+    public void test1(){
+        // for (MarketKeyword marketKeyword : marketKeywordMapper.selectByExample(null)) {
+        //     System.out.println(marketKeyword);
+        // }
 
-    }
-
-    @Test
-    public void Test(){
-        Map instance = OrderStatusConvert.getInstance();
-        OrderStatusConvert object = (OrderStatusConvert) instance.get(1);
-        System.out.println();
+        fileService.sendMsg("15602109920","123456");
     }
 
 }

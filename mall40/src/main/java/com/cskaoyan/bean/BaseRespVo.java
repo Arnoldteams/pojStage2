@@ -114,4 +114,11 @@ public class BaseRespVo<T> {
         baseRespVo.setErrmsg(Msg);
         return baseRespVo;
     }
+
+    public static <T> BaseRespVo codeAndMsg(Integer code,String msg) {
+        BaseRespVo baseRespVo = new BaseRespVo();
+        baseRespVo.setErrno(code);
+        baseRespVo.setErrmsg(msg);
+        return baseRespVo;
+    }
 }
