@@ -1,6 +1,5 @@
 import com.cskaoyan.MarketApplication;
 import com.cskaoyan.bean.MarketKeyword;
-import com.cskaoyan.bean.OrderStatus;
 import com.cskaoyan.mapper.MarketKeywordMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,13 +29,6 @@ public class RainTest {
             System.out.println(marketKeyword.getKeyword());
         }
 
-    }
-
-    @Test
-    public void Test(){
-        Map instance = OrderStatus.getInstance();
-        OrderStatus object = (OrderStatus) instance.get(1);
-        System.out.println();
     }
 
 }

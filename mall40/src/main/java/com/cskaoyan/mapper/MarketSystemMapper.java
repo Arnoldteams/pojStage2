@@ -28,4 +28,6 @@ public interface MarketSystemMapper {
     int updateByPrimaryKeySelective(MarketSystem record);
 
     int updateByPrimaryKey(MarketSystem record);
+
+    Integer selectKeyValueByKeyName(@Param("keyName") String keyName);
 }
