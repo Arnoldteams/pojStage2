@@ -29,7 +29,7 @@ public class WxBrandServiceImpl implements WxBrandService{
 
         MarketBrandExample example = new MarketBrandExample();
         MarketBrandExample.Criteria criteria = example.createCriteria();
-        
+
         criteria.andDeletedEqualTo(false);
 
         //分页插件 PageHelper，辅助我们做分页以及分页信息的获得

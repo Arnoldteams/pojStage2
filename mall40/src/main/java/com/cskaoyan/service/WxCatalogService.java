@@ -1,5 +1,6 @@
 package com.cskaoyan.service;
 
+import com.cskaoyan.bean.vo.WxCatalogCurrentVO;
 import com.cskaoyan.bean.vo.WxCatalogIndexVO;
 
 /**
@@ -11,4 +12,10 @@ import com.cskaoyan.bean.vo.WxCatalogIndexVO;
 public interface WxCatalogService {
     WxCatalogIndexVO showCatalogIndex();
 
+    /**
+     * @author sprinkle
+     * @since 2022/06/29 15:50
+     */
+
+    WxCatalogCurrentVO queryOneCatalog(String id);
 }
