@@ -12,7 +12,7 @@ import java.util.List;
  * @since 2022/06/29 16:58
  */
 @Data
-public class WxTopicListVO<T> {
+public class WxListVO<T> {
     private List<T> list;
 
     private Integer page;
