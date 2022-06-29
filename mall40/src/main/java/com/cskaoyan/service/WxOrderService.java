@@ -22,5 +22,9 @@ public interface WxOrderService {
 
     void addOrderComment(WxOrderListCommentBO wxOrderListCommentBO);
 
+
+    void cancelOrder(Integer orderId);
+
     WxOrderDetailVo selectOrderDetailByOrderId(Integer orderId);
+
 }
