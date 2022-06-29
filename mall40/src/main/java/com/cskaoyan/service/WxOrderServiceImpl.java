@@ -95,8 +95,9 @@ public class WxOrderServiceImpl implements WxOrderService {
             wxOrderListChildVOList.add(wxOrderListChildVO);
         }
 
-        PageInfo<WxOrderListChildVO> wxOrderListChildVOPageInfo = new PageInfo<>(wxOrderListChildVOList);
-        return CommonData.data(wxOrderListChildVOPageInfo);
+        // PageInfo<WxOrderListChildVO> wxOrderListChildVOPageInfo = new PageInfo<>(wxOrderListChildVOList);
+        PageInfo<MarketOrder> marketOrderPageInfo = new PageInfo<>(orderList);
+        return CommonData.data(marketOrderPageInfo);
     }
 
 
@@ -165,13 +166,17 @@ public class WxOrderServiceImpl implements WxOrderService {
     public WxOrderDetailVo selectOrderDetailByOrderId(Integer orderId) {
         // 查询订单
         WxOrderDetailChildVo child = wxOrderMapper.selectOrderInfoByOrderId(orderId);
-        WxOrderListHandleOption handler = (WxOrderListHandleOption) OrderStatusHandleConvert.getInstance().get(child.getOrderStatus());
-        String statusText = (String) OrderStatusContentConvert.getInstance().get(orderId);
+        Map instance = OrderStatusHandleConvert.getInstance();
+        OrderStatusHandleConvert convert = (OrderStatusHandleConvert) instance.get(child.getOrderStatus());
+        WxOrderListHandleOption handler = convert.getHandler();
+
+        OrderStatusContentConvert statusConvert = (OrderStatusContentConvert) OrderStatusContentConvert.getInstance().get(child.getOrderStatus());
+        String statusText = statusConvert.getOrderStatusContent();
         child.setHandleOption(handler);
         child.setOrderStatusText(statusText);
 
         // 查询商品
-        List<AdminOrderDetailGoodsVO> list = wxOrderMapper.selectAllOrderGoodsByOrderId(orderId);
+        List<AdminOrderDetailGoodsVO> list = wxOrderMapper.selectAllInfoOrderGoodsByOrderId(orderId);
         WxOrderDetailVo detailVo = new WxOrderDetailVo();
         detailVo.setOrderGoods(list);
         detailVo.setOrderInfo(child);

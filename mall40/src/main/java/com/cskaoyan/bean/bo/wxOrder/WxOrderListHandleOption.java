@@ -13,14 +13,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WxOrderListHandleOption {
-    Boolean aftersale;
-    Boolean cancel;
-    Boolean comment;
-    Boolean confirm;
-    Boolean delete;
-    Boolean pay;
-    Boolean rebuy;
-    Boolean refund;
+    boolean aftersale;
+    boolean cancel;
+    boolean comment;
+    boolean confirm;
+    boolean delete;
+    boolean pay;
+    boolean rebuy;
+    boolean refund;
 
     public Boolean getAftersale() {
         return aftersale;
