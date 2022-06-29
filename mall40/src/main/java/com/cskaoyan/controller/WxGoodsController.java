@@ -1,6 +1,7 @@
 package com.cskaoyan.controller;
 
 import com.cskaoyan.bean.BaseRespVo;
+import com.cskaoyan.bean.MarketGoods;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.wxGoodsCategory.WxGoodsCategoryVo;
@@ -54,6 +55,12 @@ public class WxGoodsController {
     public BaseRespVo wxGoodsDetail(Integer id) {
         WxGoodsDetailVo vo = wxGoodsService.quarryGoodsDetail(id);
         return BaseRespVo.ok(vo);
+    }
+
+    @RequestMapping("related")
+    public BaseRespVo wxGoodsRelated(Integer id) {
+        CommonData<MarketGoods> data = wxGoodsService.quarryRelatedGoods(id);
+        return BaseRespVo.ok(data);
     }
 
 }

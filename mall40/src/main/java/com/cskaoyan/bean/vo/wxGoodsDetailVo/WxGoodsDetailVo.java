@@ -31,7 +31,7 @@ public class WxGoodsDetailVo {
 
     private String shareImage;
 
-    private List<MarketGoodsSpecification> specificationList;
+    private List<WxGoodsDetailSpecificationVo> specificationList;
 
     private Integer userHasCollect;
 

@@ -1,6 +1,8 @@
 package com.cskaoyan.service;
 
+import com.cskaoyan.bean.MarketGoods;
 import com.cskaoyan.bean.param.BaseParam;
+import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.wxGoodsCategory.WxGoodsCategoryVo;
 import com.cskaoyan.bean.vo.wxGoodsDetailVo.WxGoodsDetailVo;
 import com.cskaoyan.bean.vo.wxGoodsList.WxGoodsListVo;
@@ -25,4 +27,6 @@ public interface WxGoodsService {
     WxGoodsListVo quarryList(BaseParam baseParam, Integer id);
 
     WxGoodsDetailVo quarryGoodsDetail(Integer id);
+
+    CommonData<MarketGoods> quarryRelatedGoods(Integer id);
 }
