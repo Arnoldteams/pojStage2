@@ -3,10 +3,12 @@ package com.cskaoyan.controller;
 import com.cskaoyan.bean.*;
 import com.cskaoyan.configuration.realm.MarketToken;
 import com.cskaoyan.handler.LogAnnotation;
+import com.cskaoyan.service.AdminAuthService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 // import javax.validation.Valid;
@@ -16,15 +18,18 @@ import java.util.Map;
 //shiro整合之后，在做具体的开发
 //响应结果都是JSON，Controller组件上我们都用@RestController注解
 @RestController
-@RequestMapping("admin")
+@RequestMapping("admin/auth")
 public class AuthController {
 
+
+    @Autowired
+    AdminAuthService adminAuthService;
 
     /**
      * Shiro
      * 如果参数比较少，类型比较简单的话，使用map来接收也可以
      */
-    @PostMapping("auth/login")
+    @PostMapping("login")
     @LogAnnotation("登录")
     public BaseRespVo login(@RequestBody Map map) {
 //        $2a$10$.rEfyBb/GURD9P2p0fRg/OAJGloGNDkJS4lY0cQHeqDgsbdTylBpu
@@ -71,22 +76,21 @@ public class AuthController {
     }
 
 
-    @RequestMapping("auth/info")
+    @RequestMapping("info")
     public BaseRespVo info(String token) {
 
 
-        //开发完shiro之后，再整合
-        InfoData infoData = new InfoData();
-        infoData.setName("admin123");
+//        //开发完shiro之后，再整合
+//        InfoData infoData = new InfoData();
+//        infoData.setName("admin123");
 
-        //根据primaryPrincipal做查询
-        infoData.setAvatar("https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
-        ArrayList<String> roles = new ArrayList<>();
-        roles.add("超级管理员");
-        infoData.setRoles(roles);
-        ArrayList<String> perms = new ArrayList<>();
-        perms.add("*");
-        infoData.setPerms(perms);
+//        //根据primaryPrincipal做查询
+        Subject subject = SecurityUtils.getSubject();
+        MarketAdmin primaryPrincipal = (MarketAdmin) subject.getPrincipals().getPrimaryPrincipal();
+
+        InfoData infoData = adminAuthService.getInfo(primaryPrincipal);
+
+
 
 
         return BaseRespVo.ok(infoData);
@@ -99,7 +103,7 @@ public class AuthController {
      * @author xyg2597@163.com
      * @since 2022/06/28 20:01
      */
-    @PostMapping("auth/logout")
+    @PostMapping("logout")
     public BaseRespVo logout() {
 
         Subject subject = SecurityUtils.getSubject();
@@ -107,10 +111,10 @@ public class AuthController {
         return BaseRespVo.ok();
     }
 
-    @GetMapping("profile/nnotice")
+
+    @GetMapping("noAuthc")
     public BaseRespVo nNotice() {
         return BaseRespVo.ok(0);
     }
-
 
 }

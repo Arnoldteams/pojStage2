@@ -23,7 +23,6 @@ import java.util.List;
  * @since 2022/06/25 19:36
  * @author Gzy
  */
-
 @RestController
 @RequestMapping("/admin/role")
 public class AdminRoleController {

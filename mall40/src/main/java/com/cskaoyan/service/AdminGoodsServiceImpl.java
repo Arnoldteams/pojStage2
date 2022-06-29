@@ -14,11 +14,13 @@ import com.cskaoyan.bean.vo.adminGoodsDetailVo.AdminGoodsDetailVo;
 import com.cskaoyan.mapper.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +29,7 @@ import java.util.List;
  * @author: Sssd
  * @date: 2022年06月26日 13:47
  */
+@Transactional
 @Service
 public class AdminGoodsServiceImpl implements AdminGoodsService{
 
@@ -44,6 +47,12 @@ public class AdminGoodsServiceImpl implements AdminGoodsService{
 
     @Autowired
     MarketCategoryMapper marketCategoryMapper;
+
+    @Autowired
+    HttpSession session;
+
+    @Autowired
+    RedisTemplate redisTemplate;
 
     @Override
     public CommonData<MarketGoods> qurryAllGoods(BaseParam baseParam, Integer goodsSn, String name, Integer goodsId) {
@@ -142,6 +151,7 @@ public class AdminGoodsServiceImpl implements AdminGoodsService{
             marketGoodsSpecificationMapper.insertSelective(specification);
         }
 
+        session.setAttribute("log", goods.getId());
     }
 
     @Override
@@ -216,6 +226,8 @@ public class AdminGoodsServiceImpl implements AdminGoodsService{
             product.setUpdateTime(date);
             marketGoodsProductMapper.updateByPrimaryKeySelective(product);
         }
+
+        session.setAttribute("log", goods.getId());
     }
 
     @Override
@@ -226,5 +238,7 @@ public class AdminGoodsServiceImpl implements AdminGoodsService{
         MarketGoods marketGoods = new MarketGoods();
         marketGoods.setDeleted(true);
         marketGoodsMapper.updateByExampleSelective(marketGoods, example);
+
+        session.setAttribute("log", bo.getId());
     }
 }
