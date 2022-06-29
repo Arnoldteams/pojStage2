@@ -22,11 +22,11 @@ public class WebConfiguration implements WebMvcConfigurer {
      * @author: 相当疲惫的 Sssd
      * @description: 注意一定要写，否则上传文件的大小会有限制
      */
-    @Bean
+    /*@Bean
     public MultipartResolver multipartResolver() {
         CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
         return commonsMultipartResolver;
-    }
+    }*/
 
     @Override
     public Validator getValidator() {

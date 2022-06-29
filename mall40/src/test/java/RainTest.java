@@ -1,6 +1,13 @@
 import com.cskaoyan.MarketApplication;
 import com.cskaoyan.bean.MarketKeyword;
 
+import com.cskaoyan.bean.bo.wxOrder.OrderStatusConvert;
+
+import com.cskaoyan.bean.vo.WxFootprintVO;
+import com.cskaoyan.mapper.MarketFootprintMapper;
+
+
+
 import com.cskaoyan.mapper.MarketKeywordMapper;
 import com.cskaoyan.service.FileService;
 import org.apache.commons.lang3.RandomStringUtils;

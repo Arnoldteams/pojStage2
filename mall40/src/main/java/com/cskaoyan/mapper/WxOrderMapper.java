@@ -92,4 +92,5 @@ public interface WxOrderMapper {
 
     WxOrderDetailChildVo selectOrderInfoByOrderId(@Param("orderId") Integer orderId);
 
+    List<AdminOrderDetailGoodsVO> selectAllInfoOrderGoodsByOrderId(Integer orderId);
 }

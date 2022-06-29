@@ -1,6 +1,10 @@
 package com.cskaoyan.service;
 
-import com.cskaoyan.bean.*;
+
+import com.cskaoyan.bean.InfoData;
+import com.cskaoyan.bean.MarketAdmin;
+import com.cskaoyan.bean.MarketAdminExample;
+import com.cskaoyan.bean.MarketRole;
 import com.cskaoyan.mapper.MarketAdminMapper;
 import com.cskaoyan.mapper.MarketPermissionMapper;
 import com.cskaoyan.mapper.MarketRoleMapper;
