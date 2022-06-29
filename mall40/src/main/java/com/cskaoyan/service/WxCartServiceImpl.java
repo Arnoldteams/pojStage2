@@ -1,19 +1,18 @@
 package com.cskaoyan.service;
 
 import com.cskaoyan.bean.MarketCart;
-import com.cskaoyan.bean.MarketGoods;
-import com.cskaoyan.bean.MarketGoodsProduct;
-import com.cskaoyan.bean.MarketUser;
 import com.cskaoyan.bean.vo.wxCart.WxCartIndexAllNumberVo;
 import com.cskaoyan.bean.vo.wxCart.WxCartIndexVo;
-import com.cskaoyan.mapper.*;
-import org.apache.shiro.session.Session;
-import org.springframework.beans.BeanUtils;
+import com.cskaoyan.mapper.MarketCartMapper;
+import com.cskaoyan.mapper.MarketGoodsMapper;
+import com.cskaoyan.mapper.MarketGoodsProductMapper;
+import com.cskaoyan.mapper.MarketUserMapper;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +23,7 @@ import java.util.List;
  */
 
 @Service
-public class WxCartServiceImpl implements WxCartService{
+public class WxCartServiceImpl implements WxCartService {
 
     @Autowired
     HttpSession session;
@@ -47,21 +46,37 @@ public class WxCartServiceImpl implements WxCartService{
     @Override
     public int cartAddNewGoods(MarketCart cart) {
 
-        // String username = (String) session.getAttribute("username");
-        // 查询userId
-        // Integer id = userMapper.selectUserIdByName(username);
+        // 获取当前登录的用户信息
+        // Subject subject = SecurityUtils.getSubject();
+        // if (!subject.isAuthenticated()) {
+        //     return 0;
+        // }
+        // String username = (String) subject.getPrincipal();
+
         // 查询good和product表
         MarketCart cartPo = productMapper.selectPartDataByPrimaryKey(cart.getProductId());
+
+        // 设置更新时间和状态位
         Date date = new Date();
-        // 对象封装
-        cartPo.setUserId(1)
-                .setAddTime(date)
-                .setUpdateTime(date)
-                .setDeleted(false)
-                .setGoodsId(cart.getGoodsId())
-                .setNumber(cart.getNumber())
-                .setProductId(cart.getProductId());
-        cartMapper.insertSelective(cartPo);
+
+        // // 查询userId
+        // Integer userId = userMapper.selectUserIdByName(username);
+
+        // 购物车中存在同款商品，则商品数量合并
+        Integer cartId;
+        if ((cartId = cartMapper.selectIdByUserIdAndProductId(1,cart.getProductId())) != null) {
+            cartMapper.updateCartInfo(cartId,cart.getNumber(),date);
+        } else {
+            // 对象封装
+            cartPo.setUserId(1)
+                    .setUpdateTime(date)
+                    .setNumber(cart.getNumber())
+                    .setDeleted(false)
+                    .setAddTime(date)
+                    .setGoodsId(cart.getGoodsId())
+                    .setProductId(cart.getProductId());
+            cartMapper.insertSelective(cartPo);
+        }
 
         // 获取购物车中的商品数量
         return cartMapper.selectAllNumber();
@@ -92,9 +107,9 @@ public class WxCartServiceImpl implements WxCartService{
             goodsCount += number;
             price = marketCart.getPrice().floatValue();
             goodsAmount += number * price;
-            if(marketCart.getChecked()){
+            if (marketCart.getChecked()) {
                 checkedGoodsAmount += number * price;
-                checkedGoodsCount += goodsCount;
+                checkedGoodsCount += number;
             }
         }
         // 封装对象

@@ -354,4 +354,12 @@
   <select id="selectAllNumber" resultType="int">
     select count(number) from market_cart
   </select>
+
+  <select id="selectIdByUserIdAndProductId" resultType="java.lang.Integer">
+    select id from market_cart where user_id = #{userId} and product_id = #{productId}
+    </select>
+
+  <update id="updateCartInfo">
+    update market_cart set number = number + ${number} where id = #{cartId}
+  </update>
 </mapper>

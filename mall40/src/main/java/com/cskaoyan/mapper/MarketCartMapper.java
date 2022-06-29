@@ -4,6 +4,7 @@ import com.cskaoyan.bean.MarketCart;
 import com.cskaoyan.bean.MarketCartExample;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface MarketCartMapper {
@@ -31,4 +32,7 @@ public interface MarketCartMapper {
 
     int selectAllNumber();
 
+    Integer selectIdByUserIdAndProductId(@Param("userId") Integer userId, @Param("productId") Integer productId);
+
+    void updateCartInfo(@Param("cartId") Integer cartId, @Param("number") Short number, @Param("date") Date date);
 }
