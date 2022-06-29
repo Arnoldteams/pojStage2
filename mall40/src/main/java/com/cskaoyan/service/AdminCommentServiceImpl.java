@@ -10,7 +10,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -18,11 +20,15 @@ import java.util.List;
  * @author: 无敌帅的 Sssd
  * @date: 2022年06月27日 22:40
  */
+@Transactional
 @Service
 public class AdminCommentServiceImpl implements AdminCommentService{
 
     @Autowired
     MarketCommentMapper marketCommentMapper;
+
+    @Autowired
+    HttpSession session;
 
     @Override
     public CommonData<MarketComment> quarryAllComment(BaseParam baseParam, Integer userId, Integer valueId) {
@@ -57,6 +63,8 @@ public class AdminCommentServiceImpl implements AdminCommentService{
         criteria.andIdEqualTo(bo.getId());
         MarketComment marketComment = new MarketComment();
         marketComment.setDeleted(true);
+
         marketCommentMapper.updateByExampleSelective(marketComment, marketCommentExample);
+        session.setAttribute("log", "删除了id = " + bo.getId() +  "的商品评论");
     }
 }

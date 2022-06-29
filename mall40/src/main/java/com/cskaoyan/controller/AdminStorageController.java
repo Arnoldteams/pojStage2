@@ -30,7 +30,6 @@ import java.util.UUID;
  * @Description: 系统管理-对象存储业务（CRUD）
  */
 @RestController
-@RequestMapping("admin/storage")
 public class AdminStorageController {
 
     @Autowired
@@ -53,7 +52,7 @@ public class AdminStorageController {
      * @param file 形参接收请求参数
      * @description: 图片上传，单个图片
      */
-    @PostMapping("create")
+    @RequestMapping({"admin/storage/create", "wx/storage/upload"})
     public BaseRespVo adminStorageCreate(MultipartFile file) {
         // 创建一个 storage 存参数
         MarketStorage marketStorage = new MarketStorage();
@@ -104,7 +103,7 @@ public class AdminStorageController {
      * @param: baseParam - [BaseParam]
      * @return: com.cskaoyan.bean.BaseRespVo<com.cskaoyan.bean.vo.AdminStorageVO>
      */
-    @GetMapping("list")
+    @GetMapping("/admin/storage/list")
     public BaseRespVo<AdminStorageVO> list(BaseParam baseParam,String key,String name) {
 
         CommonData<MarketStorage> data = adminStorageService.queryAllStorage(baseParam,key,name);
@@ -119,7 +118,7 @@ public class AdminStorageController {
      * @param: marketStorage - [MarketStorage]
      * @return: com.cskaoyan.bean.BaseRespVo<com.cskaoyan.bean.MarketStorage>
      */
-    @PostMapping("update")
+    @PostMapping("/admin/storage/update")
     public BaseRespVo<MarketStorage> update(@RequestBody MarketStorage marketStorage) {
         BaseRespVo<MarketStorage> resp = new BaseRespVo<>();
 
@@ -137,7 +136,7 @@ public class AdminStorageController {
      * @param: marketStorage - [MarketStorage]
      * @return: com.cskaoyan.bean.BaseRespVo<java.lang.String>
      */
-    @PostMapping("delete")
+    @PostMapping("/admin/storage/delete")
     public BaseRespVo<String> delete(@RequestBody MarketStorage marketStorage) {
         BaseRespVo<String> resp = new BaseRespVo<>();
 
