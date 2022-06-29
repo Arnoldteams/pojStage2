@@ -14,7 +14,6 @@ import com.cskaoyan.bean.vo.PermissionsVo;
 import com.cskaoyan.mapper.MarketAdminMapper;
 import com.cskaoyan.mapper.MarketPermissionMapper;
 import com.cskaoyan.mapper.MarketRoleMapper;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;

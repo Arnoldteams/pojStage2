@@ -57,7 +57,9 @@ public class AdminCouponServiceImpl implements AdminCouponService {
         if(!(status == null)){
             criteria1.andStatusEqualTo(status);
         }
-        marketCouponUserExample.setOrderByClause(info.getSort()+" "+info.getOrder());
+        if(info.getSort()!=null&&info.getOrder()!=null) {
+            marketCouponUserExample.setOrderByClause(info.getSort() + " " + info.getOrder());
+        }
         List<MarketCoupon> marketCoupons = marketCouponMapper.selectByExample(marketCouponUserExample);
         PageInfo<MarketCoupon> marketCouponPageInfo = new PageInfo<>(marketCoupons);
         return CommonData.data(marketCouponPageInfo);
