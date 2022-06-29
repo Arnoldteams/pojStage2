@@ -61,8 +61,15 @@ public class PostExceptionHandler {
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseBody
-    @LogAnnotation(value = "编辑专题信息",successResult = "专题编辑成功")
+    @LogAnnotation(value = "编辑专题信息")
     public BaseRespVo JsonExceptionHandle(HttpMessageNotReadableException e){
-        return BaseRespVo.invalidPrice();
+        return BaseRespVo.invalidJson("参数值错误");
     }
+
+    @ExceptionHandler(AdminRequestBodyException.class)
+    @ResponseBody
+    public BaseRespVo JsonExceptionHandle(AdminRequestBodyException e){
+        return BaseRespVo.invalidJson(e.getMessage());
+    }
+
 }

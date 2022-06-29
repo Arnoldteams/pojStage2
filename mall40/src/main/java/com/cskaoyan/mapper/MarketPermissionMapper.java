@@ -45,4 +45,8 @@ public interface MarketPermissionMapper {
     List<AdminOptionsVo> selectAllPermission();
 
     String selectNameById(@Param("id") Integer id);
+
+    //    根据权限查询对应api
+    String queryApiByPermission(@Param("permission") String permission);
+
 }

@@ -268,4 +268,8 @@
   <select id="selectNameById" resultType="java.lang.String">
     select name from market_role where id = #{id}
   </select>
+
+  <select id="queryApiByPermission" resultType="java.lang.String">
+    select api from market_permission_table where id = #{permission}
+  </select>
 </mapper>
