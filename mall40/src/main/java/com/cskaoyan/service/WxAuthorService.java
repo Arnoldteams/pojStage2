@@ -12,4 +12,6 @@ public interface WxAuthorService {
 
     //    登录后的用户首页信息
     UserIndexVO userIndex(MarketUser primaryPrincipal);
+
+    Boolean hasAccount(String mobile);
 }

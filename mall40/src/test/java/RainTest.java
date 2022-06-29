@@ -38,11 +38,11 @@ public class RainTest {
 
     @Test
     public void test1(){
-        for (MarketKeyword marketKeyword : marketKeywordMapper.selectByExample(null)) {
-            System.out.println(marketKeyword);
-        }
+        // for (MarketKeyword marketKeyword : marketKeywordMapper.selectByExample(null)) {
+        //     System.out.println(marketKeyword);
+        // }
 
-        // fileService.sendMsg("15602109920","123456");
+        fileService.sendMsg("15602109920","123456");
     }
 
 }

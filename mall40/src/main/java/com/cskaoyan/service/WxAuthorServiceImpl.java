@@ -3,9 +3,11 @@ package com.cskaoyan.service;
 import com.cskaoyan.bean.MarketOrder;
 import com.cskaoyan.bean.MarketOrderExample;
 import com.cskaoyan.bean.MarketUser;
+import com.cskaoyan.bean.MarketUserExample;
 import com.cskaoyan.bean.vo.wx.user.UserIndexOrder;
 import com.cskaoyan.bean.vo.wx.user.UserIndexVO;
 import com.cskaoyan.mapper.MarketOrderMapper;
+import com.cskaoyan.mapper.MarketUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,9 @@ public class WxAuthorServiceImpl implements WxAuthorService {
 
     @Autowired
     MarketOrderMapper marketOrderMapper;
+
+    @Autowired
+    MarketUserMapper userMapper;
 
     /**
      * 登录后用户界面信息
@@ -77,5 +82,18 @@ public class WxAuthorServiceImpl implements WxAuthorService {
 
 
         return UserIndexVO.setUserIndexVO(userIndexOrder);
+    }
+
+    @Override
+    public Boolean hasAccount(String mobile) {
+
+        MarketUserExample example = new MarketUserExample();
+        MarketUserExample.Criteria criteria = example.createCriteria();
+        criteria.andMobileEqualTo(mobile).andDeletedEqualTo(false);
+
+        List<MarketUser> marketUsers = userMapper.selectByExample(example);
+
+        // 如果list.size > 0 就是表中存在注册的手机号
+        return marketUsers.size() > 0;
     }
 }

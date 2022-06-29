@@ -56,8 +56,8 @@ com:
 
 # sms
 aliyun:
-  accessKeyId: LTAI4Fr5gfYhcVjLMqeRGbuT
-  accessKeySecret: IrkcHu6dZyrjPZRushgO76P5392HJ1
+  accessKeyId: LTAI5t8gpxPTCR6W58RnZq4u
+  accessKeySecret: mVPbpbxia0JQotb7HyJAREV8QUuq8h
   oss:
     bucket: cskaoyan
     endPoint: oss-cn-beijing.aliyuncs.com
