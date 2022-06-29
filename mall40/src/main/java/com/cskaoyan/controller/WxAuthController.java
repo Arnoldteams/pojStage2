@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -40,46 +41,63 @@ public class WxAuthController {
     @Autowired
     FileService fileService;
 
+    @Autowired
+    HttpServletRequest request;
+
     @PostMapping("regCaptcha")
-    public BaseRespVo regCaptcha(@RequestBody Map<String,String> map){
+    public BaseRespVo regCaptcha(@RequestBody Map<String, String> map) {
 
         String mobile = map.get("mobile");
         String code = RandomStringUtils.randomNumeric(6);
 
-        redisTemplate.opsForValue().set("code", code,300, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set("code", code, 300, TimeUnit.SECONDS);
 
-        fileService.sendMsg(mobile,code);
+        fileService.sendMsg(mobile, code);
 
         return BaseRespVo.ok();
     }
 
 
     @PostMapping("register")
-    public BaseRespVo register(@RequestBody WxAuthRegisterBO wxAuthRegisterBO,HttpSession session){
+    public BaseRespVo register(@RequestBody WxAuthRegisterBO wxAuthRegisterBO) {
 
         Boolean codeError = true;
         Object code = redisTemplate.opsForValue().get("code");
         String uCode = wxAuthRegisterBO.getCode();
         // 判断验证码是否过期
-        if (code != null){
+        if (code != null) {
             // 仅当用户验证码不空，且与验证码相同，通过
-            if (!StringUtils.isEmpty(uCode) && StringUtils.equals((String)code,uCode)){
+            if (!StringUtils.isEmpty(uCode) && StringUtils.equals((String) code, uCode)) {
                 codeError = false;
             }
         }
         Boolean hasAccount = wxAuthorService.hasAccount(wxAuthRegisterBO.getMobile());
 
-        if (codeError){
-            return BaseRespVo.codeAndMsg(703,"验证码错误，淦");
+        if (codeError) {
+            return BaseRespVo.codeAndMsg(703, "验证码错误，淦");
         }
-        if (hasAccount){
-            return BaseRespVo.codeAndMsg(705,"手机号已注册");
+        if (hasAccount) {
+            return BaseRespVo.codeAndMsg(705, "手机号已注册");
         }
 
-        String sessionId = session.getId();
+        String avatarUrl = "https://yanxuan.nosdn.127.net/80841d741d7fa3073e0ae27bf487339f.jpg?imageView&quality=90&thumbnail=64x64";
+
+
+        wxAuthorService.insertUser(wxAuthRegisterBO, avatarUrl, request);
+
+        MarketToken authenticationToken = new MarketToken(wxAuthRegisterBO.getUsername(), wxAuthRegisterBO.getPassword(), "wx");
+        Subject subject = SecurityUtils.getSubject();
+        try {
+            // realm.doGetAuthenticationInfo
+            subject.login(authenticationToken);
+        } catch (AuthenticationException e) {
+            return BaseRespVo.invalidAuth("用户名或密码不正确");
+        }
+
+        String sessionId = request.getSession().getId();
         WxAuthRegisterVO.UserInfo userInfo = new WxAuthRegisterVO.UserInfo();
         userInfo.setNickName(wxAuthRegisterBO.getUsername());
-        userInfo.setAvatarUrl("https://yanxuan.nosdn.127.net/80841d741d7fa3073e0ae27bf487339f.jpg?imageView&quality=90&thumbnail=64x64");
+        userInfo.setAvatarUrl(avatarUrl);
         WxAuthRegisterVO vo = new WxAuthRegisterVO();
         vo.setToken(sessionId);
         vo.setUserInfo(userInfo);

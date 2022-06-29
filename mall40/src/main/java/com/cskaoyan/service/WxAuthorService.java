@@ -1,7 +1,10 @@
 package com.cskaoyan.service;
 
 import com.cskaoyan.bean.MarketUser;
+import com.cskaoyan.bean.bo.WxAuthRegisterBO;
 import com.cskaoyan.bean.vo.wx.user.UserIndexVO;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author xyg2597@163.com
@@ -14,4 +17,6 @@ public interface WxAuthorService {
     UserIndexVO userIndex(MarketUser primaryPrincipal);
 
     Boolean hasAccount(String mobile);
+
+    void insertUser(WxAuthRegisterBO wxAuthRegisterBO, String avatarUrl, HttpServletRequest request);
 }
