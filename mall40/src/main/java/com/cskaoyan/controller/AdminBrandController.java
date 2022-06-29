@@ -34,10 +34,9 @@ public class AdminBrandController {
      * @param: baseParam - [BaseParam] 分页信息
      * @param: id - [Integer] brand 的id
      * @param: name - [String] brand 的name
-     * @return: com.cskaoyan.bean.BaseRespVo<com.cskaoyan.bean.vo.AdminBrandVO>
      */
     @GetMapping("list")
-    public BaseRespVo<AdminBrandVO> list(BaseParam baseParam, String id, String name) {
+    public BaseRespVo list(BaseParam baseParam, String id, String name) {
 
         CommonData<MarketBrand> data = adminBrandService.queryAllBrand(baseParam, id, name);
 

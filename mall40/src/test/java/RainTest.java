@@ -1,6 +1,12 @@
 import com.cskaoyan.MarketApplication;
 import com.cskaoyan.bean.MarketKeyword;
+<<<<<<< HEAD
 import com.cskaoyan.bean.bo.wxOrder.OrderStatusConvert;
+=======
+import com.cskaoyan.bean.vo.WxFootprintVO;
+import com.cskaoyan.mapper.MarketFootprintMapper;
+import com.cskaoyan.bean.OrderStatus;
+>>>>>>> 9893e9a0db56d5d713d788d6e844988fc7544675
 import com.cskaoyan.mapper.MarketKeywordMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +29,18 @@ public class RainTest {
 
     @Autowired
     MarketKeywordMapper marketKeywordMapper;
+
+    @Autowired
+    MarketFootprintMapper marketFootprintMapper;
+
+
+    @Test
+    public void test01(){
+        for (WxFootprintVO wxFootprintVO : marketFootprintMapper.selectFootprintInfoByUserId(4)) {
+            System.out.println(wxFootprintVO);
+        }
+
+    }
 
     @Test
     public void queryAll() {

@@ -2,6 +2,8 @@ package com.cskaoyan.bean;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -12,6 +14,7 @@ public class MarketTopic {
 
     private String subtitle;
 
+    @DecimalMin("0")
     private BigDecimal price;
 
     private String readCount;
