@@ -1,5 +1,7 @@
 package com.cskaoyan.bean.vo;
 
+import java.io.Serializable;
+
 /**
  *
  * @since 2022/06/26 14:24
@@ -7,7 +9,9 @@ package com.cskaoyan.bean.vo;
  */
 
 
-public class PermissionGrandChildVo {
+public class PermissionGrandChildVo implements Serializable {
+    private static final long serialVersionUID = 2L;
+
     /**
      * id : admin:category:list
      * label : 查询

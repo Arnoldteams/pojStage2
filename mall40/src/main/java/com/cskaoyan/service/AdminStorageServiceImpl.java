@@ -1,10 +1,13 @@
 package com.cskaoyan.service;
 
+import com.cskaoyan.bean.MarketBrand;
 import com.cskaoyan.bean.MarketStorage;
 import com.cskaoyan.bean.MarketStorageExample;
 import com.cskaoyan.bean.param.BaseParam;
+import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.mapper.MarketStorageMapper;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +28,7 @@ public class AdminStorageServiceImpl implements AdminStorageService {
     MarketStorageMapper marketStorageMapper;
 
     @Override
-    public List<MarketStorage> queryAllStorage(BaseParam baseParam,String key,String name) {
+    public CommonData<MarketStorage> queryAllStorage(BaseParam baseParam, String key, String name) {
         MarketStorageExample example = new MarketStorageExample();
         MarketStorageExample.Criteria criteria = example.createCriteria();
         if (!StringUtils.isEmpty(key)){
@@ -42,7 +45,10 @@ public class AdminStorageServiceImpl implements AdminStorageService {
         PageHelper.startPage(baseParam.getPage(), baseParam.getLimit());
         List<MarketStorage> marketStorages = marketStorageMapper.selectByExample(example);
 
-        return marketStorages;
+        // 配置分页工具
+        PageHelper.startPage(baseParam.getPage(),baseParam.getLimit());
+        PageInfo<MarketStorage> pageInfo = new PageInfo<>(marketStorages);
+        return CommonData.data(pageInfo);
     }
 
     @Override

@@ -12,12 +12,14 @@ import com.cskaoyan.mapper.MarketGoodsMapper;
 import com.cskaoyan.mapper.MarketTopicMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.*;
 
 /**
  * 专题管理业务实现
@@ -34,6 +36,11 @@ public class AdminTopicServiceImpl implements AdminTopicService {
 
     @Autowired
     MarketGoodsMapper marketGoodsMapper;
+
+    @Autowired
+    HttpSession session ;
+
+
 
     /**
      * 根据条件获得专题信息
@@ -62,6 +69,8 @@ public class AdminTopicServiceImpl implements AdminTopicService {
             subtitle = "%" + subtitle + "%";
             or.andSubtitleLike(subtitle);
         }
+
+        or.andDeletedEqualTo(false);
         marketTopicExample.setOrderByClause(baseInfo.getSort()+" "+baseInfo.getOrder());
 
 //        查询符合条件的专题
@@ -87,7 +96,9 @@ public class AdminTopicServiceImpl implements AdminTopicService {
         marketTopic.setAddTime(date);
         marketTopic.setUpdateTime(date);
         marketTopicMapper.insertSelective(marketTopic);
+        session.setAttribute("log",marketTopic.getTitle());
         MarketTopic selectMarketTopic = marketTopicMapper.selectByPrimaryKey(marketTopic.getId());
+
 
         return selectMarketTopic;
     }
@@ -105,29 +116,22 @@ public class AdminTopicServiceImpl implements AdminTopicService {
 //        根据专题id查找专题信息
         MarketTopic marketTopic = marketTopicMapper.selectByPrimaryKey(id);
 
-//        获得商品id，并转化成Integer类型
-        String goods = marketTopic.getGoods();
-        String strip = StringUtils.strip(goods, "[]");
 
 //        将专题信息封装封装成前端所需要的信息
         AdminTopicReadVO adminTopicReadVO = new AdminTopicReadVO();
         adminTopicReadVO.setTopic(marketTopic);
 
-        if (StringUtils.isEmpty(strip)) {
-            adminTopicReadVO.setGoodsList(null);
-            return adminTopicReadVO;
-        }
-        String[] goodsSplit = strip.split(",");
-
+        Integer[] goods = marketTopic.getGoods();
         ArrayList<Integer> integers = new ArrayList<>();
-        for (String s : goodsSplit) {
-            integers.add(Integer.parseInt(s));
-        }
+        Collections.addAll(integers, goods);
+//        List<Integer> integers = Arrays.asList(goods);
 
 //        根据商品id查询商品信息
         MarketGoodsExample marketGoodsExample = new MarketGoodsExample();
         MarketGoodsExample.Criteria or = marketGoodsExample.or();
-        or.andIdIn(integers);
+        if(integers.size()!=0){
+            or.andIdIn(integers);
+        }
 
         List<MarketGoods> marketGoods = marketGoodsMapper.selectByExample(marketGoodsExample);
 
@@ -160,6 +164,7 @@ public class AdminTopicServiceImpl implements AdminTopicService {
         deleteMarketTopic.setDeleted(true);
         deleteMarketTopic.setId(marketTopic.getId());
 
+        session.setAttribute("log",marketTopic.getTitle());
         marketTopicMapper.updateByPrimaryKeySelective(deleteMarketTopic);
     }
 
@@ -180,6 +185,8 @@ public class AdminTopicServiceImpl implements AdminTopicService {
         MarketTopic marketTopic = new MarketTopic();
         marketTopic.setDeleted(true);
 
+        session.setAttribute("log",idList);
+
         marketTopicMapper.updateByExampleSelective(marketTopic,marketTopicExample);
     }
 
@@ -196,6 +203,7 @@ public class AdminTopicServiceImpl implements AdminTopicService {
         //        有选择的插入到数据库中
         Date date = new Date();
         marketTopic.setUpdateTime(date);
+        session.setAttribute("log",marketTopic.getTitle());
         marketTopicMapper.updateByPrimaryKeySelective(marketTopic);
 
         return marketTopic;

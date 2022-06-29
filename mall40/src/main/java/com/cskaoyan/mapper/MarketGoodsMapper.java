@@ -45,4 +45,6 @@ public interface MarketGoodsMapper {
     List<ChildrenEntity> selectAddSonCat(@Param("value") Integer value);
 
     List<BrandListEntity> selectAllBrand();
+
+    MarketGoods selectPartDataByPrimaryKey(Integer goodsId);
 }

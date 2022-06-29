@@ -3,17 +3,16 @@ package com.cskaoyan.controller;
 import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.MarketStorage;
 import com.cskaoyan.bean.param.BaseParam;
+import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.AdminBrandVO;
 import com.cskaoyan.bean.vo.AdminStorageVO;
+import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminBrandService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.cskaoyan.bean.MarketBrand;
 
-import java.util.List;
 
 /**
  * @Author: 于艳帆
@@ -39,24 +38,51 @@ public class AdminBrandController {
      */
     @GetMapping("list")
     public BaseRespVo<AdminBrandVO> list(BaseParam baseParam, String id, String name) {
-        BaseRespVo<AdminBrandVO> resp = new BaseRespVo<>();
 
-        AdminBrandVO adminBrandVO = new AdminBrandVO();
+        CommonData<MarketBrand> data = adminBrandService.queryAllBrand(baseParam, id, name);
 
-        List<MarketBrand> list = adminBrandService.queryAllBrand(baseParam, id, name);
-
-        Integer limit = baseParam.getLimit();
-        Integer pages = list.size() / limit + 1;
-
-        adminBrandVO.setPage(baseParam.getPage());
-        adminBrandVO.setLimit(limit);
-        adminBrandVO.setTotal(list.size());
-        adminBrandVO.setPages(pages);
-        adminBrandVO.setList(list);
-
-        resp.setData(adminBrandVO);
-
-        return resp;
+        return BaseRespVo.ok(data);
     }
 
+    /**
+     * @author: sprinkle
+     * @createTime: 2022-06-27 13:55:26
+     * @description: 根据MarketBrand类的成员变量更新数据库里的一条数据
+     * @param: MarketBrand - [MarketBrand] MarketBrand类的成员变量
+     * @return: com.cskaoyan.bean.BaseRespVo
+     */
+    @PostMapping("update")
+    @LogAnnotation(value = "更新品牌制造商", comment = "来自sprinkle")
+    public BaseRespVo update(@RequestBody MarketBrand marketBrand) {
+        MarketBrand brand = adminBrandService.updateOneBrand(marketBrand);
+        return BaseRespVo.ok(brand);
+    }
+
+    /**
+     * @author: sprinkle
+     * @createTime: 2022-06-27 16:45:24
+     * @description: 根据MarketBrand类的成员变量删除数据库里的一条数据
+     * @param: MarketBrand - [MarketBrand] MarketBrand类的成员变量
+     * @return: com.cskaoyan.bean.BaseRespVo
+     */
+    @PostMapping("delete")
+    @LogAnnotation(value = "删除品牌制造商", comment = "来自sprinkle")
+    public BaseRespVo delete(@RequestBody MarketBrand marketBrand) {
+        adminBrandService.deleteOneBrand(marketBrand);
+        return BaseRespVo.ok();
+    }
+
+    /**
+     * @author: sprinkle
+     * @createTime: 2022-06-27 16:45:24
+     * @description: 根据MarketBrand类的成员变量创建数据库里的一条数据
+     * @param: MarketBrand - [MarketBrand] MarketBrand类的成员变量
+     * @return: com.cskaoyan.bean.BaseRespVo
+     */
+    @PostMapping("create")
+    @LogAnnotation(value = "增加品牌制造商", comment = "来自sprinkle")
+    public BaseRespVo create(@RequestBody MarketBrand marketBrand) {
+        MarketBrand brand = adminBrandService.createOneBrand(marketBrand);
+        return BaseRespVo.ok(brand);
+    }
 }

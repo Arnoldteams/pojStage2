@@ -18,6 +18,12 @@ public class BaseRespVo<T> {
         return baseRespVo;
     }
 
+    public static <T> BaseRespVo ok() {
+        BaseRespVo baseRespVo = new BaseRespVo();
+        baseRespVo.setErrno(0);
+        return baseRespVo;
+    }
+
     public static <T> BaseRespVo invalidData(String msg) {
         BaseRespVo baseRespVo = new BaseRespVo();
         baseRespVo.setErrno(504);
@@ -60,6 +66,13 @@ public class BaseRespVo<T> {
         return baseRespVo;
     }
 
+    public static <T> BaseRespVo invalidUsername(String Msg) {
+        BaseRespVo baseRespVo = new BaseRespVo();
+        baseRespVo.setErrno(601);
+        baseRespVo.setErrmsg(Msg);
+        return baseRespVo;
+    }
+
     public static <T> BaseRespVo invalidPrice() {
         BaseRespVo baseRespVo = new BaseRespVo();
         baseRespVo.setErrno(402);
@@ -84,6 +97,20 @@ public class BaseRespVo<T> {
     public static <T> BaseRespVo AuthNotEnough(String Msg) {
         BaseRespVo baseRespVo = new BaseRespVo();
         baseRespVo.setErrno(641);
+        baseRespVo.setErrmsg(Msg);
+        return baseRespVo;
+    }
+
+    public static <T> BaseRespVo hasReplied(String Msg) {
+        BaseRespVo baseRespVo = new BaseRespVo();
+        baseRespVo.setErrno(622);
+        baseRespVo.setErrmsg("订单商品已回复");
+        return baseRespVo;
+    }
+
+    public static <T> BaseRespVo invalidAuth(String Msg) {
+        BaseRespVo baseRespVo = new BaseRespVo();
+        baseRespVo.setErrno(605);
         baseRespVo.setErrmsg(Msg);
         return baseRespVo;
     }

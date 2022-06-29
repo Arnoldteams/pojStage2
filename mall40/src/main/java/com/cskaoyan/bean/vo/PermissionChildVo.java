@@ -1,5 +1,6 @@
 package com.cskaoyan.bean.vo;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,7 +10,9 @@ import java.util.List;
  */
 
 
-public class PermissionChildVo {
+public class PermissionChildVo implements Serializable {
+    private static final long serialVersionUID = 2L;
+
     /**
      * id : 类目管理
      * label : 类目管理

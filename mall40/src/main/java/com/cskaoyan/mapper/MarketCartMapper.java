@@ -28,4 +28,7 @@ public interface MarketCartMapper {
     int updateByPrimaryKeySelective(MarketCart record);
 
     int updateByPrimaryKey(MarketCart record);
+
+    int selectAllNumber();
+
 }

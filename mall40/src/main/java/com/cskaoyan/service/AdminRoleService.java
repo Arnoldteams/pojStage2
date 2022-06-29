@@ -25,7 +25,7 @@ public interface AdminRoleService {
     int deleteRole(MarketRole role);
 
     // 更新指定角色信息
-    int updateRole(MarketRole role);
+    void updateRole(MarketRole role);
 
     // 创建新角色
     int createRole(MarketRole role);
@@ -41,5 +41,8 @@ public interface AdminRoleService {
 
     // 查询所有角色信息
     CommonData<AdminOptionsVo> queryAllRolesWithNoInfo();
+
+    // 根据角色Id获取角色Name
+    String selectRoleNameById(Integer id);
 
 }

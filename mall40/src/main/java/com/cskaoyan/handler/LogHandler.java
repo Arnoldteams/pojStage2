@@ -2,8 +2,12 @@ package com.cskaoyan.handler;
 
 import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.MarketLog;
+import com.cskaoyan.controller.AdminOrderController;
+import com.cskaoyan.controller.AuthController;
 import com.cskaoyan.mapper.MarketLogMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.session.mgt.SessionContext;
+import org.apache.shiro.session.mgt.SessionManager;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -41,6 +45,7 @@ public class LogHandler {
 
     @Around("controllerPointcut()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+        BaseRespVo proceed = (BaseRespVo) joinPoint.proceed(); // 执行委托类的方法
 
         MarketLog marketLog = new MarketLog();
         HttpSession session = request.getSession();
@@ -54,22 +59,39 @@ public class LogHandler {
 
 //        获得增强类
         Object target = joinPoint.getTarget();
-        Method[] declaredMethods = target.getClass().getDeclaredMethods();
+        Class<?> targetClass = target.getClass();
+//        获得增强类中的所有方法，并得到对应的注解和参数
+        Method[] declaredMethods = targetClass.getDeclaredMethods();
         for (Method declaredMethod : declaredMethods) {
             if (name.equals(declaredMethod.getName())) {
                 LogAnnotation annotation = declaredMethod.getAnnotation(LogAnnotation.class);
                 action = annotation.value();
                 successResult = annotation.successResult();
                 unSuccessResult = annotation.unSuccessResult();
+//                设置备注
+                marketLog.setComment(annotation.comment());
             }
         }
+
+
+        String log = (String) session.getAttribute("log");
+        if(log == null){
+            log = "";
+        }
+
 
         marketLog.setAction(action);
 
 
-//        获得操作管理员名称
+//        TODO:获得操作管理员名称
         String loginName = (String) session.getAttribute("username");
-        marketLog.setAdmin(loginName);
+
+        if (StringUtils.isEmpty(loginName)) {
+            marketLog.setAdmin("匿名用户");
+        } else {
+
+            marketLog.setAdmin(loginName);
+        }
 
 //        插入ip
         marketLog.setIp(request.getRemoteHost());
@@ -79,20 +101,20 @@ public class LogHandler {
         marketLog.setAddTime(date);
         marketLog.setUpdateTime(date);
 
-        BaseRespVo proceed = (BaseRespVo) joinPoint.proceed(); // 执行委托类的方法
-
-
+//        操作结果和操作状态
         if (proceed.getErrno() == 0) {
             marketLog.setStatus(true);
+            marketLog.setResult(log + successResult);
         } else {
             marketLog.setStatus(false);
+            if (StringUtils.isEmpty(unSuccessResult)) {
+                marketLog.setResult(log + proceed.getErrmsg());
+            } else {
+                marketLog.setResult(log + unSuccessResult);
+            }
         }
         marketLog.setType(1);
-        if ("成功".equals(proceed.getErrmsg())) {
-            marketLog.setResult(successResult);
-        } else {
-            marketLog.setResult(unSuccessResult);
-        }
+
 
         marketLogMapper.insertSelective(marketLog);
         return proceed;

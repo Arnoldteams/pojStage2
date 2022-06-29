@@ -1,18 +1,30 @@
 package com.cskaoyan.service;
 
-import com.cskaoyan.bean.*;
+import com.cskaoyan.bean.MarketPermission;
+import com.cskaoyan.bean.MarketPermissionExample;
+import com.cskaoyan.bean.MarketRole;
+import com.cskaoyan.bean.MarketRoleExample;
 import com.cskaoyan.bean.bo.AdminPermissionsBo;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
-import com.cskaoyan.bean.vo.*;
+import com.cskaoyan.bean.vo.AdminOptionsVo;
+import com.cskaoyan.bean.vo.PermissionChildVo;
+import com.cskaoyan.bean.vo.PermissionGrandChildVo;
+import com.cskaoyan.bean.vo.PermissionsVo;
 import com.cskaoyan.mapper.MarketAdminMapper;
 import com.cskaoyan.mapper.MarketPermissionMapper;
 import com.cskaoyan.mapper.MarketRoleMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 系统管理-角色管理
@@ -21,7 +33,8 @@ import java.util.*;
  */
 
 @Service
-public class AdminRoleServiceImpl implements AdminRoleService{
+@Transactional
+public class AdminRoleServiceImpl implements AdminRoleService {
 
     @Autowired
     MarketRoleMapper roleMapper;
@@ -29,6 +42,10 @@ public class AdminRoleServiceImpl implements AdminRoleService{
     MarketPermissionMapper permissionMapper;
     @Autowired
     MarketAdminMapper adminMapper;
+    @Autowired
+    RedisTemplate redisTemplate;
+    private static final String ROLE_PREFIX = "ROLE:";
+
 
     /**
      * @description: 显示所有-搜索 角色
@@ -39,6 +56,8 @@ public class AdminRoleServiceImpl implements AdminRoleService{
      */
     @Override
     public CommonData<MarketRole> queryAllRoles(BaseParam param, String name) {
+        // 配置分页工具
+        PageHelper.startPage(param.getPage(), param.getLimit());
 
         MarketRoleExample example = new MarketRoleExample();
         MarketRoleExample.Criteria or = example.or();
@@ -51,15 +70,14 @@ public class AdminRoleServiceImpl implements AdminRoleService{
         or.andDeletedEqualTo(false);
 
         // 角色用户名模糊查询
-        if(name != null){
+        if (name != null) {
             String sqlName = "%" + name + "%";
             or.andNameLike(sqlName);
         }
 
         List<MarketRole> roles = roleMapper.selectByExample(example);
 
-        // 配置分页工具
-        PageHelper.startPage(param.getPage(),param.getLimit());
+
         PageInfo<MarketRole> pageInfo = new PageInfo<>(roles);
         return CommonData.data(pageInfo);
     }
@@ -83,13 +101,13 @@ public class AdminRoleServiceImpl implements AdminRoleService{
         // 分解角色id成字符串
         for (String list : lists) {
             int length = list.length();
-            sb.append(list, 1, length-1).append(",");
+            sb.append(list, 1, length - 1).append(",");
         }
         String[] split = sb.toString().split(",");
 
         // 判断要删除的roleId是否有被
         for (String s : split) {
-            if(s.equals(id)){
+            if (s.equals(id)) {
                 return 0;
             }
         }
@@ -105,8 +123,9 @@ public class AdminRoleServiceImpl implements AdminRoleService{
      * @createTime: 2022/6/25 22:16
      */
     @Override
-    public int updateRole(MarketRole role) {
-        return roleMapper.updateByPrimaryKey(role);
+    @Async
+    public void updateRole(MarketRole role) {
+        roleMapper.updateByPrimaryKey(role);
     }
 
     /**
@@ -118,6 +137,10 @@ public class AdminRoleServiceImpl implements AdminRoleService{
      */
     @Override
     public int createRole(MarketRole role) {
+        List<String> names = roleMapper.selectAllRoleName();
+        if(names.contains(role.getName())){
+            return 0;
+        }
         return roleMapper.insertSelective(role);
     }
 
@@ -130,17 +153,24 @@ public class AdminRoleServiceImpl implements AdminRoleService{
      */
     @Override
     public List<PermissionsVo> queryAllRolePermissions() {
+        List<PermissionsVo> permissions;
+        // 先去redis里获取数据
+        if ((permissions = (List<PermissionsVo>) redisTemplate.opsForValue().
+                get(ROLE_PREFIX + "permissions")) != null) {
+            return permissions;
+        }
+        // redis中没有数据，去mybatis中读取数据
         // 读第一层
-        List<PermissionsVo> permissions = permissionMapper.queryAllPermissions();
+        permissions = permissionMapper.queryAllPermissions();
         Iterator<PermissionsVo> permissionIterator = permissions.iterator();
         // 读第二层
-        while(permissionIterator.hasNext()){
+        while (permissionIterator.hasNext()) {
             PermissionsVo permission = permissionIterator.next();
             Integer key = permission.getKey();
             List<PermissionChildVo> children = permissionMapper.selectPermissionChildByPermissionKey(key);
             Iterator<PermissionChildVo> childIterator = children.iterator();
             // 读第三层
-            while (childIterator.hasNext()){
+            while (childIterator.hasNext()) {
                 PermissionChildVo child = childIterator.next();
                 Integer childKey = child.getKey();
                 List<PermissionGrandChildVo> grandChild = permissionMapper.selectGrandChildByChildKey(childKey);
@@ -148,7 +178,9 @@ public class AdminRoleServiceImpl implements AdminRoleService{
             }
             permission.setChildren(children);
         }
-
+        // 将mybatis中读到的数据存到redis中，300s过期
+        redisTemplate.opsForValue().
+                set(ROLE_PREFIX + "permissions", permissions,300, TimeUnit.SECONDS);
         return permissions;
     }
 
@@ -159,11 +191,17 @@ public class AdminRoleServiceImpl implements AdminRoleService{
      * @author: 帅关
      * @createTime: 2022/6/27 21:57
      */
-    public List<String> selectRoleApiById(Integer id){
+    public List<String> selectRoleApiById(Integer id) {
         List<String> apis;
-        if(id == 1){
-            apis = permissionMapper.selectAllPermissionApi();
-        }else{
+
+        if (id == 1) {
+            if (redisTemplate.opsForValue().get(ROLE_PREFIX + "apis") == null) {
+                apis = permissionMapper.selectAllPermissionApi();
+                redisTemplate.opsForValue().set(ROLE_PREFIX + "apis", apis);
+            } else {
+                apis = (List) redisTemplate.opsForValue().get(ROLE_PREFIX + "apis");
+            }
+        } else {
             apis = permissionMapper.selectPermissionApiById(id);
         }
         return apis;
@@ -178,6 +216,7 @@ public class AdminRoleServiceImpl implements AdminRoleService{
      */
 
     @Override
+    @Async
     public void updateRolePermissions(AdminPermissionsBo adminPermissions) {
 
         // 生成sql语句
@@ -203,8 +242,8 @@ public class AdminRoleServiceImpl implements AdminRoleService{
         }
         marketPermission.setUpdateTime(date);
         marketPermission.setDeleted(false);
-        if(union.size() != 0){
-            permissionMapper.updateByExampleSelective(marketPermission,example);
+        if (union.size() != 0) {
+            permissionMapper.updateByExampleSelective(marketPermission, example);
         }
 
         // 获取需要删除的权限
@@ -218,8 +257,8 @@ public class AdminRoleServiceImpl implements AdminRoleService{
         }
         marketPermission2.setDeleted(true);
         marketPermission2.setUpdateTime(date);
-        if(strings.size() != 0){
-            permissionMapper.updateByExampleSelective(marketPermission2,example);
+        if (strings.size() != 0) {
+            permissionMapper.updateByExampleSelective(marketPermission2, example);
         }
 
         //获取需要添加的权限
@@ -250,7 +289,12 @@ public class AdminRoleServiceImpl implements AdminRoleService{
 
         // 配置分页工具
         PageInfo<AdminOptionsVo> pageInfo = new PageInfo<>(list);
-        PageHelper.startPage(1,pageInfo.getSize());
+        PageHelper.startPage(1, pageInfo.getSize());
         return CommonData.data(pageInfo);
+    }
+
+    @Override
+    public String selectRoleNameById(Integer id) {
+        return permissionMapper.selectNameById(id);
     }
 }

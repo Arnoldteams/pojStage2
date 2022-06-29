@@ -659,4 +659,15 @@
     refund_amount=#{refundMoney},refund_time=curtime(),order_status=203
     where id=#{orderId}
   </update>
+
+  <select id="selectAdminComment" resultType="java.lang.String">
+    select admin_content from market_comment where id=#{commentId}
+    </select>
+
+  <update id="updateOrderComment">
+    update market_comment
+    set
+    admin_content=#{content}
+    where id=#{commentId}
+  </update>
 </mapper>
