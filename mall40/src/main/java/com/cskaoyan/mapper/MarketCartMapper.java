@@ -35,4 +35,10 @@ public interface MarketCartMapper {
     Integer selectIdByUserIdAndProductId(@Param("userId") Integer userId, @Param("productId") Integer productId);
 
     void updateCartInfo(@Param("cartId") Integer cartId, @Param("number") Short number, @Param("date") Date date);
+
+    void updateCartGoodsChecked(@Param("userId") Integer userId, @Param("productIds") List<Integer> productIds, @Param("checked") Integer checked);
+
+    void updateCartGoodsDeleted(@Param("userId") Integer userId, @Param("productIds") List<Integer> productIds);
+
+    Integer selectCartGoodsCount(@Param("userId") Integer userId);
 }

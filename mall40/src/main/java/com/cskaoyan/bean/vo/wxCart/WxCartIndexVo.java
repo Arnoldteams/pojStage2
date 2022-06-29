@@ -13,6 +13,7 @@ import java.util.List;
 
 public class WxCartIndexVo {
 
+
     private WxCartIndexAllNumberVo cartTotal;
     private List<MarketCart> cartList;
 
