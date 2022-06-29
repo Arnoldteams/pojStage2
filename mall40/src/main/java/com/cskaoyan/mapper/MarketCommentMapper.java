@@ -2,6 +2,7 @@ package com.cskaoyan.mapper;
 
 import com.cskaoyan.bean.MarketComment;
 import com.cskaoyan.bean.MarketCommentExample;
+import com.cskaoyan.bean.vo.UserInfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -28,4 +29,6 @@ public interface MarketCommentMapper {
     int updateByPrimaryKeySelective(MarketComment record);
 
     int updateByPrimaryKey(MarketComment record);
+
+    UserInfo selectUserInfo(@Param("id") Integer userId);
 }

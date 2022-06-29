@@ -39,5 +39,7 @@ public interface MarketCategoryMapper {
     List<MarketCategory> selectL2CategoryByLevelAndPid(@Param("l2") String l2, @Param("id") Integer id);
 
     List<Integer> selectCatIds(@Param("id") Integer id);
+
+    List<MarketCategory> selectL2CategoryByPid(@Param("pid") Integer pid);
 }
 

@@ -18,7 +18,7 @@ spring:
       static-locations: file:d:/spring/
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mydb?useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://localhost:3306/mydb?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
     username: root
     password: 123456
     type: com.alibaba.druid.pool.DruidDataSource
@@ -27,6 +27,11 @@ spring:
     port: 6379
     lettuce:
       shutdown-timeout: 0
+  # Sssd 配置上传文件大小
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1000MB
 
 
 # 配置Mybatis
@@ -54,3 +59,13 @@ com:
     logPath: D://log.txt
 
 
+# sms
+aliyun:
+  accessKeyId: LTAI5t8gpxPTCR6W58RnZq4u
+  accessKeySecret: mVPbpbxia0JQotb7HyJAREV8QUuq8h
+  oss:
+    bucket: cskaoyan
+    endPoint: oss-cn-beijing.aliyuncs.com
+  sms:
+    signName: stone4j
+    templateCode: SMS_173765187

@@ -73,10 +73,10 @@ public class BaseRespVo<T> {
         return baseRespVo;
     }
 
-    public static <T> BaseRespVo invalidPrice() {
+    public static <T> BaseRespVo invalidJson(String msg) {
         BaseRespVo baseRespVo = new BaseRespVo();
         baseRespVo.setErrno(402);
-        baseRespVo.setErrmsg("参数值不对");
+        baseRespVo.setErrmsg(msg);
         return baseRespVo;
     }
 
@@ -112,6 +112,13 @@ public class BaseRespVo<T> {
         BaseRespVo baseRespVo = new BaseRespVo();
         baseRespVo.setErrno(605);
         baseRespVo.setErrmsg(Msg);
+        return baseRespVo;
+    }
+
+    public static <T> BaseRespVo codeAndMsg(Integer code,String msg) {
+        BaseRespVo baseRespVo = new BaseRespVo();
+        baseRespVo.setErrno(code);
+        baseRespVo.setErrmsg(msg);
         return baseRespVo;
     }
 }

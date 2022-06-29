@@ -1,10 +1,10 @@
 package com.cskaoyan.configuration.realm;
 
-import com.cskaoyan.bean.MarketAdmin;
-import com.cskaoyan.bean.MarketAdminExample;
-import com.cskaoyan.bean.MarketUser;
-import com.cskaoyan.bean.MarketUserExample;
+import com.cskaoyan.bean.*;
+import com.cskaoyan.bean.vo.DashBoardVO;
 import com.cskaoyan.mapper.MarketAdminMapper;
+import com.cskaoyan.mapper.MarketPermissionMapper;
+import com.cskaoyan.mapper.MarketRoleMapper;
 import com.cskaoyan.mapper.MarketUserMapper;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -17,7 +17,10 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,6 +37,15 @@ public class CustomRealm extends AuthorizingRealm {
     @Autowired
     MarketUserMapper marketUserMapper;
 
+    @Autowired
+    MarketRoleMapper marketRoleMapper;
+
+    @Autowired
+    MarketPermissionMapper marketPermissionMapper;
+
+    @Autowired
+    HttpServletRequest request;
+
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
 
@@ -41,6 +53,9 @@ public class CustomRealm extends AuthorizingRealm {
         String type = ((MarketToken) authenticationToken).getType();
         String username = (String) authenticationToken.getPrincipal();
 
+//        获得认证时间和认证ip
+        Date date = new Date();
+        String remoteHost = request.getRemoteHost();
         if ("admin".equals(type)) {
             MarketAdminExample example = new MarketAdminExample();
             example.createCriteria().andUsernameEqualTo(username);
@@ -48,6 +63,10 @@ public class CustomRealm extends AuthorizingRealm {
             if (marketAdmins.size() == 1) {
                 //说明数据库中有一条对应的信息
                 MarketAdmin marketAdmin = marketAdmins.get(0);
+                marketAdmin.setLastLoginTime(date);
+                marketAdmin.setLastLoginIp(remoteHost);
+
+                marketAdminMapper.updateByPrimaryKeySelective(marketAdmin);
 
                 // 构造认证信息时，可以放入你需要的用户信息，而你放入的用户信息，可以作为Principals
                 // 放入这个信息，是为了取出这个信息
@@ -60,8 +79,14 @@ public class CustomRealm extends AuthorizingRealm {
             marketUserExample.createCriteria().andUsernameEqualTo(username);
             List<MarketUser> marketUsers = marketUserMapper.selectByExample(marketUserExample);
             if (marketUsers.size() == 1) {
+
+
                 //说明数据库中有一条对应的信息
                 MarketUser marketUser = marketUsers.get(0);
+                marketUser.setLastLoginTime(date);
+                marketUser.setLastLoginIp(remoteHost);
+
+                marketUserMapper.updateByPrimaryKeySelective(marketUser);
 
                 // 构造认证信息时，可以放入你需要的用户信息，而你放入的用户信息，可以作为Principals
                 // 放入这个信息，是为了取出这个信息
@@ -78,10 +103,26 @@ public class CustomRealm extends AuthorizingRealm {
         // 要先获得Principal信息
         MarketAdmin principal = (MarketAdmin) principalCollection.getPrimaryPrincipal();
         // 根据用户信息查询出对应的权限列表
+        MarketAdminExample marketAdminExample = new MarketAdminExample();
+        MarketAdminExample.Criteria adminExampleCriteria = marketAdminExample.createCriteria();
+        adminExampleCriteria.andUsernameEqualTo(principal.getUsername());
+        List<MarketAdmin> marketAdmins = marketAdminMapper.selectByExample(marketAdminExample);
+
+        MarketAdmin marketAdmin = marketAdmins.get(0);
+
+        Integer[] roleIds = marketAdmin.getRoleIds();
+        ArrayList<String> permissionList = new ArrayList<>();
+        permissionList.add("dashboard");
+        for (Integer roleId : roleIds) {
+            List<String> permissionApiById = marketPermissionMapper.selectPermissionApiById(roleId);
+            permissionList.addAll(permissionApiById);
+        }
+
+
         // mybatis来查询
-        List<String> permissions = Arrays.asList("aaa");
+//        List<String> permissions = permissionList;
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        simpleAuthorizationInfo.addStringPermissions(permissions);
+        simpleAuthorizationInfo.addStringPermissions(permissionList);
         return simpleAuthorizationInfo;
     }
 }

@@ -327,7 +327,7 @@
   </select>
 
   <select id="selectL1CategoryByPid" resultType="com.cskaoyan.bean.MarketCategoryChildren">
-    select id, name, keywords, `desc`, pid, icon_url as iconUrl, pic_url as picUrl, level, sort_order from market_category where level = #{l1} and deleted = 0;
+    select id, name, keywords, `desc`, pid, icon_url as iconUrl, pic_url as picUrl, level, sort_order as sortOrder from market_category where level = #{l1} and deleted = 0;
   </select>
 
   <select id="selectL2CategoryByLevelAndPid" resultMap="BaseResultMap">
@@ -336,6 +336,15 @@
 
   <select id="selectCatIds" resultType="java.lang.Integer">
     select id from market_category where pid = #{id}
+    </select>
+
+  <select id="selectL2CategoryByPid" resultMap="BaseResultMap">
+select id, name, keywords, `desc`, pid, icon_url, pic_url, level, sort_order,
+       add_time,
+       update_time,
+       deleted
+    from market_category
+    where pid = #{pid}
     </select>
 </mapper>
 

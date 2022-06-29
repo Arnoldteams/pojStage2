@@ -38,8 +38,7 @@ public class AdminTopicServiceImpl implements AdminTopicService {
     MarketGoodsMapper marketGoodsMapper;
 
     @Autowired
-    HttpSession session ;
-
+    HttpSession session;
 
 
     /**
@@ -71,7 +70,7 @@ public class AdminTopicServiceImpl implements AdminTopicService {
         }
 
         or.andDeletedEqualTo(false);
-        marketTopicExample.setOrderByClause(baseInfo.getSort()+" "+baseInfo.getOrder());
+        marketTopicExample.setOrderByClause(baseInfo.getSort() + " " + baseInfo.getOrder());
 
 //        查询符合条件的专题
         List<MarketTopic> marketTopicList = marketTopicMapper.selectByExampleWithBLOBs(marketTopicExample);
@@ -83,6 +82,7 @@ public class AdminTopicServiceImpl implements AdminTopicService {
 
     /**
      * 添加一个新的专题
+     *
      * @param marketTopic 从浏览器获得的一些参数
      * @return com.cskaoyan.bean.MarketTopic 回显插入的专题信息
      * @author xyg2597@163.com
@@ -96,7 +96,7 @@ public class AdminTopicServiceImpl implements AdminTopicService {
         marketTopic.setAddTime(date);
         marketTopic.setUpdateTime(date);
         marketTopicMapper.insertSelective(marketTopic);
-        session.setAttribute("log",marketTopic.getTitle());
+        session.setAttribute("log", marketTopic.getTitle());
         MarketTopic selectMarketTopic = marketTopicMapper.selectByPrimaryKey(marketTopic.getId());
 
 
@@ -105,6 +105,7 @@ public class AdminTopicServiceImpl implements AdminTopicService {
 
     /**
      * 回显需要编辑的专题信息
+     *
      * @param id 专题id
      * @return com.cskaoyan.bean.vo.AdminTopicReadVO 需要返回专题信息的data
      * @author xyg2597@163.com
@@ -129,19 +130,21 @@ public class AdminTopicServiceImpl implements AdminTopicService {
 //        根据商品id查询商品信息
         MarketGoodsExample marketGoodsExample = new MarketGoodsExample();
         MarketGoodsExample.Criteria or = marketGoodsExample.or();
-        if(integers.size()!=0){
+        ArrayList<TopicReadGoodsVO> topicReadGoodsVOS = new ArrayList<>();
+        if (integers.size() != 0) {
             or.andIdIn(integers);
-        }
-
-        List<MarketGoods> marketGoods = marketGoodsMapper.selectByExample(marketGoodsExample);
+            List<MarketGoods> marketGoods = marketGoodsMapper.selectByExample(marketGoodsExample);
 
 //        对查询到的商品信息进行处理，去除不必要的信息
-        ArrayList<TopicReadGoodsVO> topicReadGoodsVOS = new ArrayList<>();
-        for (MarketGoods marketGood : marketGoods) {
-            TopicReadGoodsVO topicReadGoodsVO = new TopicReadGoodsVO();
-            topicReadGoodsVO.setAllFiled(marketGood);
-            topicReadGoodsVOS.add(topicReadGoodsVO);
+            for (MarketGoods marketGood : marketGoods) {
+                TopicReadGoodsVO topicReadGoodsVO = new TopicReadGoodsVO();
+                topicReadGoodsVO.setAllFiled(marketGood);
+                topicReadGoodsVOS.add(topicReadGoodsVO);
+            }
         }
+
+
+
 
 //        将商品列表封装成前端所需要的信息
         adminTopicReadVO.setGoodsList(topicReadGoodsVOS);
@@ -152,6 +155,7 @@ public class AdminTopicServiceImpl implements AdminTopicService {
 
     /**
      * 删除专题信息
+     *
      * @param marketTopic 该专题的信息
      * @return void 无返回值
      * @author xyg2597@163.com
@@ -164,12 +168,13 @@ public class AdminTopicServiceImpl implements AdminTopicService {
         deleteMarketTopic.setDeleted(true);
         deleteMarketTopic.setId(marketTopic.getId());
 
-        session.setAttribute("log",marketTopic.getTitle());
+        session.setAttribute("log", marketTopic.getTitle());
         marketTopicMapper.updateByPrimaryKeySelective(deleteMarketTopic);
     }
 
     /**
      * 根据id列表批量删除专题信息
+     *
      * @param idList 需要删除的专题id
      * @return void
      * @author xyg2597@163.com
@@ -185,14 +190,15 @@ public class AdminTopicServiceImpl implements AdminTopicService {
         MarketTopic marketTopic = new MarketTopic();
         marketTopic.setDeleted(true);
 
-        session.setAttribute("log",idList);
+        session.setAttribute("log", idList);
 
-        marketTopicMapper.updateByExampleSelective(marketTopic,marketTopicExample);
+        marketTopicMapper.updateByExampleSelective(marketTopic, marketTopicExample);
     }
 
 
     /**
      * 更新专题信息
+     *
      * @param marketTopic 更新的专题信息
      * @return com.cskaoyan.bean.MarketTopic
      * @author xyg2597@163.com
@@ -203,7 +209,7 @@ public class AdminTopicServiceImpl implements AdminTopicService {
         //        有选择的插入到数据库中
         Date date = new Date();
         marketTopic.setUpdateTime(date);
-        session.setAttribute("log",marketTopic.getTitle());
+        session.setAttribute("log", marketTopic.getTitle());
         marketTopicMapper.updateByPrimaryKeySelective(marketTopic);
 
         return marketTopic;

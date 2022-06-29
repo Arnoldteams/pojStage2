@@ -13,7 +13,7 @@ public class User {
     Integer id;
     String username;
     String password;
-   Integer gender;
+    Integer gender;
     Date birthday;
     Date lastLoginTime;
 }

@@ -1,9 +1,11 @@
 package com.cskaoyan.controller;
 
 import com.cskaoyan.bean.BaseRespVo;
+import com.cskaoyan.bean.vo.WxCatalogCurrentVO;
 import com.cskaoyan.bean.vo.WxCatalogIndexVO;
 import com.cskaoyan.service.WxCatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,4 +36,14 @@ public class WxCatalogController {
         return BaseRespVo.ok(wxCatalogIndexVO);
     }
 
+    /**
+     * @author sprinkle
+     * @since 2022/06/29 15:47
+     */
+
+    @GetMapping("current")
+    public BaseRespVo current(String id){
+        WxCatalogCurrentVO catalog= wxCatalogService.queryOneCatalog(id);
+        return BaseRespVo.ok(catalog);
+    }
 }

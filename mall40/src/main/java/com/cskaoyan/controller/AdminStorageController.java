@@ -30,7 +30,7 @@ import java.util.UUID;
  * @Description: 系统管理-对象存储业务（CRUD）
  */
 @RestController
-@RequestMapping("admin/storage")
+@RequestMapping("/admin/storage")
 public class AdminStorageController {
 
     @Autowired
@@ -102,10 +102,10 @@ public class AdminStorageController {
      * @createTime: 2022-06-26 17:30:59
      * @description: 查询storage所有列
      * @param: baseParam - [BaseParam]
-     * @return: com.cskaoyan.bean.BaseRespVo<com.cskaoyan.bean.vo.AdminStorageVO>
      */
     @GetMapping("list")
-    public BaseRespVo<AdminStorageVO> list(BaseParam baseParam,String key,String name) {
+    public BaseRespVo list(BaseParam baseParam,String key,String name) {
+
 
         CommonData<MarketStorage> data = adminStorageService.queryAllStorage(baseParam,key,name);
 

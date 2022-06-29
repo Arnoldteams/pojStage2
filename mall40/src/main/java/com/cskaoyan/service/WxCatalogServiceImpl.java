@@ -1,7 +1,10 @@
 package com.cskaoyan.service;
 
+import com.cskaoyan.bean.AdminCategoryOne;
 import com.cskaoyan.bean.MarketCategory;
+import com.cskaoyan.bean.MarketCategoryChildren;
 import com.cskaoyan.bean.MarketCategoryExample;
+import com.cskaoyan.bean.vo.WxCatalogCurrentVO;
 import com.cskaoyan.bean.vo.WxCatalogIndexVO;
 import com.cskaoyan.mapper.MarketCategoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +42,19 @@ public class WxCatalogServiceImpl implements WxCatalogService {
         wxCatalogIndexVO.setCurrentSubCategory(currentSubCategory);
 
         return wxCatalogIndexVO;
+    }
+
+    /**
+     * @author sprinkle
+     * @since 2022/06/29 15:50
+     */
+    @Override
+    public WxCatalogCurrentVO queryOneCatalog(String id) {
+        MarketCategory category = marketCategoryMapper.selectByPrimaryKey(Integer.parseInt(id));
+        List<MarketCategory> list = marketCategoryMapper.selectL2CategoryByPid(Integer.parseInt(id));
+        WxCatalogCurrentVO current = new WxCatalogCurrentVO();
+        current.setCurrentCategory(category);
+        current.setCurrentSubCategory(list);
+        return current;
     }
 }

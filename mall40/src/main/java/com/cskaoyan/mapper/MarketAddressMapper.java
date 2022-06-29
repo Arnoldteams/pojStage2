@@ -28,4 +28,6 @@ public interface MarketAddressMapper {
     int updateByPrimaryKeySelective(MarketAddress record);
 
     int updateByPrimaryKey(MarketAddress record);
+
+    MarketAddress selectAddressInfoByUserId(@Param("userId") Integer userId);
 }

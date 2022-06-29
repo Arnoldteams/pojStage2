@@ -1,16 +1,20 @@
 
 package com.cskaoyan.controller;
 
-import com.cskaoyan.bean.*;
+
+import com.cskaoyan.bean.BasePageInfo;
+import com.cskaoyan.bean.MarketAddress;
+import com.cskaoyan.bean.MarketCollect;
+import com.cskaoyan.bean.MarketFootprint;
+import com.cskaoyan.bean.MarketSearchHistory;
+import com.cskaoyan.bean.MarketFeedback;
+import com.cskaoyan.bean.MarketLog;
 import com.cskaoyan.bean.bo.userManager.AdminUserListBO;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.userManager.AdminUserListVO;
 import com.cskaoyan.bean.vo.userManager.UserEntity;
 import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.*;
-import com.cskaoyan.bean.BasePageInfo;
-import com.cskaoyan.bean.BaseRespVo;
-import com.cskaoyan.bean.MarketLog;
 import com.cskaoyan.bean.bo.userManager.AdminUserListBO;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.vo.AdminListVO;
@@ -18,6 +22,8 @@ import com.cskaoyan.bean.vo.userManager.AdminUserListVO;
 import com.cskaoyan.bean.vo.userManager.UserEntity;
 import com.cskaoyan.service.UserService;
 import com.github.pagehelper.PageInfo;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -159,6 +165,7 @@ public class AdminController {
     * @return: com.cskaoyan.bean.BaseRespVo
             */
     @RequestMapping("dashboard")
+    @RequiresPermissions(value = "dashboard",logical = Logical.OR)
     public BaseRespVo dashboard() {
         DashBoardVO data = marketAdminService.queryAllCount();
         return BaseRespVo.ok(data);
@@ -185,4 +192,11 @@ public class AdminController {
         adminListVO.setList(marketLogList);
         return BaseRespVo.ok(adminListVO);
     }
+
+    @GetMapping("profile/nnotice")
+    public BaseRespVo nNotice() {
+        return BaseRespVo.ok(0);
+    }
+
+
 }
