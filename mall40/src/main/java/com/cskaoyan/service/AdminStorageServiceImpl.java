@@ -42,11 +42,10 @@ public class AdminStorageServiceImpl implements AdminStorageService {
 
         example.setOrderByClause(baseParam.getSort() + " " + baseParam.getOrder());
 
-        PageHelper.startPage(baseParam.getPage(), baseParam.getLimit());
-        List<MarketStorage> marketStorages = marketStorageMapper.selectByExample(example);
-
         // 配置分页工具
         PageHelper.startPage(baseParam.getPage(),baseParam.getLimit());
+        List<MarketStorage> marketStorages = marketStorageMapper.selectByExample(example);
+
         PageInfo<MarketStorage> pageInfo = new PageInfo<>(marketStorages);
         return CommonData.data(pageInfo);
     }

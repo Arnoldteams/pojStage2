@@ -2,6 +2,7 @@ package com.cskaoyan.mapper;
 
 import com.cskaoyan.bean.MarketFootprint;
 import com.cskaoyan.bean.MarketFootprintExample;
+import com.cskaoyan.bean.vo.WxFootprintVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -28,4 +29,7 @@ public interface MarketFootprintMapper {
     int updateByPrimaryKeySelective(MarketFootprint record);
 
     int updateByPrimaryKey(MarketFootprint record);
+
+    List<WxFootprintVO> selectFootprintInfoByUserId(@Param("userId") Integer userId);
+
 }

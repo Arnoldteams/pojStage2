@@ -42,11 +42,10 @@ public class AdminKeywordServiceImpl implements AdminKeywordService {
 
         example.setOrderByClause(adminKeywordBO.getSort()+" "+adminKeywordBO.getOrder());
 
-        PageHelper.startPage(adminKeywordBO.getPage(), adminKeywordBO.getLimit());
-        List<MarketKeyword> marketKeywords = marketKeywordMapper.selectByExample(example);
-
         // 配置分页工具
         PageHelper.startPage(adminKeywordBO.getPage(),adminKeywordBO.getLimit());
+        List<MarketKeyword> marketKeywords = marketKeywordMapper.selectByExample(example);
+
         PageInfo<MarketKeyword> pageInfo = new PageInfo<>(marketKeywords);
         return CommonData.data(pageInfo);
     }
