@@ -740,20 +740,6 @@
   </insert>
 
 
-  <select id="selectAllorderListByUserId" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from market_order
-    where user_id=#{userId}
-  </select>
-
-  <select id="selectOrderListByStatusByUserId" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from market_order
-    where user_id=#{userId} and order_status=#{orderStatus}
-  </select>
-
   <select id="selectAllOrderGoodsByOrderId" resultType="com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO">
      select id,goods_name as goodsName,specifications,pic_url as picUrl,number,price
      from market_order_goods
@@ -762,5 +748,28 @@
 
   <select id="selectHandleOption" resultType="com.cskaoyan.bean.bo.wxOrder.WxOrderListHandleOption">
 
+  </select>
+
+  <update id="updateUserOrderStatusCancel">
+     update market_order set order_status=102,end_time=curtime(),update_time=curtime()
+     where id=#{orderId}
+  </update>
+
+  <select id="selectAllorderListByUserId" resultType="com.cskaoyan.bean.vo.wxOrder.WxOrderListChildVO">
+    select actual_price as actualPrice,
+    aftersale_status as afterStatus,id,order_sn as orderSn
+    from market_order
+    where user_id=#{userId} and deleted=0
+  </select>
+
+  <select id="selectOrderListByStatusByUserId" resultType="com.cskaoyan.bean.vo.wxOrder.WxOrderListChildVO">
+    select actual_price as actualPrice,
+     aftersale_status as afterStatus,id,order_sn as orderSn
+      from market_order
+     where user_id=#{userId} and order_status=#{orderStatus} and deleted=0
+  </select>
+
+  <select id="selectOrderStatusById" resultType="java.lang.Integer">
+    select order_status from market_order where id=#{orderId}
   </select>
 </mapper>

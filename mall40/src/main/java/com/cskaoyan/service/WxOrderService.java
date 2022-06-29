@@ -20,4 +20,6 @@ public interface WxOrderService {
     AdminOrderDetailGoodsVO queryOrdersGoods(Integer orderId, Integer goodsId);
 
     void addOrderComment(WxOrderListCommentBO wxOrderListCommentBO);
+
+    void cancelOrder(Integer orderId);
 }
