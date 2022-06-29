@@ -1,12 +1,11 @@
 import com.cskaoyan.MarketApplication;
 import com.cskaoyan.bean.MarketKeyword;
 
-
 import com.cskaoyan.bean.bo.wxOrder.OrderStatusConvert;
 
 import com.cskaoyan.bean.vo.WxFootprintVO;
 import com.cskaoyan.mapper.MarketFootprintMapper;
-//import com.cskaoyan.bean.OrderStatus;
+
 
 
 import com.cskaoyan.mapper.MarketKeywordMapper;
