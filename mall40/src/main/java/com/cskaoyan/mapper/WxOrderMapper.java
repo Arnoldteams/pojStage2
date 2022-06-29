@@ -78,9 +78,10 @@ public interface WxOrderMapper {
 
     AdminOrderDetailGoodsVO selectOrdersGoods(@Param("orderId") Integer orderId, @Param("goodsId") Integer goodsId);
 
-    void insertOrderComment(WxOrderListCommentBO wxOrderListCommentBO);
+    void insertOrderComment(@Param("wxOrderListCommentBO") WxOrderListCommentBO wxOrderListCommentBO,
+                            @Param("userId") Integer userId,@Param("picUrls") String picUrls);
 
-    List<MarketOrder> selectAllorderListByUerId(Integer userId);
+    List<MarketOrder> selectAllorderListByUserId(Integer userId);
 
     List<MarketOrder> selectOrderListByStatusByUserId(@Param("orderStatus") Integer orderStatus, @Param("userId") Integer userId);
 
