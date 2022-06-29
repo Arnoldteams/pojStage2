@@ -162,6 +162,13 @@ public class WxOrderServiceImpl implements WxOrderService {
         wxOrderMapper.insertOrderComment(wxOrderListCommentBO,userId,picUrls);
     }
 
+    /**
+     * @description: 根据指定订单id获取订单和商品信息
+     * @parameter: [orderId]
+     * @return: com.cskaoyan.bean.vo.wxOrder.WxOrderDetailVo
+     * @author: 帅关
+     * @createTime: 2022/6/30 7:32
+     */
     @Override
     public WxOrderDetailVo selectOrderDetailByOrderId(Integer orderId) {
         // 查询订单

@@ -125,6 +125,13 @@ public class WxOrderController {
     }
 
 
+    /**
+     * @description: 获取订单详情商品信息
+     * @parameter: [orderId]
+     * @return: com.cskaoyan.bean.BaseRespVo
+     * @author: 帅关
+     * @createTime: 2022/6/30 7:33
+     */
     @RequestMapping("detail")
     public BaseRespVo detail(Integer orderId){
         WxOrderDetailVo detail = wxOrderService.selectOrderDetailByOrderId(orderId);
