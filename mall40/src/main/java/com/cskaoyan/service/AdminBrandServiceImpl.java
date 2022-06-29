@@ -43,17 +43,15 @@ public class AdminBrandServiceImpl implements AdminBrandService{
             criteria.andNameLike("%"+name+"%");
         }
 
-        // example.createCriteria().andDeletedEqualTo(false);
-
         criteria.andDeletedEqualTo(false); // 显示没有删除的数据
 
         example.setOrderByClause(baseParam.getSort() + " " + baseParam.getOrder());
 
+        // 配置分页工具
         PageHelper.startPage(baseParam.getPage(),baseParam.getLimit());
         List<MarketBrand> marketBrands = marketBrandMapper.selectByExample(example);
 
-        // 配置分页工具
-        PageHelper.startPage(baseParam.getPage(),baseParam.getLimit());
+
         PageInfo<MarketBrand> pageInfo = new PageInfo<>(marketBrands);
         return CommonData.data(pageInfo);
     }

@@ -102,10 +102,10 @@ public class AdminStorageController {
      * @createTime: 2022-06-26 17:30:59
      * @description: 查询storage所有列
      * @param: baseParam - [BaseParam]
-     * @return: com.cskaoyan.bean.BaseRespVo<com.cskaoyan.bean.vo.AdminStorageVO>
      */
-    @GetMapping("/admin/storage/list")
-    public BaseRespVo<AdminStorageVO> list(BaseParam baseParam,String key,String name) {
+    @GetMapping("list")
+    public BaseRespVo list(BaseParam baseParam,String key,String name) {
+
 
         CommonData<MarketStorage> data = adminStorageService.queryAllStorage(baseParam,key,name);
 
@@ -119,7 +119,7 @@ public class AdminStorageController {
      * @param: marketStorage - [MarketStorage]
      * @return: com.cskaoyan.bean.BaseRespVo<com.cskaoyan.bean.MarketStorage>
      */
-    @PostMapping("/admin/storage/update")
+    @PostMapping("update")
     public BaseRespVo<MarketStorage> update(@RequestBody MarketStorage marketStorage) {
         BaseRespVo<MarketStorage> resp = new BaseRespVo<>();
 
@@ -137,7 +137,7 @@ public class AdminStorageController {
      * @param: marketStorage - [MarketStorage]
      * @return: com.cskaoyan.bean.BaseRespVo<java.lang.String>
      */
-    @PostMapping("/admin/storage/delete")
+    @PostMapping("delete")
     public BaseRespVo<String> delete(@RequestBody MarketStorage marketStorage) {
         BaseRespVo<String> resp = new BaseRespVo<>();
 

@@ -32,11 +32,9 @@ public class AdminKeywordController {
      * @createTime: 2022-06-25 20:56:27
      * @description: 响应Keyword表的全部数据
      * @param: adminKeywordBO - [AdminKeywordBO]
-     * @return: com.cskaoyan.bean.BaseRespVo<com.cskaoyan.bean.vo.AdminKeywordVO>
      */
     @GetMapping("list")
-    public BaseRespVo<AdminKeywordVO> list(AdminKeywordBO adminKeywordBO) {
-
+    public BaseRespVo list(AdminKeywordBO adminKeywordBO) {
 
         CommonData<MarketKeyword> data = adminKeywordService.queryAllKeywordList(adminKeywordBO);
 
