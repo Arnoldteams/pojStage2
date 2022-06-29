@@ -17,7 +17,7 @@ public class WxOrderListCommentBO {
     String content;
     Boolean hasPicture;
     Integer orderGoodsId;
-    String[] picUrl;
+    String[] picUrls;
     Integer star;
 
 }
