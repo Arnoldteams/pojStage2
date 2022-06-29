@@ -135,7 +135,7 @@ public class AdminRoleController {
      */
     @LogAnnotation("更新角色权限")
     @PostMapping("/permissions")
-    public BaseRespVo adminRolePermissions(@RequestBody AdminPermissionsBo adminPermissions) {
+    public BaseRespVo updateAdminRolePermissions(@RequestBody AdminPermissionsBo adminPermissions) {
         String roleName = adminRoleService.selectRoleNameById(adminPermissions.getRoleId());
         if (adminPermissions.getRoleId() == 1) {
             session.setAttribute("log",roleName);

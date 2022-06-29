@@ -1,5 +1,6 @@
 package com.cskaoyan.mapper;
 
+import com.cskaoyan.bean.MarketCart;
 import com.cskaoyan.bean.MarketGoodsProduct;
 import com.cskaoyan.bean.MarketGoodsProductExample;
 import org.apache.ibatis.annotations.Param;
@@ -28,4 +29,6 @@ public interface MarketGoodsProductMapper {
     int updateByPrimaryKeySelective(MarketGoodsProduct record);
 
     int updateByPrimaryKey(MarketGoodsProduct record);
+
+    MarketCart selectPartDataByPrimaryKey(@Param("productId") Integer productId);
 }
