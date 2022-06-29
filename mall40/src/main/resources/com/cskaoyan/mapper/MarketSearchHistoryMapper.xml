@@ -240,4 +240,8 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectKeyWordByUserId" resultType="com.cskaoyan.bean.vo.wxSearch.HistoryKeywordListEntity">
+    select keyword from market_search_history where user_id=#{userId} and deleted=0
+    </select>
 </mapper>

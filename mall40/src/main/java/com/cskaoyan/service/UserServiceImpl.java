@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +37,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     MarketLogMapper marketLogMapper;
+
+    @Autowired
+    HttpSession httpSession;
 
 
     @Override
@@ -79,6 +83,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(UserEntity user) {
+        httpSession.setAttribute("log","修改用户："+user.getId());
         userMapper.updateUser(user);
     }
 
