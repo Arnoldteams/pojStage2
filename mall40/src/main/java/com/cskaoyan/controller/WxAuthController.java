@@ -44,6 +44,39 @@ public class WxAuthController {
     @Autowired
     HttpServletRequest request;
 
+    @PostMapping("reset")
+    public BaseRespVo reset(@RequestBody WxAuthRegisterBO wxAuthRegisterBO){
+        Boolean codeError = true;
+        Object code = redisTemplate.opsForValue().get("code");
+        String uCode = wxAuthRegisterBO.getCode();
+        // 判断验证码是否过期
+        if (code != null) {
+            // 仅当用户验证码不空，且与验证码相同，通过
+            if (!StringUtils.isEmpty(uCode) && StringUtils.equals((String) code, uCode)) {
+                codeError = false;
+            }
+        }
+
+        Boolean filedUpdate = wxAuthorService.updateUserByMobil(wxAuthRegisterBO);
+
+        if (codeError) {
+            return BaseRespVo.codeAndMsg(703, "验证码错误，淦");
+        }
+        if (filedUpdate) {
+            return BaseRespVo.codeAndMsg(706, "手机号未注册，宝");
+        }
+
+        return BaseRespVo.ok();
+    }
+
+    /**
+     * @author: 于艳帆
+     * @createTime: 2022-06-29 23:29:53
+     * @description: 发送验证码
+     * @param: map - [String]
+     * @return: com.cskaoyan.bean.BaseRespVo
+     */
+
     @PostMapping("regCaptcha")
     public BaseRespVo regCaptcha(@RequestBody Map<String, String> map) {
 
@@ -57,7 +90,13 @@ public class WxAuthController {
         return BaseRespVo.ok();
     }
 
-
+    /**
+     * @author: 于艳帆
+     * @createTime: 2022-06-29 23:30:35
+     * @description: 注册
+     * @param: wxAuthRegisterBO - [WxAuthRegisterBO]
+     * @return: com.cskaoyan.bean.BaseRespVo
+     */
     @PostMapping("register")
     public BaseRespVo register(@RequestBody WxAuthRegisterBO wxAuthRegisterBO) {
 
