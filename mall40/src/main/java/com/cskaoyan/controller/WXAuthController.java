@@ -6,10 +6,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -18,12 +15,12 @@ import java.util.Map;
  * @since 2022/06/28 22:37
  */
 @RestController
-@RequestMapping("wx/auth")
+@RequestMapping("wx/")
 public class WXAuthController {
 
 
-    @PostMapping("login")
-    public BaseRespVo login(@RequestBody Map map){
+    @PostMapping("auth/login")
+    public BaseRespVo login(@RequestBody Map map) {
         String username = (String) map.get("username");
         String password = (String) map.get("password");
 
@@ -66,12 +63,17 @@ public class WXAuthController {
     }
 
 
-    @PostMapping("logout")
-    public BaseRespVo logout(){
+    @PostMapping("auth/logout")
+    public BaseRespVo logout() {
 
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
         return BaseRespVo.ok();
+    }
+
+    @GetMapping("user/index")
+    public BaseRespVo userIndex() {
+        return null;
     }
 
 }
