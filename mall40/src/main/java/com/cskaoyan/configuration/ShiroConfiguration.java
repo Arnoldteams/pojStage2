@@ -33,13 +33,18 @@ public class ShiroConfiguration {
         LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         // map中key    → 请求url
         // map中value  → filter名称
-        filterChainDefinitionMap.put("/admin/auth/login", "anon");
-        filterChainDefinitionMap.put("/wx/auth/login", "anon");
-        filterChainDefinitionMap.put("/admin/auth/info", "anon");
-        filterChainDefinitionMap.put("/admin/auth/noAuthc", "anon");
+//        filterChainDefinitionMap.put("/wx/goods/index", "anon");
+//        filterChainDefinitionMap.put("/wx/storage/upload", "anon");
+//        filterChainDefinitionMap.put("/admin/auth/login", "anon");
+//        filterChainDefinitionMap.put("/wx/auth/login", "anon");
+//        filterChainDefinitionMap.put("/admin/auth/info", "anon");
+//        filterChainDefinitionMap.put("/admin/auth/noAuthc", "anon");
 //        filterChainDefinitionMap.put("/admin/profile/nnotice", "anon");
-        filterChainDefinitionMap.put("/admin/**", "authc");
-        filterChainDefinitionMap.put("/wx/**", "authc");
+//        filterChainDefinitionMap.put("/admin/**", "authc");
+//        filterChainDefinitionMap.put("/wx/**", "authc");
+        filterChainDefinitionMap.put("/wx/**", "anon");
+
+
 
         // 含义就是访问/admin/user/list这个请求需要的权限是aaa
         // 但是通常我们不这样写，因为增加权限通常指的url → 对handler方法做访问控制

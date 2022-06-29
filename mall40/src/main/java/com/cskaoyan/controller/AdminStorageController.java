@@ -30,6 +30,7 @@ import java.util.UUID;
  * @Description: 系统管理-对象存储业务（CRUD）
  */
 @RestController
+@RequestMapping("/admin/storage")
 public class AdminStorageController {
 
     @Autowired
@@ -52,7 +53,7 @@ public class AdminStorageController {
      * @param file 形参接收请求参数
      * @description: 图片上传，单个图片
      */
-    @RequestMapping({"admin/storage/create", "wx/storage/upload"})
+    @PostMapping("create")
     public BaseRespVo adminStorageCreate(MultipartFile file) {
         // 创建一个 storage 存参数
         MarketStorage marketStorage = new MarketStorage();
