@@ -1,4 +1,4 @@
-package com.cskaoyan.bean.vo.wx.topic;
+package com.cskaoyan.bean.vo.wx;
 
 import com.github.pagehelper.PageInfo;
 import lombok.Data;
