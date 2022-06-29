@@ -20,7 +20,7 @@ public class MarketCart {
 
     private Short number;
 
-    private String specifications;
+    private String[] specifications;
 
     private Boolean checked;
 
@@ -44,32 +44,36 @@ public class MarketCart {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public MarketCart setUserId(Integer userId) {
         this.userId = userId;
+        return this;
     }
 
     public Integer getGoodsId() {
         return goodsId;
     }
 
-    public void setGoodsId(Integer goodsId) {
+    public MarketCart setGoodsId(Integer goodsId) {
         this.goodsId = goodsId;
+        return this;
     }
 
     public String getGoodsSn() {
         return goodsSn;
     }
 
-    public void setGoodsSn(String goodsSn) {
+    public MarketCart setGoodsSn(String goodsSn) {
         this.goodsSn = goodsSn == null ? null : goodsSn.trim();
+        return this;
     }
 
     public String getGoodsName() {
         return goodsName;
     }
 
-    public void setGoodsName(String goodsName) {
+    public MarketCart setGoodsName(String goodsName) {
         this.goodsName = goodsName == null ? null : goodsName.trim();
+        return this;
     }
 
     public Integer getProductId() {
@@ -92,16 +96,9 @@ public class MarketCart {
         return number;
     }
 
-    public void setNumber(Short number) {
+    public MarketCart setNumber(Short number) {
         this.number = number;
-    }
-
-    public String getSpecifications() {
-        return specifications;
-    }
-
-    public void setSpecifications(String specifications) {
-        this.specifications = specifications == null ? null : specifications.trim();
+        return this;
     }
 
     public Boolean getChecked() {
@@ -124,23 +121,34 @@ public class MarketCart {
         return addTime;
     }
 
-    public void setAddTime(Date addTime) {
+    public MarketCart setAddTime(Date addTime) {
         this.addTime = addTime;
+        return this;
     }
 
     public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public MarketCart setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+        return this;
     }
 
     public Boolean getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public MarketCart setDeleted(Boolean deleted) {
         this.deleted = deleted;
+        return this;
+    }
+
+    public String[] getSpecifications() {
+        return specifications;
+    }
+
+    public void setSpecifications(String[] specifications) {
+        this.specifications = specifications;
     }
 }

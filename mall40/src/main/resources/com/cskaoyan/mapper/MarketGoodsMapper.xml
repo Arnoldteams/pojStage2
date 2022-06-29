@@ -551,4 +551,7 @@
         select id as value, name as label from market_brand
     </select>
 
+    <select id="selectPartDataByPrimaryKey" resultMap="BaseResultMap">
+        select goods_sn, name from market_goods where id = #{goodsId}
+    </select>
 </mapper>

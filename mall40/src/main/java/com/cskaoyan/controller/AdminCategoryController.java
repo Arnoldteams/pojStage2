@@ -5,6 +5,7 @@ import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.vo.AdminBrandVO;
 import com.cskaoyan.bean.vo.AdminCategoryOneVO;
 import com.cskaoyan.bean.vo.AdminCategoryVO;
+import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminBrandService;
 import com.cskaoyan.service.AdminCategoryService;
 import com.github.pagehelper.PageHelper;
@@ -98,6 +99,7 @@ public class AdminCategoryController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @PostMapping("create")
+    @LogAnnotation(value = "增加商品类目", comment = "来自sprinkle")
     public BaseRespVo create(@RequestBody MarketCategory marketCategory) {
         MarketCategory category = adminCategoryService.createOneCategory(marketCategory);
         return BaseRespVo.ok(category);
@@ -111,6 +113,7 @@ public class AdminCategoryController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @PostMapping("update")
+    @LogAnnotation(value = "更新商品类目", comment = "来自sprinkle")
     public BaseRespVo update(@RequestBody MarketCategory marketCategory) {
         adminCategoryService.updateOneCategory(marketCategory);
         return BaseRespVo.ok();
@@ -124,6 +127,7 @@ public class AdminCategoryController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @PostMapping("delete")
+    @LogAnnotation(value = "删除商品类目", comment = "来自sprinkle")
     public BaseRespVo delete(@RequestBody MarketCategory marketCategory) {
         adminCategoryService.deleteOneCategory(marketCategory);
         return BaseRespVo.ok();

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.EmptyStackException;
 import java.util.List;
@@ -28,6 +29,8 @@ public class AdminBrandServiceImpl implements AdminBrandService{
 
     @Autowired
     MarketBrandMapper marketBrandMapper;
+    @Autowired
+    HttpSession session;
 
     @Override
     public CommonData<MarketBrand> queryAllBrand(BaseParam baseParam, String id, String name) {
@@ -63,6 +66,7 @@ public class AdminBrandServiceImpl implements AdminBrandService{
      */
     @Override
     public MarketBrand updateOneBrand(MarketBrand marketBrand) {
+        session.setAttribute("log",marketBrand.getName());
         MarketBrandExample example = new MarketBrandExample();
         MarketBrandExample.Criteria criteria = example.createCriteria();
 
@@ -90,11 +94,13 @@ public class AdminBrandServiceImpl implements AdminBrandService{
      */
     @Override
     public void deleteOneBrand(MarketBrand marketBrand) {
+        session.setAttribute("log",marketBrand.getName());
         marketBrandMapper.deleteByPrimaryKeyUseUpdate(marketBrand.getId());
     }
 
     @Override
     public MarketBrand createOneBrand(MarketBrand marketBrand) {
+        session.setAttribute("log",marketBrand.getName());
         Date date = new Date();
         marketBrand.setAddTime(date);
         marketBrand.setUpdateTime(date);

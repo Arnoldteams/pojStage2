@@ -56,6 +56,8 @@ public class AdminRoleServiceImpl implements AdminRoleService {
      */
     @Override
     public CommonData<MarketRole> queryAllRoles(BaseParam param, String name) {
+        // 配置分页工具
+        PageHelper.startPage(param.getPage(), param.getLimit());
 
         MarketRoleExample example = new MarketRoleExample();
         MarketRoleExample.Criteria or = example.or();
@@ -75,8 +77,7 @@ public class AdminRoleServiceImpl implements AdminRoleService {
 
         List<MarketRole> roles = roleMapper.selectByExample(example);
 
-        // 配置分页工具
-        PageHelper.startPage(param.getPage(), param.getLimit());
+
         PageInfo<MarketRole> pageInfo = new PageInfo<>(roles);
         return CommonData.data(pageInfo);
     }

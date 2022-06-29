@@ -1,6 +1,6 @@
-package com.cskaoyan.config;
+package com.cskaoyan.configuration;
 
-import com.cskaoyan.config.realm.CustomRealm;
+import com.cskaoyan.configuration.realm.CustomRealm;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -26,12 +26,6 @@ public class ShiroConfiguration {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
 
-        //提供Filter链 → 配置的内容类似于之前的HandlerInterceptor
-        // 1、Filter是谁 → anon、authc、perms
-        // 2、Filter的作用范围是什么 → 建立请求URL和Filter之间的映射关系
-        // 3、Filter之间的顺序 → 书写顺序
-
-
         // 通常anon ← authc ← perms
         // 通常anon写在最前面
 
@@ -40,9 +34,12 @@ public class ShiroConfiguration {
         // map中key    → 请求url
         // map中value  → filter名称
         filterChainDefinitionMap.put("/admin/auth/login", "anon");
+        filterChainDefinitionMap.put("/wx/auth/login", "anon");
         filterChainDefinitionMap.put("/admin/auth/info", "anon");
         filterChainDefinitionMap.put("/admin/auth/noAuthc", "anon");
+//        filterChainDefinitionMap.put("/admin/profile/nnotice", "anon");
         filterChainDefinitionMap.put("/admin/**", "authc");
+        filterChainDefinitionMap.put("/wx/**", "authc");
 
         // 含义就是访问/admin/user/list这个请求需要的权限是aaa
         // 但是通常我们不这样写，因为增加权限通常指的url → 对handler方法做访问控制
@@ -56,6 +53,7 @@ public class ShiroConfiguration {
         // shiro会给你做重定向 → 默认的重定向的地址 /login.jsp
         // 如果想要修改重定向的地址，可以使用方法来修改
         shiroFilterFactoryBean.setLoginUrl("/admin/auth/noAuthc");
+//        shiroFilterFactoryBean.setLoginUrl("/admin/profile/nnotice");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 

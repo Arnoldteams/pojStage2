@@ -1,11 +1,14 @@
 import com.cskaoyan.MarketApplication;
 import com.cskaoyan.bean.MarketKeyword;
+import com.cskaoyan.bean.OrderStatus;
 import com.cskaoyan.mapper.MarketKeywordMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Map;
 
 /**
  * @Author: 于艳帆
@@ -27,6 +30,13 @@ public class RainTest {
             System.out.println(marketKeyword.getKeyword());
         }
 
+    }
+
+    @Test
+    public void Test(){
+        Map instance = OrderStatus.getInstance();
+        OrderStatus object = (OrderStatus) instance.get(1);
+        System.out.println();
     }
 
 }

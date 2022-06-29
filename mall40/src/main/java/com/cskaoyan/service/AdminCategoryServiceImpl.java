@@ -6,6 +6,7 @@ import com.cskaoyan.mapper.MarketCategoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +20,8 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     @Autowired
     MarketCategoryMapper marketCategoryMapper;
 
+    @Autowired
+    HttpSession session;
     @Override
     public List<MarketCategoryChildren> getAllCategory() {
         List<MarketCategoryChildren> list = marketCategoryMapper.selectL1CategoryByPid("L1");
@@ -41,6 +44,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
 
     @Override
     public MarketCategory createOneCategory(MarketCategory marketCategory) {
+        session.setAttribute("log",marketCategory.getName());
         Date date = new Date();
         marketCategory.setAddTime(date);
         marketCategory.setUpdateTime(date);
@@ -50,11 +54,13 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
 
     @Override
     public void updateOneCategory(MarketCategory marketCategory) {
+        session.setAttribute("log",marketCategory.getName());
         marketCategoryMapper.updateByPrimaryKeySelective(marketCategory);
     }
 
     @Override
     public void deleteOneCategory(MarketCategory marketCategory) {
+        session.setAttribute("log",marketCategory.getName());
         marketCategoryMapper.deleteByPrimaryKey(marketCategory.getId());
     }
 

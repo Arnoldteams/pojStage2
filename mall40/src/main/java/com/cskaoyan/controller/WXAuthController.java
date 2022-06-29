@@ -2,33 +2,28 @@ package com.cskaoyan.controller;
 
 import com.cskaoyan.bean.*;
 import com.cskaoyan.configuration.realm.MarketToken;
-import com.cskaoyan.handler.LogAnnotation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-// import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Map;
 
-//shiro整合之后，在做具体的开发
-//响应结果都是JSON，Controller组件上我们都用@RestController注解
+/**
+ * @author xyg2597@163.com
+ * @since 2022/06/28 22:37
+ */
 @RestController
-@RequestMapping("admin")
-public class AuthController {
+@RequestMapping("wx/auth")
+public class WXAuthController {
 
 
-    /**
-     * Shiro
-     * 如果参数比较少，类型比较简单的话，使用map来接收也可以
-     */
-    @PostMapping("auth/login")
-    @LogAnnotation("登录")
-    public BaseRespVo login(@RequestBody Map map) {
-//        $2a$10$.rEfyBb/GURD9P2p0fRg/OAJGloGNDkJS4lY0cQHeqDgsbdTylBpu
-
+    @PostMapping("login")
+    public BaseRespVo login(@RequestBody Map map){
         String username = (String) map.get("username");
         String password = (String) map.get("password");
 
@@ -37,7 +32,7 @@ public class AuthController {
         Subject subject = SecurityUtils.getSubject();
         // 执行登录（认证）
         //UsernamePasswordToken authenticationToken = new UsernamePasswordToken(username,password);
-        MarketToken authenticationToken = new MarketToken(username, password, "admin");
+        MarketToken authenticationToken = new MarketToken(username, password, "wx");
         try {
             // realm.doGetAuthenticationInfo
             subject.login(authenticationToken);
@@ -54,7 +49,7 @@ public class AuthController {
 
         session.setAttribute("username", username);
         // 获得Principal信息 → realm的doGetAuthorizationInfo方法构造的认证信息里的第一个参数
-        MarketAdmin primaryPrincipal = (MarketAdmin) subject.getPrincipals().getPrimaryPrincipal();
+        MarketUser primaryPrincipal = (MarketUser) subject.getPrincipals().getPrimaryPrincipal();
 
 
         LoginUserData loginUserData = new LoginUserData();
@@ -71,46 +66,12 @@ public class AuthController {
     }
 
 
-    @RequestMapping("auth/info")
-    public BaseRespVo info(String token) {
-
-
-        //开发完shiro之后，再整合
-        InfoData infoData = new InfoData();
-        infoData.setName("admin123");
-
-        //根据primaryPrincipal做查询
-        infoData.setAvatar("https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
-        ArrayList<String> roles = new ArrayList<>();
-        roles.add("超级管理员");
-        infoData.setRoles(roles);
-        ArrayList<String> perms = new ArrayList<>();
-        perms.add("*");
-        infoData.setPerms(perms);
-
-
-        return BaseRespVo.ok(infoData);
-    }
-
-    /**
-     * 后台管理登出
-     *
-     * @return com.cskaoyan.bean.BaseRespVo
-     * @author xyg2597@163.com
-     * @since 2022/06/28 20:01
-     */
-    @PostMapping("auth/logout")
-    public BaseRespVo logout() {
+    @PostMapping("logout")
+    public BaseRespVo logout(){
 
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
         return BaseRespVo.ok();
     }
-
-    @GetMapping("profile/nnotice")
-    public BaseRespVo nNotice() {
-        return BaseRespVo.ok(0);
-    }
-
 
 }

@@ -1,8 +1,6 @@
-package com.cskaoyan.config;
+package com.cskaoyan.configuration;
 
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
-import org.springframework.stereotype.Component;
-
 
 
 import javax.servlet.ServletRequest;
