@@ -3,14 +3,13 @@ package com.cskaoyan.controller;
 import com.cskaoyan.bean.*;
 import com.cskaoyan.configuration.realm.MarketToken;
 import com.cskaoyan.handler.LogAnnotation;
+import com.cskaoyan.service.AdminAuthService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 // import javax.validation.Valid;
 import java.util.ArrayList;
@@ -22,6 +21,9 @@ import java.util.Map;
 @RequestMapping("admin/auth")
 public class AuthController {
 
+
+    @Autowired
+    AdminAuthService adminAuthService;
 
     /**
      * Shiro
@@ -78,18 +80,17 @@ public class AuthController {
     public BaseRespVo info(String token) {
 
 
-        //开发完shiro之后，再整合
-        InfoData infoData = new InfoData();
-        infoData.setName("admin123");
+//        //开发完shiro之后，再整合
+//        InfoData infoData = new InfoData();
+//        infoData.setName("admin123");
 
-        //根据primaryPrincipal做查询
-        infoData.setAvatar("https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
-        ArrayList<String> roles = new ArrayList<>();
-        roles.add("超级管理员");
-        infoData.setRoles(roles);
-        ArrayList<String> perms = new ArrayList<>();
-        perms.add("*");
-        infoData.setPerms(perms);
+//        //根据primaryPrincipal做查询
+        Subject subject = SecurityUtils.getSubject();
+        MarketAdmin primaryPrincipal = (MarketAdmin) subject.getPrincipals().getPrimaryPrincipal();
+
+        InfoData infoData = adminAuthService.getInfo(primaryPrincipal);
+
+
 
 
         return BaseRespVo.ok(infoData);
@@ -97,15 +98,23 @@ public class AuthController {
 
     /**
      * 后台管理登出
+     *
      * @return com.cskaoyan.bean.BaseRespVo
      * @author xyg2597@163.com
      * @since 2022/06/28 20:01
      */
     @PostMapping("logout")
-    public BaseRespVo logout(){
+    public BaseRespVo logout() {
 
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
         return BaseRespVo.ok();
     }
+
+
+    @GetMapping("noAuthc")
+    public BaseRespVo nNotice() {
+        return BaseRespVo.ok(0);
+    }
+
 }

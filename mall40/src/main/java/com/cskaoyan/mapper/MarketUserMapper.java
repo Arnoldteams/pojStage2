@@ -32,4 +32,5 @@ public interface MarketUserMapper {
 
     List<RowsEntity> countUserByAddTime();
 
+    Integer selectUserIdByName(@Param("username") String username);
 }

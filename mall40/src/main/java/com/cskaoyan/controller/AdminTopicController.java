@@ -1,22 +1,24 @@
 package com.cskaoyan.controller;
 
-import com.alibaba.druid.support.json.JSONParser;
 import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.MarketTopic;
 import com.cskaoyan.bean.bo.AdminTopicCreateBO;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.AdminTopicReadVO;
+import com.cskaoyan.handler.AdminRequestBodyException;
 import com.cskaoyan.handler.LogAnnotation;
+import com.cskaoyan.handler.ValidationUtils;
 import com.cskaoyan.service.AdminTopicService;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +49,7 @@ public class AdminTopicController {
      * @since 2022/06/25 20:05
      */
     @GetMapping("list")
+    @RequiresPermissions(value = {"admin:topic:list","*"},logical = Logical.OR)
     public BaseRespVo topicList(BaseParam baseInfo, String subtitle, String title) {
 
         CommonData<MarketTopic> commonData = adminTopicService.getList(baseInfo, subtitle, title);
@@ -63,6 +66,7 @@ public class AdminTopicController {
      * @since 2022/06/25 23:14
      */
     @RequestMapping("create")
+    @RequiresPermissions(value = {"admin:topic:create","*"},logical = Logical.OR)
     @LogAnnotation(value = "添加专题信息",successResult = "专题添加成功")
     public BaseRespVo topicCreate(@RequestBody AdminTopicCreateBO adminTopicCreateBO) {
 
@@ -74,7 +78,7 @@ public class AdminTopicController {
             price = new BigDecimal(adminTopicCreateBO.getPrice());
         }catch (Exception e){
             session.setAttribute("log",adminTopicCreateBO.getTitle());
-            return BaseRespVo.invalidPrice();
+            return BaseRespVo.invalidJson("参数值不对");
         }
         createMarketTopic.setPrice(price);
 
@@ -93,6 +97,7 @@ public class AdminTopicController {
      * @since 2022/06/26 13:22
      */
     @GetMapping("read")
+    @RequiresPermissions(value = {"admin:topic:read","*"},logical = Logical.OR)
     public BaseRespVo topicRead(Integer id) {
 
         AdminTopicReadVO adminTopicReadVO = adminTopicService.readTopic(id);
@@ -108,8 +113,11 @@ public class AdminTopicController {
      * @since 2022/06/27 10:46
      */
     @PostMapping("update")
+    @RequiresPermissions(value = {"admin:topic:update","*"},logical = Logical.OR)
     @LogAnnotation(value = "更新专题信息",successResult = "专题修改成功")
-    public BaseRespVo topicUpdate(@RequestBody MarketTopic marketTopic){
+    public BaseRespVo topicUpdate(@Validated@RequestBody MarketTopic marketTopic, BindingResult bindingResult) throws AdminRequestBodyException {
+
+        ValidationUtils.valid(bindingResult);
 
         MarketTopic marketTopicVo = adminTopicService.topicUpdate(marketTopic);
 
@@ -124,6 +132,7 @@ public class AdminTopicController {
      * @since 2022/06/26 14:36
      */
     @PostMapping("delete")
+    @RequiresPermissions(value = {"admin:topic:delete","*"},logical = Logical.OR)
     @LogAnnotation(value = "删除指定专题", successResult = "专题删除成功")
     public BaseRespVo topicDelete(@RequestBody MarketTopic marketTopic){
 
@@ -139,6 +148,7 @@ public class AdminTopicController {
      * @since 2022/06/26 14:44
      */
     @PostMapping("batch-delete")
+    @RequiresPermissions(value = {"admin:topic:batch-delete","*"},logical = Logical.OR)
     @LogAnnotation(value = "批量删除专题信息",successResult = "专题删除成功")
     public BaseRespVo topicBatchDelete(@RequestBody Map idList){
 

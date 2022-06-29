@@ -272,4 +272,12 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectPartDataByPrimaryKey" resultType="com.cskaoyan.bean.MarketCart">
+    select g.id as goodsId,g.goods_sn as goodsSn,g.name as goodsName,
+    p.id as productId,p.price as price, p.specifications, p.url as picUrl
+    from market_goods_product as p
+    left join market_goods as g on p.goods_id = g.id
+    where p.id = #{productId}
+  </select>
 </mapper>

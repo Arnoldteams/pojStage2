@@ -65,58 +65,61 @@ public class LogHandler {
         for (Method declaredMethod : declaredMethods) {
             if (name.equals(declaredMethod.getName())) {
                 LogAnnotation annotation = declaredMethod.getAnnotation(LogAnnotation.class);
+//                如果该方法没有注解，说明进行了方法重载，跳过该方法
+                if (annotation == null) {
+                    continue;
+                }
                 action = annotation.value();
                 successResult = annotation.successResult();
                 unSuccessResult = annotation.unSuccessResult();
 //                设置备注
                 marketLog.setComment(annotation.comment());
-            }
-        }
+                String log = (String) session.getAttribute("log");
+
+                if (log == null) {
+                    log = "";
+                }
 
 
-        String log = (String) session.getAttribute("log");
-        if(log == null){
-            log = "";
-        }
+                marketLog.setAction(action);
 
 
-        marketLog.setAction(action);
+//                获得操作管理员名称
+                String loginName = (String) session.getAttribute("username");
 
+                if (StringUtils.isEmpty(loginName)) {
+                    marketLog.setAdmin("匿名用户");
+                } else {
 
-//        TODO:获得操作管理员名称
-        String loginName = (String) session.getAttribute("username");
-
-        if (StringUtils.isEmpty(loginName)) {
-            marketLog.setAdmin("匿名用户");
-        } else {
-
-            marketLog.setAdmin(loginName);
-        }
+                    marketLog.setAdmin(loginName);
+                }
 
 //        插入ip
-        marketLog.setIp(request.getRemoteHost());
+                marketLog.setIp(request.getRemoteHost());
 
 //        操作时间
-        Date date = new Date();
-        marketLog.setAddTime(date);
-        marketLog.setUpdateTime(date);
+                Date date = new Date();
+                marketLog.setAddTime(date);
+                marketLog.setUpdateTime(date);
 
 //        操作结果和操作状态
-        if (proceed.getErrno() == 0) {
-            marketLog.setStatus(true);
-            marketLog.setResult(log + successResult);
-        } else {
-            marketLog.setStatus(false);
-            if (StringUtils.isEmpty(unSuccessResult)) {
-                marketLog.setResult(log + proceed.getErrmsg());
-            } else {
-                marketLog.setResult(log + unSuccessResult);
+                if (proceed.getErrno() == 0) {
+                    marketLog.setStatus(true);
+                    marketLog.setResult(log + successResult);
+                } else {
+                    marketLog.setStatus(false);
+                    if (StringUtils.isEmpty(unSuccessResult)) {
+                        marketLog.setResult(log + proceed.getErrmsg());
+                    } else {
+                        marketLog.setResult(log + unSuccessResult);
+                    }
+                }
+                marketLog.setType(1);
+                marketLogMapper.insertSelective(marketLog);
             }
         }
-        marketLog.setType(1);
 
 
-        marketLogMapper.insertSelective(marketLog);
         return proceed;
     }
 
