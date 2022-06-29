@@ -1,9 +1,6 @@
 package com.cskaoyan.service;
 
-import com.cskaoyan.bean.MarketAddress;
-import com.cskaoyan.bean.MarketCart;
-import com.cskaoyan.bean.MarketCoupon;
-import com.cskaoyan.bean.MarketOrder;
+import com.cskaoyan.bean.*;
 import com.cskaoyan.bean.bo.wxOrder.*;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.wxOrder.WxOrderListChildVO;
@@ -12,14 +9,13 @@ import com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO;
 import com.cskaoyan.mapper.WxOrderMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author: ZY
@@ -34,15 +30,29 @@ public class WxOrderServiceImpl implements WxOrderService {
     WxOrderMapper wxOrderMapper;
 
 
+    /**
+    * @author: ZY
+    * @createTime: 2022/06/29 20:18:19
+    * @description: 个人-我的订单，list
+    * @param: showType
+ * @param: page
+ * @param: limit
+    * @return: com.cskaoyan.bean.param.CommonData<com.cskaoyan.bean.vo.wxOrder.WxOrderListChildVO>
+            */
     @Override
     public CommonData<WxOrderListChildVO> queryAllOrder(Integer showType, Integer page, Integer limit) {
         PageHelper.startPage(page, limit);
-        //编一个userId，回头再改
-        Integer userId = 1;
+
+        //拿到userId
+//        PrincipalCollection principals = SecurityUtils.getSubject().getPrincipals();
+//        MarketUser user = (MarketUser) principals.getPrimaryPrincipal();
+        MarketUser user = (MarketUser) SecurityUtils.getSubject().getPrincipal();
+        Integer userId = user.getId();
+
         //根据userId和订单状态找出该用户该状态的订单列表
         List<MarketOrder> orderList = new ArrayList<>();
         if (showType == 0) {
-            orderList = wxOrderMapper.selectAllorderListByUerId(userId);
+            orderList = wxOrderMapper.selectAllorderListByUserId(userId);
         } else {
             Map instance = OrderStatusConvert.getInstance();
             OrderStatusConvert o = (OrderStatusConvert) instance.get(showType);
@@ -61,11 +71,17 @@ public class WxOrderServiceImpl implements WxOrderService {
             wxOrderListChildVO.setIsGroupin(false);
             wxOrderListChildVO.setOrderSn(order.getOrderSn());
 
+            //根据订单状态，查状态码信息
             Integer orderStatus = Integer.valueOf(order.getOrderStatus());
-            Map instance = OrderStatusContentConvert.getInstance();
-            OrderStatusContentConvert o = (OrderStatusContentConvert) instance.get(orderStatus);
-            String orderStatusContent = o.getOrderStatusContent();
+            Map instance1 = OrderStatusContentConvert.getInstance();
+            OrderStatusContentConvert o1 = (OrderStatusContentConvert) instance1.get(orderStatus);
+            String orderStatusContent = o1.getOrderStatusContent();
             wxOrderListChildVO.setOrderStatusText(orderStatusContent);
+           //根据订单状态，查可操作信息
+            Map instance2 = OrderStatusHandleConvert.getInstance();
+            OrderStatusHandleConvert o2 = (OrderStatusHandleConvert) instance2.get(orderStatus);
+            WxOrderListHandleOption handler = o2.getHandler();
+            wxOrderListChildVO.setHandleOption(handler);
 
             //根据orderId查找该订单里的商品信息
             Integer orderId = order.getId();
@@ -73,19 +89,8 @@ public class WxOrderServiceImpl implements WxOrderService {
                     wxOrderMapper.selectAllOrderGoodsByOrderId(orderId);
             wxOrderListChildVO.setGoodsList(goodsList);
 
-            //根据orderId查找该订单的各个状态位
-//            WxOrderListHandleOption handleOption =
-//                    wxOrderMapper.selectHandleOption(orderId);
-            WxOrderListHandleOption handleOption = new WxOrderListHandleOption();
-
-
-
-
-            wxOrderListChildVO.setHandleOption(handleOption);
-
-
+            //将封装好的VO加进List
             wxOrderListChildVOList.add(wxOrderListChildVO);
-
         }
 
         PageInfo<WxOrderListChildVO> wxOrderListChildVOPageInfo = new PageInfo<>(wxOrderListChildVOList);
@@ -93,6 +98,13 @@ public class WxOrderServiceImpl implements WxOrderService {
     }
 
 
+    /**
+    * @author: ZY
+    * @createTime: 2022/06/29 20:24:11
+    * @description: 用户申请退款
+    * @param: orderId
+    * @return: void
+            */
     @Override
     public void refundOrder(Integer orderId) {
         wxOrderMapper.updateUserOrderStatusRefund(orderId);
@@ -103,21 +115,48 @@ public class WxOrderServiceImpl implements WxOrderService {
         wxOrderMapper.updateUserOrderStatusConfirm(orderId);
     }
 
+    /**
+    * @author: ZY
+    * @createTime: 2022/06/29 20:25:34
+    * @description: 退款后可逻辑删除订单
+    * @param: orderId
+    * @return: void
+            */
     @Override
     public void deleteOrder(Integer orderId) {
         wxOrderMapper.updateUserOrderStatusDeleted(orderId);
     }
 
 
+    /**
+    * @author: ZY
+    * @createTime: 2022/06/29 20:33:16
+    * @description: 确认收货后评价商品，信息回显
+    * @param: orderId
+ * @param: goodsId
+    * @return: com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO
+            */
     @Override
     public AdminOrderDetailGoodsVO queryOrdersGoods(Integer orderId, Integer goodsId) {
         AdminOrderDetailGoodsVO adminOrderDetailGoodsVO = wxOrderMapper.selectOrdersGoods(orderId, goodsId);
         return adminOrderDetailGoodsVO;
     }
 
+    /**
+    * @author: ZY
+    * @createTime: 2022/06/29 21:27:57
+    * @description: 确认收货后评价商品
+    * @param: wxOrderListCommentBO
+    * @return: void
+            */
     @Override
     public void addOrderComment(WxOrderListCommentBO wxOrderListCommentBO) {
-        wxOrderMapper.insertOrderComment(wxOrderListCommentBO);
+        //拿到userId
+        MarketUser user = (MarketUser) SecurityUtils.getSubject().getPrincipal();
+        Integer userId = user.getId();
+
+        String picUrls = Arrays.toString(wxOrderListCommentBO.getPicUrls());
+        wxOrderMapper.insertOrderComment(wxOrderListCommentBO,userId,picUrls);
     }
 
 }

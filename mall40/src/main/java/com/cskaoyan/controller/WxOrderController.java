@@ -2,10 +2,8 @@ package com.cskaoyan.controller;
 
 import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.bo.wxOrder.WxOrderListCommentBO;
-import com.cskaoyan.bean.bo.wxOrder.WxOrderSubmitBO;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.wxOrder.WxOrderListChildVO;
-import com.cskaoyan.bean.vo.wxOrder.WxOrderSubmitVO;
 import com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO;
 import com.cskaoyan.service.WxOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,12 +27,28 @@ public class WxOrderController {
     WxOrderService wxOrderService;
 
 
+    /**
+     * @author: ZY
+     * @createTime: 2022/06/29 20:12:52
+     * @description: 个人-我的订单
+     * @param: showType
+     * @param: page
+     * @param: limit
+     * @return: com.cskaoyan.bean.BaseRespVo
+     */
     @RequestMapping("list")
     public BaseRespVo list(Integer showType, Integer page, Integer limit) {
         CommonData<WxOrderListChildVO> data = wxOrderService.queryAllOrder(showType, page, limit);
         return BaseRespVo.ok(data);
     }
 
+    /**
+    * @author: ZY
+    * @createTime: 2022/06/29 20:15:42
+    * @description: 还没找到在哪
+    * @param:
+    * @return: com.cskaoyan.bean.BaseRespVo
+            */
     @RequestMapping("cancel")
     public BaseRespVo cancel() {
         return BaseRespVo.ok(null);
@@ -86,7 +99,7 @@ public class WxOrderController {
     /**
      * @author: ZY
      * @createTime: 2022/06/29 00:12:58
-     * @description: 我的订单-订单详情-确认收货后可评价商品
+     * @description: 我的订单-订单详情-确认收货后可评价商品，信息的回显
      * @param: orderId
      * @param: goodsId
      * @return: com.cskaoyan.bean.BaseRespVo
@@ -97,6 +110,13 @@ public class WxOrderController {
         return BaseRespVo.ok(adminOrderDetailGoodsVO);
     }
 
+    /**
+    * @author: ZY
+    * @createTime: 2022/06/29 21:20:52
+    * @description: 我的订单-订单详情-确认收货后评价商品
+    * @param: wxOrderListCommentBO
+    * @return: com.cskaoyan.bean.BaseRespVo
+            */
     @RequestMapping("comment")
     public BaseRespVo comment(@RequestBody WxOrderListCommentBO wxOrderListCommentBO) {
         wxOrderService.addOrderComment(wxOrderListCommentBO);
