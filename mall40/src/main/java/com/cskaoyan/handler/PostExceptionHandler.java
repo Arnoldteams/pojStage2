@@ -63,6 +63,7 @@ public class PostExceptionHandler {
     @ResponseBody
     @LogAnnotation(value = "编辑专题信息")
     public BaseRespVo JsonExceptionHandle(HttpMessageNotReadableException e){
+        e.printStackTrace();
         return BaseRespVo.invalidJson("参数值错误");
     }
 

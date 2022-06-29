@@ -8,6 +8,7 @@ import com.cskaoyan.bean.bo.wxOrder.WxOrderSubmitBO;
 import com.cskaoyan.bean.vo.statForm.OrderRowsEntity;
 import com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO;
 import com.cskaoyan.bean.vo.wxOrder.WxOrderListChildVO;
+import com.cskaoyan.bean.vo.wxOrder.WxOrderDetailChildVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -86,6 +87,7 @@ public interface WxOrderMapper {
 
     WxOrderListHandleOption selectHandleOption(Integer orderId);
 
+
     void updateUserOrderStatusCancel(Integer orderId);
 
     List<WxOrderListChildVO> selectAllorderListByUserId(Integer userId);
@@ -93,5 +95,10 @@ public interface WxOrderMapper {
     List<WxOrderListChildVO> selectOrderListByStatusByUserId(@Param("orderStatus") Integer orderStatus, @Param("userId") Integer userId);
 
     Integer selectOrderStatusById(Integer orderId);
+
+
+    WxOrderDetailChildVo selectOrderInfoByOrderId(@Param("orderId") Integer orderId);
+
+    List<AdminOrderDetailGoodsVO> selectAllInfoOrderGoodsByOrderId(Integer orderId);
 
 }

@@ -3,7 +3,7 @@ package com.cskaoyan.controller;
 import com.cskaoyan.bean.BasePageInfo;
 import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.vo.wx.topic.WxTopicDetailVO;
-import com.cskaoyan.bean.vo.wx.topic.WxTopicListVO;
+import com.cskaoyan.bean.vo.wx.WxListVO;
 import com.cskaoyan.service.WxTopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +33,7 @@ public class WxTopicController {
     @GetMapping("list")
     public BaseRespVo topicList(BasePageInfo pageInfo){
 
-        WxTopicListVO topicListVO = wxTopicService.getTopicList(pageInfo);
+        WxListVO topicListVO = wxTopicService.getTopicList(pageInfo);
 
         return BaseRespVo.ok(topicListVO);
     }
@@ -63,7 +63,7 @@ public class WxTopicController {
     @GetMapping("related")
     public BaseRespVo topicRelated(Integer id){
 
-        WxTopicListVO wxTopicListVO = wxTopicService.topicRelated(id);
+        WxListVO wxTopicListVO = wxTopicService.topicRelated(id);
 
         return BaseRespVo.ok(wxTopicListVO);
     }

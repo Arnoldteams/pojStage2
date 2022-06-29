@@ -3,6 +3,7 @@ package com.cskaoyan.controller;
 import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.bo.wxOrder.WxOrderListCommentBO;
 import com.cskaoyan.bean.param.CommonData;
+import com.cskaoyan.bean.vo.wxOrder.WxOrderDetailVo;
 import com.cskaoyan.bean.vo.wxOrder.WxOrderListChildVO;
 import com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO;
 import com.cskaoyan.service.WxOrderService;
@@ -123,6 +124,13 @@ public class WxOrderController {
     public BaseRespVo comment(@RequestBody WxOrderListCommentBO wxOrderListCommentBO) {
         wxOrderService.addOrderComment(wxOrderListCommentBO);
         return BaseRespVo.ok(null);
+    }
+
+
+    @RequestMapping("detail")
+    public BaseRespVo detail(Integer orderId){
+        WxOrderDetailVo detail = wxOrderService.selectOrderDetailByOrderId(orderId);
+        return BaseRespVo.ok(detail);
     }
 
 

@@ -11,6 +11,14 @@ public class MarketComment {
 
     private Byte type;
 
+//    public Boolean getType() {
+//        return type;
+//    }
+//
+//    public void setType(Boolean type) {
+//        this.type = type;
+//    }
+
     private String content;
 
     private String adminContent;

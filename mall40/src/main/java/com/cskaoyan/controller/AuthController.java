@@ -1,6 +1,10 @@
 package com.cskaoyan.controller;
 
-import com.cskaoyan.bean.*;
+import com.cskaoyan.bean.AdminInfoBean;
+import com.cskaoyan.bean.BaseRespVo;
+import com.cskaoyan.bean.LoginUserData;
+import com.cskaoyan.bean.MarketAdmin;
+import com.cskaoyan.bean.InfoData;
 import com.cskaoyan.configuration.realm.MarketToken;
 import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminAuthService;

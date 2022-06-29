@@ -771,5 +771,27 @@
 
   <select id="selectOrderStatusById" resultType="java.lang.Integer">
     select order_status from market_order where id=#{orderId}
+ </select>
+  
+  <select id="selectOrderInfoByOrderId" resultType="com.cskaoyan.bean.vo.wxOrder.WxOrderDetailChildVo">
+      select consignee,address,add_time as addTime,order_sn as orderSn,
+      actual_price as actualPrice,mobile,message,aftersale_status as aftersaleStatus,
+      goods_price as goodsPrice,coupon_price as couponPrice,id,freight_price,
+      order_status as orderStatus
+      from market_order
+      where id =#{orderId}
+    </select>
+
+  <select id="selectOrderGoodsInfoByOrderId" resultType="com.cskaoyan.bean.MarketOrderGoods">
+
   </select>
+
+  <select id="selectAllInfoOrderGoodsByOrderId" resultType="com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO">
+    select id,order_id as orderId,goods_id as goodsId,goods_sn as goodsSn,
+    product_id as productId,comment,add_time as addTime,update_time as updateTime,
+    goods_name as goodsName,specifications,pic_url as picUrl,number,price,deleted
+     from market_order_goods
+     where order_id=#{orderId}
+  </select>
+
 </mapper>

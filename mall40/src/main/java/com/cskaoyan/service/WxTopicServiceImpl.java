@@ -1,11 +1,16 @@
 package com.cskaoyan.service;
 
-import com.cskaoyan.bean.*;
+
+import com.cskaoyan.bean.BasePageInfo;
+import com.cskaoyan.bean.MarketGoodsExample;
+import com.cskaoyan.bean.MarketTopic;
+import com.cskaoyan.bean.MarketTopicExample;
+import com.cskaoyan.bean.MarketGoods;
 import com.cskaoyan.bean.vo.AdminTopicReadVO;
 import com.cskaoyan.bean.vo.TopicReadGoodsVO;
 import com.cskaoyan.bean.vo.wx.topic.SingleTopicInfoVO;
 import com.cskaoyan.bean.vo.wx.topic.WxTopicDetailVO;
-import com.cskaoyan.bean.vo.wx.topic.WxTopicListVO;
+import com.cskaoyan.bean.vo.wx.WxListVO;
 import com.cskaoyan.mapper.MarketGoodsMapper;
 import com.cskaoyan.mapper.MarketTopicMapper;
 import com.github.pagehelper.PageHelper;
@@ -41,7 +46,7 @@ public class WxTopicServiceImpl implements WxTopicService {
      * @since 2022/06/29 19:12
      */
     @Override
-    public WxTopicListVO getTopicList(BasePageInfo pageInfo) {
+    public WxListVO getTopicList(BasePageInfo pageInfo) {
 
         PageHelper.startPage(pageInfo.getPage(), pageInfo.getLimit());
 
@@ -62,7 +67,7 @@ public class WxTopicServiceImpl implements WxTopicService {
         }
 
 //        将查询信息封装代VO中
-        WxTopicListVO<SingleTopicInfoVO> singleTopicInfoVOTopicListVO = new WxTopicListVO<>();
+        WxListVO<SingleTopicInfoVO> singleTopicInfoVOTopicListVO = new WxListVO<>();
         singleTopicInfoVOTopicListVO.setList(singleTopicInfoVOList);
         singleTopicInfoVOTopicListVO.setBaseInfo(marketTopicPageInfo);
 
@@ -126,7 +131,7 @@ public class WxTopicServiceImpl implements WxTopicService {
      * @since 2022/06/29 19:41
      */
     @Override
-    public WxTopicListVO topicRelated(Integer id) {
+    public WxListVO topicRelated(Integer id) {
 
 //        分页开启
         PageHelper.startPage(1, 4);
@@ -145,7 +150,7 @@ public class WxTopicServiceImpl implements WxTopicService {
         PageInfo<MarketTopic> pageInfo = new PageInfo<>(marketTopicList);
 
 //        封装查询信息
-        WxTopicListVO<MarketTopic> topicWxTopicListVO = new WxTopicListVO<>();
+        WxListVO<MarketTopic> topicWxTopicListVO = new WxListVO<>();
         topicWxTopicListVO.setBaseInfo(pageInfo);
         topicWxTopicListVO.setList(marketTopicList);
 

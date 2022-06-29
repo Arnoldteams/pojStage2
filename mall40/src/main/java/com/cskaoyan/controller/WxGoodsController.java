@@ -4,6 +4,7 @@ import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.wxGoodsCategory.WxGoodsCategoryVo;
+import com.cskaoyan.bean.vo.wxGoodsDetailVo.WxGoodsDetailVo;
 import com.cskaoyan.bean.vo.wxGoodsList.WxGoodsListVo;
 import com.cskaoyan.service.WxGoodsService;
 import com.fasterxml.jackson.databind.ser.Serializers;
@@ -44,8 +45,14 @@ public class WxGoodsController {
     }
 
     @RequestMapping("list")
-    public BaseRespVo wxGoodsList(BaseParam baseParam, Integer categoryId) {
+    public BaseRespVo wxGoodsList(Integer categoryId,BaseParam baseParam) {
         WxGoodsListVo vo = wxGoodsService.quarryList(baseParam, categoryId);
+        return BaseRespVo.ok(vo);
+    }
+
+    @RequestMapping("detail")
+    public BaseRespVo wxGoodsDetail(Integer id) {
+        WxGoodsDetailVo vo = wxGoodsService.quarryGoodsDetail(id);
         return BaseRespVo.ok(vo);
     }
 

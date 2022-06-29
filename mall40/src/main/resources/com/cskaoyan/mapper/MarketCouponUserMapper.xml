@@ -116,7 +116,7 @@
       #{endTime,jdbcType=TIMESTAMP}, #{orderId,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{deleted,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="com.cskaoyan.bean.MarketCouponUser">
+  <insert id="insertSelective" parameterType="com.cskaoyan.bean.MarketCouponUser" useGeneratedKeys="true" keyProperty="id">
     insert into market_coupon_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

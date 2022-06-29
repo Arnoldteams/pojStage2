@@ -3,12 +3,17 @@ package com.cskaoyan.service;
 import com.cskaoyan.bean.MarketOrder;
 import com.cskaoyan.bean.MarketOrderExample;
 import com.cskaoyan.bean.MarketUser;
+import com.cskaoyan.bean.MarketUserExample;
+import com.cskaoyan.bean.bo.WxAuthRegisterBO;
 import com.cskaoyan.bean.vo.wx.user.UserIndexOrder;
 import com.cskaoyan.bean.vo.wx.user.UserIndexVO;
 import com.cskaoyan.mapper.MarketOrderMapper;
+import com.cskaoyan.mapper.MarketUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,6 +27,9 @@ public class WxAuthorServiceImpl implements WxAuthorService {
 
     @Autowired
     MarketOrderMapper marketOrderMapper;
+
+    @Autowired
+    MarketUserMapper userMapper;
 
     /**
      * 登录后用户界面信息
@@ -77,5 +85,61 @@ public class WxAuthorServiceImpl implements WxAuthorService {
 
 
         return UserIndexVO.setUserIndexVO(userIndexOrder);
+    }
+
+    @Override
+    public Boolean hasAccount(String mobile) {
+
+        MarketUserExample example = new MarketUserExample();
+        MarketUserExample.Criteria criteria = example.createCriteria();
+        criteria.andMobileEqualTo(mobile).andDeletedEqualTo(false);
+
+        List<MarketUser> marketUsers = userMapper.selectByExample(example);
+
+        // 如果list.size > 0 就是表中存在注册的手机号
+        return marketUsers.size() > 0;
+    }
+
+    @Override
+    public void insertUser(WxAuthRegisterBO wxAuthRegisterBO, String avatarUrl, HttpServletRequest req) {
+        MarketUser user = new MarketUser();
+        user.setUsername(wxAuthRegisterBO.getUsername());
+        user.setNickname(wxAuthRegisterBO.getUsername());
+        user.setPassword(wxAuthRegisterBO.getPassword());
+        user.setMobile(wxAuthRegisterBO.getMobile());
+        user.setAvatar(avatarUrl);
+        Date date = new Date();
+        user.setAddTime(date);
+        user.setUpdateTime(date);
+        user.setLastLoginTime(date);
+        user.setDeleted(false);
+        user.setLastLoginIp(req.getRemoteHost());
+        user.setWeixinOpenid(wxAuthRegisterBO.getWxCode());
+        user.setUserLevel((byte) 0);
+        user.setGender((byte) 0);
+        user.setSessionKey(req.getSession().getId());
+        user.setStatus((byte) 0);
+
+        userMapper.insert(user);
+    }
+
+    @Override
+    public Boolean updateUserByMobil(WxAuthRegisterBO wxAuthRegisterBO) {
+        MarketUserExample example = new MarketUserExample();
+        MarketUserExample.Criteria criteria = example.createCriteria();
+        criteria.andMobileEqualTo(wxAuthRegisterBO.getMobile()).andDeletedEqualTo(false);
+
+        List<MarketUser> marketUsers = userMapper.selectByExample(example);
+
+        if (marketUsers.size() == 0){
+            return true;
+        }
+
+        MarketUser marketUser = marketUsers.get(0);
+        marketUser.setPassword(wxAuthRegisterBO.getPassword());
+
+        userMapper.updateByPrimaryKeySelective(marketUser);
+
+        return false;
     }
 }
