@@ -274,7 +274,7 @@ public class WxOrderServiceImpl implements WxOrderService {
         marketOrder.setUpdateTime(date);
         orderMapper.insert(marketOrder);
         Integer orderId = marketOrder.getId();
-        
+
 
         return orderId;
 
