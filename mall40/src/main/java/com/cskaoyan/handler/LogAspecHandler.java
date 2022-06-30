@@ -15,6 +15,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -45,7 +46,23 @@ public class LogAspecHandler {
 
     @Around("controllerPointcut()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+
+        Object[] args = joinPoint.getArgs();
+        Object lastArg = args[args.length - 1];
+
+        String methodName = null;
+        try {
+            Signature signature = joinPoint.getSignature();
+            methodName = signature.getName();
+            BindingResult bindingResult = (BindingResult) lastArg;
+            ValidationUtils.valid(bindingResult);
+        } catch (ClassCastException e) {
+            System.out.println(methodName + " 形参添加 BindingResult ");
+        }
+
+
         BaseRespVo proceed = (BaseRespVo) joinPoint.proceed(); // 执行委托类的方法
+
 
         MarketLog marketLog = new MarketLog();
         HttpSession session = request.getSession();

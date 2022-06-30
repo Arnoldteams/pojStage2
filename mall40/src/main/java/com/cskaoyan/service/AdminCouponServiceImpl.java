@@ -113,7 +113,7 @@ public class AdminCouponServiceImpl implements AdminCouponService {
             goodsValueString.append(goodsValue[i]);
         }
         goodsValueString.append("]");
-        marketCoupon.setGoodsValue(goodsValueString.toString());
+        marketCoupon.setGoodsValue("[]");
         marketCoupon.setLimit(marketCouponBO.getLimit());
         marketCoupon.setMin(marketCouponBO.getMin());
         marketCoupon.setName(marketCouponBO.getName());
