@@ -6,6 +6,8 @@ import com.cskaoyan.bean.LoginUserData;
 import com.cskaoyan.bean.MarketUser;
 import com.cskaoyan.bean.bo.WxAuthRegisterBO;
 import com.cskaoyan.bean.vo.WxAuthRegisterVO;
+import com.cskaoyan.bean.vo.wx.user.WxLoginUserVO;
+import com.cskaoyan.bean.vo.wx.user.WxUserBean;
 import com.cskaoyan.configuration.realm.MarketToken;
 import com.cskaoyan.service.FileService;
 import com.cskaoyan.service.WxAuthorService;
@@ -202,13 +204,13 @@ public class WxAuthController {
         MarketUser primaryPrincipal = (MarketUser) subject.getPrincipals().getPrimaryPrincipal();
 
 
-        LoginUserData loginUserData = new LoginUserData();
-        AdminInfoBean adminInfo = new AdminInfoBean();
+        WxLoginUserVO loginUserData = new WxLoginUserVO();
+        WxUserBean adminInfo = new WxUserBean();
 
-        adminInfo.setAvatar(primaryPrincipal.getAvatar());
+        adminInfo.setAvatarUrl(primaryPrincipal.getAvatar());
         adminInfo.setNickName(primaryPrincipal.getUsername());
 
-        loginUserData.setAdminInfo(adminInfo);
+        loginUserData.setUserInfo(adminInfo);
         //loginUserData.setToken("c4d988f3-e4c5-4e46-b6ce-13b9e008ea20");
         loginUserData.setToken((String) session.getId());
         //响应sessionId信息给到前端，前端发送请求的时候，通过请求头携带了session的id信息

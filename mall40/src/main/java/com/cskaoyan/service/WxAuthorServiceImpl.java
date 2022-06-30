@@ -67,10 +67,7 @@ public class WxAuthorServiceImpl implements WxAuthorService {
                 case 201:// 表示未发货
                     unshipCount++;
                     break;
-                case 401:// 用户收货
-                    unrecvCount++;
-                    break;
-                case 402:// 系统收货
+                case 301:// 已发货但是用户未收货
                     unrecvCount++;
                     break;
             }
