@@ -249,6 +249,13 @@ public class WxOrderServiceImpl implements WxOrderService {
         wxOrderMapper.updateOrderStatuPrepay(orderId, payId);
     }
 
+    /**
+     * @description: 增加订单
+     * @parameter: [wxOrderSubmitBO]
+     * @return: java.lang.Integer
+     * @author: 帅关
+     * @createTime: 2022/6/30 18:54
+     */
     @Override
     public Integer addOrder(WxOrderSubmitBO wxOrderSubmitBO) {
 
@@ -275,9 +282,7 @@ public class WxOrderServiceImpl implements WxOrderService {
         orderMapper.insert(marketOrder);
         Integer orderId = marketOrder.getId();
 
-
         return orderId;
-
     }
 
 
@@ -335,6 +340,13 @@ public class WxOrderServiceImpl implements WxOrderService {
                 .setUserId(userId);
     }
 
+    /**
+     * @description: 获取用户Id
+     * @parameter: []
+     * @return: java.lang.Integer
+     * @author: 帅关
+     * @createTime: 2022/6/30 18:53
+     */
     private Integer getUserId() {
         MarketUser user = (MarketUser) SecurityUtils.getSubject().getPrincipal();
         return user.getId();
