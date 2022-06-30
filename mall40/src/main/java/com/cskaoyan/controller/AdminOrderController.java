@@ -83,10 +83,19 @@ public class AdminOrderController {
      */
     @RequestMapping("ship")
     public BaseRespVo ship(@RequestBody AdminOrderShipBO adminOrderShipBO) {
+
+        String shipSn = adminOrderShipBO.getShipSn();
         if (StringUtils.isEmpty(adminOrderShipBO.getShipChannel()) ||
                 StringUtils.isEmpty(adminOrderShipBO.getShipSn())) {
             return BaseRespVo.errParam();
         }
+
+        //正则表达式判断8-14位字母或数字
+        boolean matches = shipSn.matches("\\w{8,14}");
+        if (!matches) {
+            return BaseRespVo.wrongLength();
+        }
+
         adminOrderService.changeOrderStatus(adminOrderShipBO);
         return BaseRespVo.ok(null);
     }
@@ -133,12 +142,12 @@ public class AdminOrderController {
 
 
     /**
-    * @author: ZY
-    * @createTime: 2022/06/28 14:26:32
-    * @description:商品管理-商品评论-回复
-    * @param: adminOrderReplyBO
-    * @return: com.cskaoyan.bean.BaseRespVo
-            */
+     * @author: ZY
+     * @createTime: 2022/06/28 14:26:32
+     * @description:商品管理-商品评论-回复
+     * @param: adminOrderReplyBO
+     * @return: com.cskaoyan.bean.BaseRespVo
+     */
     @RequestMapping("reply")
     public BaseRespVo reply(@RequestBody AdminOrderReplyBO adminOrderReplyBO) {
         if (!StringUtils.isEmpty(adminOrderService.queryAdminComment(adminOrderReplyBO.getCommentId()))) {

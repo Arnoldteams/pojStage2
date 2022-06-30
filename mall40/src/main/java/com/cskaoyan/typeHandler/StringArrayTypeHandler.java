@@ -67,12 +67,13 @@ public class StringArrayTypeHandler implements TypeHandler<String[]> {
     private String[] transfer(String result) {
         String[] strings = new String[0];
         // 使用jackson将字符串转换Integer[]
-        try {
-            strings = objectMapper.readValue(result, String[].class);
-        } catch (JsonProcessingException e) {
+        String[] res = null;
+        try{
+            res = result.substring(1, result.length() - 1).split(",");
+        }catch (Exception e){
             e.printStackTrace();
         }
-        return strings;
+        return res;
     }
 }
 

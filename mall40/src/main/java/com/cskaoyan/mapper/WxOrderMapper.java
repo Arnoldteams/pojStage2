@@ -101,4 +101,12 @@ public interface WxOrderMapper {
 
     List<AdminOrderDetailGoodsVO> selectAllInfoOrderGoodsByOrderId(Integer orderId);
 
+    void updateOrderStatuPrepay(@Param("orderId") Integer orderId, @Param("payId") String payId);
+
+    Integer selectOrderIdByOrderGoodsId(Integer orderGoodsId);
+
+    void updateOrder(Integer orderId);
+
+    void updateMarketOrderCommentStatus(@Param("commentId") Integer commentId, @Param("orderGoodsId") Integer orderGoodsId);
+
 }
