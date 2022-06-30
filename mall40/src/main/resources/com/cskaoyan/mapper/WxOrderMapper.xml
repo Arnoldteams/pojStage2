@@ -711,12 +711,12 @@
   </update>
 
   <update id="updateUserOrderStatusConfirm">
-      update market_order set order_status=401,confirm_time=curtime()
+      update market_order set order_status=401,confirm_time=curtime(),update_time=curtime()
      where id=#{orderId}
   </update>
 
   <update id="updateUserOrderStatusDeleted">
-    update market_order set deleted=1
+    update market_order set deleted=1,update_time=curtime()
      where id=#{orderId}
   </update>
 
@@ -733,7 +733,7 @@
       where order_id = #{orderId} and goods_id=#{goodsId}
   </select>
 
-  <insert id="insertOrderComment" >
+  <insert id="insertOrderComment" useGeneratedKeys="true" keyProperty="wxOrderListCommentBO.id">
     insert into market_comment values
     (null,0,0,#{wxOrderListCommentBO.content},null,
     #{userId},#{wxOrderListCommentBO.hasPicture},#{picUrls},#{wxOrderListCommentBO.star},curtime(),null,0)
@@ -772,7 +772,7 @@
   <select id="selectOrderStatusById" resultType="java.lang.Integer">
     select order_status from market_order where id=#{orderId}
  </select>
-  
+
   <select id="selectOrderInfoByOrderId" resultType="com.cskaoyan.bean.vo.wxOrder.WxOrderDetailChildVo">
       select consignee,address,add_time as addTime,order_sn as orderSn,
       actual_price as actualPrice,mobile,message,aftersale_status as aftersaleStatus,
@@ -782,9 +782,6 @@
       where id =#{orderId}
     </select>
 
-  <select id="selectOrderGoodsInfoByOrderId" resultType="com.cskaoyan.bean.MarketOrderGoods">
-
-  </select>
 
   <select id="selectAllInfoOrderGoodsByOrderId" resultType="com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO">
     select id,order_id as orderId,goods_id as goodsId,goods_sn as goodsSn,
@@ -794,4 +791,22 @@
      where order_id=#{orderId}
   </select>
 
+  <update id="updateOrderStatuPrepay">
+    update market_order set order_status=201,pay_time=curtime(),pay_id=#{payId},update_time=curtime()
+     where id=#{orderId}
+  </update>
+
+  <select id="selectOrderIdByOrderGoodsId" resultType="java.lang.Integer">
+    select order_id from market_order_goods where id=#{orderGoodsId}
+  </select>
+
+  <update id="updateOrder">
+    update market_order set comments=comments-1,update_time=curtime()
+    where id=#{orderId}
+  </update>
+
+  <update id="updateMarketOrderCommentStatus">
+    update market_order_goods
+    set comment=#{commentId},update_time=curtime()
+  </update>
 </mapper>

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -87,7 +88,6 @@ public class WxOrderServiceImpl implements WxOrderService {
     }
 
 
-
     /**
      * @author: ZY
      * @createTime: 2022/06/29 20:24:11
@@ -101,12 +101,12 @@ public class WxOrderServiceImpl implements WxOrderService {
     }
 
     /**
-    * @author: ZY
-    * @createTime: 2022/06/29 23:49:00
-    * @description: 用户确认收货
-    * @param: orderId
-    * @return: void
-            */
+     * @author: ZY
+     * @createTime: 2022/06/29 23:49:00
+     * @description: 我的订单-订单详情-订单发货后可确认收货，更改订单状态，确认收货时间，更新时间
+     * @param: orderId
+     * @return: void
+     */
     @Override
     public void confirmOrder(Integer orderId) {
         wxOrderMapper.updateUserOrderStatusConfirm(orderId);
@@ -115,7 +115,7 @@ public class WxOrderServiceImpl implements WxOrderService {
     /**
      * @author: ZY
      * @createTime: 2022/06/29 20:25:34
-     * @description: 退款后可逻辑删除订单
+     * @description: 我的订单-订单详情-退款后可逻辑删除订单，更改订单deleted，更新时间
      * @param: orderId
      * @return: void
      */
@@ -142,7 +142,7 @@ public class WxOrderServiceImpl implements WxOrderService {
     /**
      * @author: ZY
      * @createTime: 2022/06/29 21:27:57
-     * @description: 确认收货后评价商品
+     * @description: 我的订单-订单详情-确认收货后评价商品，更改更新时间，待评价商品数量
      * @param: wxOrderListCommentBO
      * @return: void
      */
@@ -152,14 +152,27 @@ public class WxOrderServiceImpl implements WxOrderService {
         MarketUser user = (MarketUser) SecurityUtils.getSubject().getPrincipal();
         Integer userId = user.getId();
 
+        //拿到订单商品表里的主键id
+        Integer orderGoodsId = wxOrderListCommentBO.getOrderGoodsId();
         String picUrls = Arrays.toString(wxOrderListCommentBO.getPicUrls());
+
+        //插入商品评论表，并获得主键id，更改订单商品表的comment
         wxOrderMapper.insertOrderComment(wxOrderListCommentBO, userId, picUrls);
+        Integer commentId = wxOrderListCommentBO.getId();
+
+        //更改订单商品表里，的商品评论状态
+        wxOrderMapper.updateMarketOrderCommentStatus(commentId);
+
+        //更改订单待评价商品数量和更新时间
+        Integer orderId = wxOrderMapper.selectOrderIdByOrderGoodsId(orderGoodsId);
+        wxOrderMapper.updateOrder(orderId);
+
     }
 
     /**
      * @author: ZY
      * @createTime: 2022/06/29 22:08:57
-     * @description: 取消订单
+     * @description: 个人-我的订单-取消订单,更改订单状态，关闭时间，更新时间
      * @param: orderId
      * @return: void
      */
@@ -195,6 +208,28 @@ public class WxOrderServiceImpl implements WxOrderService {
         detailVo.setOrderInfo(child);
         detailVo.setExpressInfo(new ArrayList<>());
         return detailVo;
+    }
+
+
+    /**
+     * @author: ZY
+     * @createTime: 2022/06/30 11:13:38
+     * @description: 预支付，更新订单状态，更新时间，付款编号，付款时间
+     * @param: orderId
+     * @return: void
+     */
+    @Override
+    public void prepayOrder(Integer orderId) {
+        //生成payId
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmmss");
+        String format = simpleDateFormat.format(date);
+        int random = (int) ((Math.random() * 9 + 1) * 100000);
+        String num = String.valueOf(random);
+
+        String payId = format.concat(num);
+
+        wxOrderMapper.updateOrderStatuPrepay(orderId, payId);
     }
 
 }
