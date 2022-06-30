@@ -32,4 +32,7 @@ public interface WxCartService {
 
 
     WxCartCheckedVo queryCartCheckInfo(WxCartCheckBo cartCheckBo);
+
+    // 获取用户Id
+    Integer getUserId();
 }

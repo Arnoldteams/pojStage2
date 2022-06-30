@@ -12,6 +12,7 @@ import com.cskaoyan.mapper.MarketCategoryMapper;
 import com.cskaoyan.mapper.MarketCommentMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.aspectj.weaver.ast.Var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,27 +32,27 @@ public class WxCommentServiceImpl implements WxCommentService{
 
     @Override
     public CommonData<WxCommentVO> quarryAllComment(BaseParam baseParam, byte type, Integer valueId, Integer showType) {
+        PageHelper.startPage(baseParam.getPage(), baseParam.getLimit());
+
         MarketCommentExample example = new MarketCommentExample();
         MarketCommentExample.Criteria criteria = example.createCriteria();
-        criteria.andTypeEqualTo(type);
+        MarketCommentExample.Criteria criteria1 = criteria.andTypeEqualTo(type).andValueIdEqualTo(valueId);
         if(showType == 1){
-            criteria.andHasPictureEqualTo(true);
+            criteria1.andHasPictureEqualTo(true);
         }
-        if(showType == 0){
-            criteria.andHasPictureEqualTo(false);
-        }
-        criteria.andValueIdEqualTo(valueId);
-        //分页插件 PageHelper，辅助我们做分页以及分页信息的获得
-        PageHelper.startPage(baseParam.getPage(), baseParam.getLimit());
-        List<MarketComment> marketComments = marketCommentMapper.selectByExample(example);
 
-        List<WxCommentVO> wxCommentVOS = new ArrayList<WxCommentVO>();
+
+        //分页插件 PageHelper，辅助我们做分页以及分页信息的获得
+        List<MarketComment> marketComments = marketCommentMapper.selectByExample(example);
+        PageInfo<MarketComment> pageInfo = new PageInfo<>(marketComments);
+
+        List<WxCommentVO> wxCommentVOS = new ArrayList<>();
         for (MarketComment marketComment : marketComments) {
             WxCommentVO wxCommentVO = new WxCommentVO();
             wxCommentVO.setContent(marketComment.getContent());
             wxCommentVO.setAddTime(marketComment.getAddTime());
             wxCommentVO.setAdminContent(marketComment.getAdminContent());
-            wxCommentVO.setPicUrls(marketComment.getPicUrls());
+            wxCommentVO.setPicList(marketComment.getPicUrls());
 
             UserInfo userInfo = marketCommentMapper.selectUserInfo(marketComment.getUserId());
 
@@ -59,10 +60,9 @@ public class WxCommentServiceImpl implements WxCommentService{
             wxCommentVOS.add(wxCommentVO);
         }
 
-        //TODO 可能有错
-        PageInfo<WxCommentVO> pageInfo = new PageInfo<>(wxCommentVOS);
-
-        return CommonData.data(pageInfo);
+        CommonData data = CommonData.data(pageInfo);
+        data.setList(wxCommentVOS);
+        return data;
     }
 
     @Override

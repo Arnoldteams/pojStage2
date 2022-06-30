@@ -24,7 +24,7 @@ public interface WxGoodsService {
      * @author: Sssd
      * @description: 显示商品 List
      */
-    WxGoodsListVo quarryList(BaseParam baseParam, Integer id);
+    WxGoodsListVo quarryList(BaseParam baseParam, Integer categoryId, Integer brandId, String keyword);
 
     WxGoodsDetailVo quarryGoodsDetail(Integer id);
 

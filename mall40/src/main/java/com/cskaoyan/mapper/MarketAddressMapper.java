@@ -30,4 +30,6 @@ public interface MarketAddressMapper {
     int updateByPrimaryKey(MarketAddress record);
 
     MarketAddress selectAddressInfoByUserId(@Param("userId") Integer userId);
+
+    MarketAddress selectPartAddressInfoByUserId(@Param("userId") Integer userId);
 }

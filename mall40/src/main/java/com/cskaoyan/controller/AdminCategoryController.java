@@ -10,6 +10,8 @@ import com.cskaoyan.service.AdminBrandService;
 import com.cskaoyan.service.AdminCategoryService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +35,7 @@ public class AdminCategoryController {
      * @return: com.cskaoyan.bean.BaseRespVo<com.cskaoyan.bean.vo.AdminCategoryVO>
      */
     @GetMapping("list")
+    @RequiresPermissions(value = {"admin:category:list","*"},logical = Logical.OR)
     public BaseRespVo<AdminCategoryVO> list() {
         BaseRespVo<AdminCategoryVO> resp = new BaseRespVo<>();
 
@@ -65,6 +68,7 @@ public class AdminCategoryController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @GetMapping("l1")
+    @RequiresPermissions(value = {"admin:category:l1","*"},logical = Logical.OR)
     public BaseRespVo l1() {
 
         BaseRespVo<AdminCategoryOneVO> resp = new BaseRespVo<>();
@@ -100,6 +104,7 @@ public class AdminCategoryController {
      */
     @PostMapping("create")
     @LogAnnotation(value = "增加商品类目", comment = "来自sprinkle")
+    @RequiresPermissions(value = {"admin:category:create","*"},logical = Logical.OR)
     public BaseRespVo create(@RequestBody MarketCategory marketCategory) {
         MarketCategory category = adminCategoryService.createOneCategory(marketCategory);
         return BaseRespVo.ok(category);
@@ -114,6 +119,7 @@ public class AdminCategoryController {
      */
     @PostMapping("update")
     @LogAnnotation(value = "更新商品类目", comment = "来自sprinkle")
+    @RequiresPermissions(value = {"admin:category:update","*"},logical = Logical.OR)
     public BaseRespVo update(@RequestBody MarketCategory marketCategory) {
         adminCategoryService.updateOneCategory(marketCategory);
         return BaseRespVo.ok();
@@ -127,6 +133,7 @@ public class AdminCategoryController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @PostMapping("delete")
+    @RequiresPermissions(value = {"admin:category:delete","*"},logical = Logical.OR)
     @LogAnnotation(value = "删除商品类目", comment = "来自sprinkle")
     public BaseRespVo delete(@RequestBody MarketCategory marketCategory) {
         adminCategoryService.deleteOneCategory(marketCategory);

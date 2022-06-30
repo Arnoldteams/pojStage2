@@ -3,6 +3,7 @@ package com.cskaoyan.bean;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class MarketCategory {
     private Integer id;
@@ -123,5 +124,18 @@ public class MarketCategory {
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+//
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        MarketCategory that = (MarketCategory) o;
+//        return Objects.equals(getId(), that.getId()) && Objects.equals(getName(), that.getName()) && Objects.equals(getKeywords(), that.getKeywords()) && Objects.equals(getDesc(), that.getDesc()) && Objects.equals(getPid(), that.getPid()) && Objects.equals(getIconUrl(), that.getIconUrl()) && Objects.equals(getPicUrl(), that.getPicUrl()) && Objects.equals(getLevel(), that.getLevel()) && Objects.equals(getSortOrder(), that.getSortOrder()) && Objects.equals(getAddTime(), that.getAddTime()) && Objects.equals(getUpdateTime(), that.getUpdateTime()) && Objects.equals(getDeleted(), that.getDeleted());
+//    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getKeywords(), getDesc(), getPid(), getIconUrl(), getPicUrl(), getLevel(), getSortOrder(), getAddTime(), getUpdateTime(), getDeleted());
     }
 }

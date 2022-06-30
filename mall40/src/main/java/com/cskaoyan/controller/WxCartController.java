@@ -37,6 +37,9 @@ public class WxCartController {
      */
     @RequestMapping("add")
     public BaseRespVo add(@RequestBody MarketCart cart) {
+        if(wxCartService.getUserId() == -1){
+            return BaseRespVo.codeAndMsg(501,"请登录！");
+        }
         int number = wxCartService.cartAddNewGoodsAndReturnCount(cart);
         return BaseRespVo.ok(number);
     }
@@ -76,6 +79,9 @@ public class WxCartController {
      */
     @RequestMapping("fastadd")
     public BaseRespVo fastAdd(@RequestBody MarketCart cart) {
+        if(wxCartService.getUserId() == -1){
+            return BaseRespVo.codeAndMsg(501,"请登录！");
+        }
         int cartId = wxCartService.cartAddNewGoodsAndReturnCartId(cart);
         return BaseRespVo.ok(cartId);
     }
