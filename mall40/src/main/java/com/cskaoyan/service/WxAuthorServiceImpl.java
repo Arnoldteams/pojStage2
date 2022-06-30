@@ -67,10 +67,7 @@ public class WxAuthorServiceImpl implements WxAuthorService {
                 case 201:// 表示未发货
                     unshipCount++;
                     break;
-                case 401:// 用户收货
-                    unrecvCount++;
-                    break;
-                case 402:// 系统收货
+                case 301:// 已发货但是用户未收货
                     unrecvCount++;
                     break;
             }
@@ -101,7 +98,7 @@ public class WxAuthorServiceImpl implements WxAuthorService {
     }
 
     @Override
-    public void insertUser(WxAuthRegisterBO wxAuthRegisterBO, String avatarUrl, HttpServletRequest req) {
+    public Boolean insertUser(WxAuthRegisterBO wxAuthRegisterBO, String avatarUrl, HttpServletRequest req) {
         MarketUser user = new MarketUser();
         user.setUsername(wxAuthRegisterBO.getUsername());
         user.setNickname(wxAuthRegisterBO.getUsername());
@@ -120,7 +117,14 @@ public class WxAuthorServiceImpl implements WxAuthorService {
         user.setSessionKey(req.getSession().getId());
         user.setStatus((byte) 0);
 
-        userMapper.insert(user);
+        try {
+            userMapper.insert(user);
+        } catch (Exception e) {
+            System.out.println("Err：插入失败");
+            return true;
+        }
+
+        return false;
     }
 
     @Override

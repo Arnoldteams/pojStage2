@@ -24,6 +24,6 @@ public class WxListVO<T> {
         setPage(pageInfo.getPageNum());
         setLimit(pageInfo.getPageSize());
         setTotal(pageInfo.getTotal());
-        setPages(pageInfo.getPageSize());
+        setPages(pageInfo.getPages());
     }
 }

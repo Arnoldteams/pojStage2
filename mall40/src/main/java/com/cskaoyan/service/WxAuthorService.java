@@ -34,7 +34,7 @@ public interface WxAuthorService {
      * @param: request - [HttpServletRequest]
      * @return: void
      */
-    void insertUser(WxAuthRegisterBO wxAuthRegisterBO, String avatarUrl, HttpServletRequest request);
+    Boolean insertUser(WxAuthRegisterBO wxAuthRegisterBO, String avatarUrl, HttpServletRequest request);
 
     /**
      * @author: 于艳帆
