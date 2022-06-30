@@ -2,6 +2,7 @@ package com.cskaoyan.mapper;
 
 import com.cskaoyan.bean.MarketAddress;
 import com.cskaoyan.bean.MarketAddressExample;
+import com.cskaoyan.bean.bo.wxAdressBo.WxAddressSaveBO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -30,4 +31,6 @@ public interface MarketAddressMapper {
     int updateByPrimaryKey(MarketAddress record);
 
     MarketAddress selectAddressInfoByUserId(@Param("userId") Integer userId);
+
+    Integer insertAddress(@Param("address") WxAddressSaveBO address);
 }

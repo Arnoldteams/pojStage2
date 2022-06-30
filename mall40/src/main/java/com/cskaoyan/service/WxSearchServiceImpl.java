@@ -11,11 +11,13 @@ import com.cskaoyan.mapper.MarketSearchHistoryMapper;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.security.Security;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: 文陶
@@ -41,6 +43,9 @@ public class WxSearchServiceImpl implements WxSearchService {
     @Autowired
     HttpSession session;
 
+    @Autowired
+    RedisTemplate redisTemplate;
+
     /***
      * @author: 文陶
      * @createTime: 2022/06/29 23:08:44
@@ -55,6 +60,7 @@ public class WxSearchServiceImpl implements WxSearchService {
         MarketKeywordExample example = new MarketKeywordExample();
         MarketKeywordExample.Criteria criteria = example.createCriteria();
         criteria.andIsDefaultEqualTo(true);
+        criteria.andDeletedEqualTo(false);
         List<MarketKeyword> marketKeywords = keywordMapper.selectByExample(example);
         if (marketKeywords == null || marketKeywords.size() == 0) {
             wxSearchIndexVo.setDefaultKeyword(new MarketKeyword());
@@ -65,16 +71,33 @@ public class WxSearchServiceImpl implements WxSearchService {
         MarketKeywordExample example2 = new MarketKeywordExample();
         MarketKeywordExample.Criteria criteria2 = example2.createCriteria();
         criteria2.andIsHotEqualTo(true);
+        criteria2.andDeletedEqualTo(false);
         List<MarketKeyword> hotKeywordList = keywordMapper.selectByExample(example2);
         wxSearchIndexVo.setHotKeywordList(hotKeywordList);
 
         //查询用户搜索历史
+        //从redis取出， 存入数据库
+        String keywowrd = (String) redisTemplate.opsForValue().get("keywowrd");
+
+        //得到当前用户信息
         Subject subject = SecurityUtils.getSubject();
         MarketUser user = (MarketUser) subject.getPrincipals().getPrimaryPrincipal();
+        //判断用户是否存在
+        if (user==null){
+            wxSearchIndexVo.setHistoryKeywordList(null);
+            return wxSearchIndexVo;
+        }
+        //用户存在
         Integer userId = user.getId();
         List<HistoryKeywordListEntity> historyKeywordListEntityList = searchHistoryMapper.selectKeyWordByUserId(userId);
-        wxSearchIndexVo.setHistoryKeywordList(historyKeywordListEntityList);
+        HistoryKeywordListEntity historyKeyword = new HistoryKeywordListEntity();
+        historyKeyword.setKeyword(keywowrd);
+        //判断数据库是否已经存在该搜索历史
+        if (!historyKeywordListEntityList.contains(historyKeyword)){
+            historyKeywordListEntityList.add(historyKeyword);
+        }
 
+        wxSearchIndexVo.setHistoryKeywordList(historyKeywordListEntityList);
         return wxSearchIndexVo;
     }
 
@@ -93,26 +116,36 @@ public class WxSearchServiceImpl implements WxSearchService {
         if (keyword != null && keyword != "") {
             criteria.andKeywordLike("%" + keyword + "%");
         }
+        criteria.andDeletedEqualTo(false);
         List<MarketKeyword> marketKeywords = keywordMapper.selectByExample(example);
         int size = marketKeywords.size();
         String[] helperList = new String[size];
         for (int i = 0; i < helperList.length; i++) {
             helperList[i] = marketKeywords.get(i).getKeyword();
         }
+
+        //将keyword存入redis,每次覆盖前面的value
+        redisTemplate.opsForValue().set("keyword",keyword,300, TimeUnit.SECONDS);
+
         return helperList;
     }
 
     @Override
     public void clearhistory() {
-//        Subject subject = SecurityUtils.getSubject();
-//        MarketUser user = (MarketUser) subject.getPrincipals().getPrimaryPrincipal();
-//        Integer userId = user.getId();
-//        MarketSearchHistory history = new MarketSearchHistory();
-//        history.setDeleted(true);
-//        MarketSearchHistoryExample example = new MarketSearchHistoryExample();
-//        MarketSearchHistoryExample.Criteria criteria = example.createCriteria();
-//        criteria.andUserIdEqualTo(userId);
-//        searchHistoryMapper.updateByExampleSelective(history,example);
+        //获取当前用户信息
+        Subject subject = SecurityUtils.getSubject();
+        MarketUser user = (MarketUser) subject.getPrincipals().getPrimaryPrincipal();
+        if(user==null){
+            return;
+        }
+        Integer userId = user.getId();
+        //根据userId删除该用户搜索历史
+        MarketSearchHistory history = new MarketSearchHistory();
+        history.setDeleted(true);
+        MarketSearchHistoryExample example = new MarketSearchHistoryExample();
+        MarketSearchHistoryExample.Criteria criteria = example.createCriteria();
+        criteria.andUserIdEqualTo(userId);
+        searchHistoryMapper.updateByExampleSelective(history,example);
     }
 
 

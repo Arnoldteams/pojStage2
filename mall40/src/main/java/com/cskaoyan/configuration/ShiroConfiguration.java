@@ -34,29 +34,30 @@ public class ShiroConfiguration {
         // map中key    → 请求url
         // map中value  → filter名称
 
-        filterChainDefinitionMap.put("/admin/auth/login", "anon");
-        filterChainDefinitionMap.put("/wx/auth/login", "anon");
-        filterChainDefinitionMap.put("/admin/auth/info", "anon");
-        filterChainDefinitionMap.put("/admin/auth/noAuthc", "anon");
-        filterChainDefinitionMap.put("/admin/profile/nnotice", "anon");
-        filterChainDefinitionMap.put("/admin/**", "authc");
-        filterChainDefinitionMap.put("/wx/**", "authc");
+//        filterChainDefinitionMap.put("/admin/auth/login", "anon");
+//        filterChainDefinitionMap.put("/wx/auth/login", "anon");
+//        filterChainDefinitionMap.put("/admin/auth/info", "anon");
+//        filterChainDefinitionMap.put("/admin/auth/noAuthc", "anon");
+//        filterChainDefinitionMap.put("/admin/profile/nnotice", "anon");
+//        filterChainDefinitionMap.put("/admin/**", "authc");
+//        filterChainDefinitionMap.put("/wx/**", "authc");
+        filterChainDefinitionMap.put("/wx/**", "anon");
 
 
 //        后台匿名请求
-        filterChainDefinitionMap.put("/admin/auth/login", "anon");
-        filterChainDefinitionMap.put("/admin/auth/logout", "anon");
-        filterChainDefinitionMap.put("/admin/auth/info", "anon");
-
-        filterChainDefinitionMap.put("/wx/auth/login", "anon");
-        filterChainDefinitionMap.put("/wx/auth/logout", "anon");
-        filterChainDefinitionMap.put("/wx/goods/index", "anon");
-        filterChainDefinitionMap.put("/wx/search/index", "anon");
-        filterChainDefinitionMap.put("/wx/brand/list", "anon");
-
-        filterChainDefinitionMap.put("/wx/**", "anon");
-        filterChainDefinitionMap.put("/admin/auth/noAuthc", "anon");
-        filterChainDefinitionMap.put("/wx/cart/goodscount", "anon");
+//        filterChainDefinitionMap.put("/admin/auth/login", "anon");
+//        filterChainDefinitionMap.put("/admin/auth/logout", "anon");
+//        filterChainDefinitionMap.put("/admin/auth/info", "anon");
+//
+//        filterChainDefinitionMap.put("/wx/auth/login", "anon");
+//        filterChainDefinitionMap.put("/wx/auth/logout", "anon");
+//        filterChainDefinitionMap.put("/wx/goods/index", "anon");
+//        filterChainDefinitionMap.put("/wx/search/index", "anon");
+//        filterChainDefinitionMap.put("/wx/brand/list", "anon");
+//
+//        filterChainDefinitionMap.put("/wx/**", "anon");
+//        filterChainDefinitionMap.put("/admin/auth/noAuthc", "anon");
+//        filterChainDefinitionMap.put("/wx/cart/goodscount", "anon");
 
         filterChainDefinitionMap.put("/wx/order/**", "anon");
 

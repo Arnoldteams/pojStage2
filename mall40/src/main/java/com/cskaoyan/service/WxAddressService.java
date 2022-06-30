@@ -1,6 +1,7 @@
 package com.cskaoyan.service;
 
 import com.cskaoyan.bean.MarketAddress;
+import com.cskaoyan.bean.bo.wxAdressBo.WxAddressSaveBO;
 import com.cskaoyan.bean.param.CommonData;
 
 
@@ -19,4 +20,6 @@ public interface WxAddressService {
     MarketAddress queryAddressById(Integer id);
 
     void deleteAddressById(Integer id);
+
+    Integer save(WxAddressSaveBO address);
 }

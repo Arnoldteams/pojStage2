@@ -359,5 +359,9 @@
     from market_address
     where user_id = #{userId}
     </select>
+
+  <insert id="insertAddress"  useGeneratedKeys="true" keyProperty="id" >
+    insert into market_address (name,tel,province,city,county,area_code,address_detail,is_default) values(#{address.name},#{address.tel},#{address.province},#{address.city},#{address.county},#{address.areaCode},#{address.addressDetail},#{address.isDefault})
+    </insert>
 </mapper>
 

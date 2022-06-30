@@ -10,6 +10,7 @@ public interface WxSearchService {
     String[] helper(String keyword);
 
 
+
     void clearhistory();
 
 }

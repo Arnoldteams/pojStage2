@@ -2,9 +2,13 @@ package com.cskaoyan.service;
 
 import com.cskaoyan.bean.MarketAddress;
 import com.cskaoyan.bean.MarketAddressExample;
+import com.cskaoyan.bean.MarketUser;
+import com.cskaoyan.bean.bo.wxAdressBo.WxAddressSaveBO;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.mapper.MarketAddressMapper;
 import com.cskaoyan.mapper.MarketRegionMapper;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +33,7 @@ public class WxAddressServiceImpl implements WxAddressService {
      * @author: 文陶
      * @createTime: 2022/06/29 15:55:56
      * @description: 查询地址
-     * @param:  null
+     * @param: null
      * @return: com.cskaoyan.bean.param.CommonData<com.cskaoyan.bean.MarketAddress>
      */
     @Override
@@ -71,12 +75,11 @@ public class WxAddressServiceImpl implements WxAddressService {
     }
 
 
-
     /***
      * @author: 文陶
      * @createTime: 2022/06/29 15:57:10
      * @description: 删除地址
-     * @param:  null
+     * @param: null
      * @return: void
      */
     @Override
@@ -86,7 +89,57 @@ public class WxAddressServiceImpl implements WxAddressService {
         criteria.andIdEqualTo(id);
         MarketAddress address = new MarketAddress();
         address.setDeleted(true);
-        addressMapper.updateByExampleSelective(address,example);
+        addressMapper.updateByExampleSelective(address, example);
+    }
+
+    @Override
+    public Integer save(WxAddressSaveBO address) {
+        Subject subject = SecurityUtils.getSubject();
+        MarketUser user = (MarketUser) subject.getPrincipals().getPrimaryPrincipal();
+        if (user==null){
+            return null;
+        }
+        //根据region信息，查询对应region id
+        Integer provinceId = regionMapper.selectIdByName(address.getProvince());
+        Integer cityId = regionMapper.selectIdByName(address.getCity());
+        Integer countyId = regionMapper.selectIdByName(address.getCounty());
+        address.setProvince(provinceId.toString());
+        address.setCounty(countyId.toString());
+        address.setCity(cityId.toString());
+
+        //判断当前保存地址是否设为默认地址，如果是默认地址，将当前用户原本的默认地址改为非默认
+        if (address.getIsDefault()){
+            MarketAddress marketAddress = new MarketAddress();
+            marketAddress.setIsDefault(false);
+            MarketAddressExample example = new MarketAddressExample();
+            MarketAddressExample.Criteria criteria = example.createCriteria();
+            criteria.andUserIdEqualTo(user.getId());
+            criteria.andIsDefaultEqualTo(true);
+            addressMapper.updateByExampleSelective(marketAddress,example);
+        }
+
+        //判断是保存新建还是保存修改
+        if (address.getId() == 0) {
+            //插入新建地址信息
+            Integer id = addressMapper.insertAddress(address);
+            return id;
+        }
+        //修改地址信息
+
+        MarketAddress marketAddress = new MarketAddress();
+        marketAddress.setName(address.getName());
+        marketAddress.setTel(address.getTel());
+        marketAddress.setProvince(address.getProvince());
+        marketAddress.setCity(address.getCity());
+        marketAddress.setCounty(address.getCounty());
+        marketAddress.setAreaCode(address.getAreaCode());
+        marketAddress.setAddressDetail(address.getAddressDetail());
+        marketAddress.setIsDefault(address.getIsDefault());
+        MarketAddressExample example = new MarketAddressExample();
+        MarketAddressExample.Criteria criteria = example.createCriteria();
+        criteria.andIdEqualTo(address.getId());
+        addressMapper.updateByExampleSelective(marketAddress,example);
+        return address.getId();
     }
 
 

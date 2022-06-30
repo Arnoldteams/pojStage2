@@ -2,6 +2,7 @@ package com.cskaoyan.controller;
 
 import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.MarketAddress;
+import com.cskaoyan.bean.bo.wxAdressBo.WxAddressSaveBO;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.service.WxAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +40,15 @@ public class WxAddressController {
     }
 
     @RequestMapping("delete")
-    public BaseRespVo delete(@RequestBody Map map){
+    public BaseRespVo delete(@RequestBody Map map) {
         Integer id = (Integer) map.get("id");
         addressService.deleteAddressById(id);
         return BaseRespVo.ok(null);
+    }
+
+    @RequestMapping("save")
+    public BaseRespVo save(WxAddressSaveBO address) {
+        Integer addressId = addressService.save(address);
+        return BaseRespVo.ok(addressId);
     }
 }
