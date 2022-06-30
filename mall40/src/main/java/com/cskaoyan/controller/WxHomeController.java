@@ -22,6 +22,10 @@ public class WxHomeController {
     @Autowired
     WxHomeService wxHomeService;
 
+    /**
+     * @author: 极其帅气的 Sssd
+     * @description: 显示主页信息
+     */
     @RequestMapping("index")
     public BaseRespVo homeIndex() {
         WxHomeIndexVo vo = wxHomeService.homeIndex();
@@ -30,7 +34,7 @@ public class WxHomeController {
 
     /**
      * @description: 小程序主页
-     * @author: 小帅的 sprinkle
+     * @author: 丑陋的 sprinkle
      * @date: 2022年06月29日 23:17
      */
     @RequestMapping("about")
