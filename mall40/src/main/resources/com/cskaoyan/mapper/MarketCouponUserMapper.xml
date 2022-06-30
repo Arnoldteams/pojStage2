@@ -308,4 +308,11 @@
     update market_coupon_user set deleted = 1
     where id =#{userCouponId}
     </update>
+
+  <select id="selectValuableCoupon" resultType="int">
+    select count(*) from market_coupon_user as u
+    left join market_coupon as c
+    on u.coupon_id = c.id
+    where u.user_id = #{userId} and u.deleted = 0 and c.min &lt; #{price}
+    </select>
 </mapper>

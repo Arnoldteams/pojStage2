@@ -5,6 +5,7 @@ import com.cskaoyan.bean.MarketUser;
 import com.cskaoyan.bean.vo.wx.user.UserIndexVO;
 import com.cskaoyan.service.WxAuthorService;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,8 +33,12 @@ public class WxUserController {
     @GetMapping("user/index")
     public BaseRespVo userIndex() {
 
-        Subject subject = SecurityUtils.getSubject();
-        MarketUser primaryPrincipal = (MarketUser) subject.getPrincipals().getPrimaryPrincipal();
+        PrincipalCollection principals = SecurityUtils.getSubject().getPrincipals();
+        if(principals == null){
+            return BaseRespVo.codeAndMsg(501,"请登录");    
+        }
+
+        MarketUser primaryPrincipal = (MarketUser) principals.getPrimaryPrincipal();
 
         UserIndexVO userIndexVO = wxAuthorService.userIndex(primaryPrincipal);
         return BaseRespVo.ok(userIndexVO);

@@ -2,6 +2,7 @@ package com.cskaoyan.mapper;
 
 import com.cskaoyan.bean.MarketSearchHistory;
 import com.cskaoyan.bean.MarketSearchHistoryExample;
+import com.cskaoyan.bean.vo.wxSearch.HistoryKeywordListEntity;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -28,4 +29,6 @@ public interface MarketSearchHistoryMapper {
     int updateByPrimaryKeySelective(MarketSearchHistory record);
 
     int updateByPrimaryKey(MarketSearchHistory record);
+
+    List<HistoryKeywordListEntity> selectKeyWordByUserId(@Param("userId") Integer userId);
 }

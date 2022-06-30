@@ -15,6 +15,7 @@ import com.github.pagehelper.PageInfo;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -278,8 +279,51 @@ public class WxOrderServiceImpl implements WxOrderService {
         marketOrder.setUpdateTime(date);
         orderMapper.insert(marketOrder);
         Integer orderId = marketOrder.getId();
-
+        updateSubmitInfo(orderId,wxOrderSubmitBO);
         return orderId;
+    }
+
+
+    /**
+     * @description: 提交订单信息杂七杂八的表修改
+     * @parameter: [orderId, userCouponId]
+     * @return: void
+     * @author: 帅关
+     * @createTime: 2022/6/30 12:06
+     */
+    @Async
+    public void updateSubmitInfo(Integer orderId,WxOrderSubmitBO wxOrderSubmitBO){
+        Integer userId = getUserId();
+        Integer cartId = wxOrderSubmitBO.getCartId();
+        MarketCartExample example = new MarketCartExample();
+        if(cartId > 0){
+            MarketCart marketCart = cartMapper.selectByPrimaryKey(cartId);
+            MarketOrderGoods goods = getMarketOrderGoods(orderId, marketCart);
+            orderGoodsMapper.insertSelective(goods);
+
+            // 更新购物车信息
+            cartMapper.updateCartGoodsDeletedByCartId(cartId);
+        }else{
+            // 查出该用户所有被选中的商品列表
+            example.createCriteria().andUserIdEqualTo(userId)
+                    .andCheckedEqualTo(true)
+                    .andDeletedEqualTo(false);
+            List<MarketCart> marketCarts = cartMapper.selectByExample(example);
+            // 将选中的商品信息添加到订单商品表中
+            for (MarketCart marketCart : marketCarts) {
+                MarketOrderGoods goods = getMarketOrderGoods(orderId, marketCart);
+                orderGoodsMapper.insertSelective(goods);
+            }
+            // 更新购物车信息
+            cartMapper.deleteCartInfoByUserId(userId);
+        }
+
+        Integer userCouponId = wxOrderSubmitBO.getUserCouponId();
+        // 更新优惠券信息
+        if(userCouponId > 0){
+            couponUserMapper.updateUserCouponNumberByCouponId(userCouponId);
+        }
+
     }
 
 
@@ -295,7 +339,15 @@ public class WxOrderServiceImpl implements WxOrderService {
         BeanUtils.copyProperties(marketCart, goods);
         goods.setOrderId(orderId);
         goods.setId(null);
-        goods.setSpecifications(Arrays.toString(marketCart.getSpecifications()));
+        StringBuffer sb = new StringBuffer();
+        String[] specifications = marketCart.getSpecifications();
+        sb.append("[");
+        for (String specification : specifications) {
+            sb.append("\"").append(specification).append("\"").append(",");
+        }
+        String res = sb.toString();
+        String s = res.substring(0,res.length()-1)+ "]";
+        goods.setSpecifications(s);
         return goods;
     }
 

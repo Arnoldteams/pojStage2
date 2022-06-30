@@ -9,6 +9,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +25,8 @@ public class AdminIssueServiceImpl implements AdminIssueService {
     @Autowired
     MarketIssueMapper marketIssueMapper;
 
+    @Autowired
+    HttpSession session;
 
     /**
      * @author: ZY
@@ -37,10 +40,10 @@ public class AdminIssueServiceImpl implements AdminIssueService {
         PageHelper.startPage(basePageInfo.getPage(), basePageInfo.getLimit());
         List<MarketIssue> marketIssueList;
         if (question == null || "".equals(question)) {
-            marketIssueList = marketIssueMapper.selectAllMarketIssue(basePageInfo.getSort(),basePageInfo.getOrder());
+            marketIssueList = marketIssueMapper.selectAllMarketIssue(basePageInfo.getSort(), basePageInfo.getOrder());
         } else {
             question = "%" + question + "%";
-            marketIssueList = marketIssueMapper.selectByPrimaryWords(basePageInfo.getSort(), basePageInfo.getOrder(), question);
+            marketIssueList = marketIssueMapper.selectByPrimaryWords(basePageInfo.getSort(), basePageInfo.getOrder(), question.trim());
         }
         PageInfo<MarketIssue> marketIssuePageInfo = new PageInfo<>(marketIssueList);
         return CommonData.data(marketIssuePageInfo);
@@ -64,7 +67,9 @@ public class AdminIssueServiceImpl implements AdminIssueService {
         marketIssue.setUpdateTime(new Date());
         marketIssue.setDeleted(false);
         marketIssueMapper.insertSelective(marketIssue);
+        session.setAttribute("log",String.valueOf(marketIssue.getId()));
         return marketIssue;
+
     }
 
 
@@ -75,14 +80,10 @@ public class AdminIssueServiceImpl implements AdminIssueService {
      * @param: marketIssue
      * @return: void
      */
-//    @Override
-//    public void deleteMarketIssue(MarketIssue marketIssue) {
-//        Integer id = marketIssue.getId();
-//        marketIssueMapper.deleteByPrimaryKey(id);
-//    }
     @Override
     public void updateMarketIssueStatus(MarketIssue marketIssue) {
         marketIssueMapper.updateMarketIssueStatus(marketIssue);
+        session.setAttribute("log",String.valueOf(marketIssue.getId()));
     }
 
     /**
@@ -96,6 +97,7 @@ public class AdminIssueServiceImpl implements AdminIssueService {
     public MarketIssue updateMarketIssue(MarketIssue marketIssue) {
         marketIssue.setUpdateTime(new Date());
         marketIssueMapper.updateByPrimaryKeySelective(marketIssue);
+        session.setAttribute("log",String.valueOf(marketIssue.getId()));
         return marketIssue;
     }
 

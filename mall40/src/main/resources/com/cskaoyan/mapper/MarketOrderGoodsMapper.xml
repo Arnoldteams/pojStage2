@@ -359,6 +359,6 @@
     select id,order_id as orderId,goods_id as goodsId,goods_name as goodsName,goods_sn as goodsSn,
     product_id as produceId,number,price,specifications,pic_url as picUrl,comment,add_time as addTime,
     update_time as updateTime,deleted
-     from market_order_goods where id = #{id}
+     from market_order_goods where order_id = #{id}
   </select>
 </mapper>

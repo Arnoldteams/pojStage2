@@ -10,8 +10,11 @@ import com.cskaoyan.bean.bo.AdminOrderShipBO;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.AdminOrderChannelVO;
 import com.cskaoyan.bean.vo.AdminOrderDetailVO;
+import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminOrderService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +43,7 @@ public class AdminOrderController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("channel")
+    @RequiresPermissions(value = {"admin:order:channel","*"},logical = Logical.OR)
     public BaseRespVo channel() {
         ArrayList<AdminOrderChannelVO> data = new ArrayList<>();
         data.add(new AdminOrderChannelVO("ZTO", "中通快递"));
@@ -68,6 +72,7 @@ public class AdminOrderController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("list")
+    @RequiresPermissions(value = {"admin:order:list","*"},logical = Logical.OR)
     public BaseRespVo list(BasePageInfo basePageInfo, AdminOrderListBO adminOrderListBO) {
         CommonData<MarketOrder> data = adminOrderService.queryOrderList(basePageInfo, adminOrderListBO);
         return BaseRespVo.ok(data);
@@ -82,20 +87,19 @@ public class AdminOrderController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("ship")
+    @RequiresPermissions(value = {"admin:order:ship","*"},logical = Logical.OR)
+    @LogAnnotation(value = "订单发货")
     public BaseRespVo ship(@RequestBody AdminOrderShipBO adminOrderShipBO) {
-
         String shipSn = adminOrderShipBO.getShipSn();
         if (StringUtils.isEmpty(adminOrderShipBO.getShipChannel()) ||
                 StringUtils.isEmpty(adminOrderShipBO.getShipSn())) {
             return BaseRespVo.errParam();
         }
-
         //正则表达式判断8-14位字母或数字
         boolean matches = shipSn.matches("\\w{8,14}");
         if (!matches) {
             return BaseRespVo.wrongLength();
         }
-
         adminOrderService.changeOrderStatus(adminOrderShipBO);
         return BaseRespVo.ok(null);
     }
@@ -108,6 +112,7 @@ public class AdminOrderController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("detail")
+    @RequiresPermissions(value = {"admin:order:detail","*"},logical = Logical.OR)
     public BaseRespVo detail(Integer id) {
         AdminOrderDetailVO adminOrderDetailVO = adminOrderService.detailOrderList(id);
         return BaseRespVo.ok(adminOrderDetailVO);
@@ -121,6 +126,7 @@ public class AdminOrderController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("delete")
+    @RequiresPermissions(value = {"admin:order:delete","*"},logical = Logical.OR)
     public BaseRespVo delete(Integer orderId) {
         return BaseRespVo.unableDelete();
     }
@@ -135,6 +141,8 @@ public class AdminOrderController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("refund")
+    @RequiresPermissions(value = {"admin:order:refund","*"},logical = Logical.OR)
+    @LogAnnotation(value = "订单退款")
     public BaseRespVo refund(@RequestBody AdminOrderRefundBO adminOrderRefundBO) {
         adminOrderService.refundOrderMoney(adminOrderRefundBO);
         return BaseRespVo.ok(null);
@@ -149,6 +157,8 @@ public class AdminOrderController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("reply")
+    @RequiresPermissions(value = {"admin:order:reply","*"},logical = Logical.OR)
+    @LogAnnotation(value = "管理员回复商品评论")
     public BaseRespVo reply(@RequestBody AdminOrderReplyBO adminOrderReplyBO) {
         if (!StringUtils.isEmpty(adminOrderService.queryAdminComment(adminOrderReplyBO.getCommentId()))) {
             return BaseRespVo.hasReplied(null);
