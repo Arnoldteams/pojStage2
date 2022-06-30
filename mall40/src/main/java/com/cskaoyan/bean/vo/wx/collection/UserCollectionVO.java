@@ -19,6 +19,7 @@ public class UserCollectionVO {
     private String name;
     private String brief;
     private BigDecimal retailPrice;
+    private String picUrl;
 
 //    封装从收藏表中查询的数据
     public void setCollectionInfo(MarketCollect marketCollect){
@@ -32,6 +33,7 @@ public class UserCollectionVO {
         this.setName(marketGoods.getName());
         this.setBrief(marketGoods.getBrief());
         this.setRetailPrice(marketGoods.getRetailPrice());
+        this.setPicUrl(marketGoods.getPicUrl());
     }
 
 }

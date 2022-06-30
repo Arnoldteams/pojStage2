@@ -14,7 +14,7 @@ public class MarketOrder {
 
     private Short orderStatus;
 
-    private Short aftersaleStatus;
+    private short aftersaleStatus;
 
     private String consignee;
 
@@ -66,7 +66,7 @@ public class MarketOrder {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateTime;
 
-    private Boolean deleted;
+    private boolean deleted;
 
     public Integer getId() {
         return id;
@@ -112,24 +112,27 @@ public class MarketOrder {
         return consignee;
     }
 
-    public void setConsignee(String consignee) {
+    public MarketOrder setConsignee(String consignee) {
         this.consignee = consignee == null ? null : consignee.trim();
+        return this;
     }
 
     public String getMobile() {
         return mobile;
     }
 
-    public void setMobile(String mobile) {
+    public MarketOrder setMobile(String mobile) {
         this.mobile = mobile == null ? null : mobile.trim();
+        return this;
     }
 
     public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public MarketOrder setAddress(String address) {
         this.address = address == null ? null : address.trim();
+        return this;
     }
 
     public String getMessage() {
@@ -145,6 +148,7 @@ public class MarketOrder {
     }
 
     public void setGoodsPrice(BigDecimal goodsPrice) {
+
         this.goodsPrice = goodsPrice;
     }
 

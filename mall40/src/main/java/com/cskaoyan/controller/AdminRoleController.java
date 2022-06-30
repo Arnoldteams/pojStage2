@@ -10,6 +10,8 @@ import com.cskaoyan.bean.vo.MarketSystemPermissionsVo;
 import com.cskaoyan.bean.vo.PermissionsVo;
 import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminRoleService;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +44,7 @@ public class AdminRoleController {
      * @createTime: 2022/6/25 20:17
      */
     @RequestMapping("list")
+    @RequiresPermissions(value = {"admin:role:list","*"},logical = Logical.OR)
     public BaseRespVo adminRoleList(BaseParam param, String name) {
         CommonData<MarketRole> data = adminRoleService.queryAllRoles(param, name);
         return BaseRespVo.ok(data);
@@ -58,6 +61,7 @@ public class AdminRoleController {
      */
     @LogAnnotation("删除角色信息")
     @RequestMapping("/delete")
+    @RequiresPermissions(value = {"admin:role:delete","*"},logical = Logical.OR)
     public BaseRespVo adminRoleDelete(@RequestBody MarketRole role) {
         if (adminRoleService.deleteRole(role) == 0) {
             session.setAttribute("log",role.getName());
@@ -76,6 +80,7 @@ public class AdminRoleController {
      */
     @LogAnnotation("更新角色信息")
     @RequestMapping("/update")
+    @RequiresPermissions(value = {"admin:role:update","*"},logical = Logical.OR)
     public BaseRespVo adminRoleUpdate(@RequestBody MarketRole role) {
         adminRoleService.updateRole(role);
         session.setAttribute("log",role.getName());
@@ -92,6 +97,7 @@ public class AdminRoleController {
      */
     @LogAnnotation("创建角色信息")
     @RequestMapping("/create")
+    @RequiresPermissions(value = {"admin:role:create","*"},logical = Logical.OR)
     public BaseRespVo adminRoleCreate(@RequestBody MarketRole role) {
 
         // 跑到Bean类去赋值啦，这里看着很清爽
@@ -112,6 +118,7 @@ public class AdminRoleController {
      * @createTime: 2022/6/25 22:57
      */
     @GetMapping("/permissions")
+    @RequiresPermissions(value = {"admin:role:permissions","*"},logical = Logical.OR)
     public BaseRespVo adminRolePermissions(Integer roleId) {
         List<PermissionsVo> systemPermissions;
         MarketSystemPermissionsVo permissions = new MarketSystemPermissionsVo();
@@ -134,6 +141,7 @@ public class AdminRoleController {
      */
     @LogAnnotation("更新角色权限")
     @PostMapping("/permissions")
+    @RequiresPermissions(value = {"admin:role:permissions","*"},logical = Logical.OR)
     public BaseRespVo updateAdminRolePermissions(@RequestBody AdminPermissionsBo adminPermissions) {
         String roleName = adminRoleService.selectRoleNameById(adminPermissions.getRoleId());
         if (adminPermissions.getRoleId() == 1) {
@@ -154,6 +162,7 @@ public class AdminRoleController {
      * @createTime: 2022/6/27 15:50
      */
     @RequestMapping("/options")
+    @RequiresPermissions(value = {"admin:role:options","*"},logical = Logical.OR)
     public BaseRespVo adminRoleOptions() {
         CommonData<AdminOptionsVo> data = adminRoleService.queryAllRolesWithNoInfo();
         return BaseRespVo.ok(data);

@@ -113,6 +113,8 @@ public class WxCollectionServiceImpl implements WxCollectionService {
             insertMarketCollect.setUpdateTime(date);
             insertMarketCollect.setUserId(userId);
             insertMarketCollect.setValueId(marketCollect.getValueId());
+
+            marketCollectMapper.insertSelective(insertMarketCollect);
             return;
         }
 //        通过取反，实现删除和添加

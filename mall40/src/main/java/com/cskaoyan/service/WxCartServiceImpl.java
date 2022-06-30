@@ -56,9 +56,10 @@ public class WxCartServiceImpl implements WxCartService {
      */
     @Override
     public int cartAddNewGoodsAndReturnCount(MarketCart cart) {
+        Integer userId = getUserId();
         addGoodsToCart(cart);
         // 获取购物车中的商品数量
-        return cartMapper.selectAllNumber();
+        return cartMapper.selectAllNumberByUserId(userId);
     }
 
     /**
@@ -308,11 +309,14 @@ public class WxCartServiceImpl implements WxCartService {
      * @author: 帅关
      * @createTime: 2022/6/29 11:16
      */
-    private Integer getUserId() {
+    public Integer getUserId() {
 
         // 获取当前登录的用户信息
         Subject subject = SecurityUtils.getSubject();
         MarketUser user = (MarketUser) subject.getPrincipal();
+        if(user == null){
+            return -1;
+        }
         return user.getId();
     }
 }

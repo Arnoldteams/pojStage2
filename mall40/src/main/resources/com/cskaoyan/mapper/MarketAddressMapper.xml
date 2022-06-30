@@ -357,11 +357,19 @@
     tel,is_default as isDefault,add_time as addTime,
     update_time as updateTime,deleted
     from market_address
-    where user_id = #{userId}
+    where user_id = #{userId} and deleted = 0;
     </select>
+
 
   <insert id="insertAddress"  useGeneratedKeys="true" keyProperty="id" >
     insert into market_address (name,tel,province,city,county,area_code,address_detail,is_default) values(#{address.name},#{address.tel},#{address.province},#{address.city},#{address.county},#{address.areaCode},#{address.addressDetail},#{address.isDefault})
     </insert>
+
+  <select id="selectPartAddressInfoByUserId" resultMap="BaseResultMap">
+    select name,tel,address_detail
+    from market_address
+    where user_id = #{userId} and deleted = 0
+  </select>
+
 </mapper>
 

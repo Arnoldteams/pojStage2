@@ -28,4 +28,6 @@ public interface MarketCouponUserMapper {
     int updateByPrimaryKeySelective(MarketCouponUser record);
 
     int updateByPrimaryKey(MarketCouponUser record);
+
+    void updateUserCouponNumberByCouponId(@Param("userCouponId") Integer userCouponId);
 }

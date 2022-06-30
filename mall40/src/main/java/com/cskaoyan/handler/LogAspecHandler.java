@@ -31,7 +31,7 @@ import java.util.List;
 
 @Aspect
 @Component
-public class LogHandler {
+public class LogAspecHandler {
 
     @Autowired
     MarketLogMapper marketLogMapper;

@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WxOrderSubmitVO {
-    Integer grouponLinkId;
+    int grouponLinkId;
     Integer orderId;
 }
