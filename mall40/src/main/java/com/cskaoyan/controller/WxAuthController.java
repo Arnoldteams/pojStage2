@@ -54,15 +54,20 @@ public class WxAuthController {
     @PostMapping("reset")
     public BaseRespVo reset(@RequestBody WxAuthRegisterBO wxAuthRegisterBO) {
 
-        // get code from redis
+        // get code and mobile from redis
         Object code = redisTemplate.opsForValue().get("code");
+        Object mobile = redisTemplate.opsForValue().get("mobile");
+
+        // user input data
         String uCode = wxAuthRegisterBO.getCode();
+        String uMobile = wxAuthRegisterBO.getMobile();
 
         Boolean codeError = true;
         // 判断验证码是否过期
         if (code != null) {
-            // 仅当用户验证码不空，且与验证码相同，false 通过
-            if (!StringUtils.isEmpty(uCode) && StringUtils.equals((String) code, uCode)) {
+            // 仅当用户验证码,手机号不空，且与发送验证码的手机和验证码相同，false 通过
+            if (!StringUtils.isEmpty(uCode) && !StringUtils.isEmpty(uMobile)
+                    && StringUtils.equals((String) code, uCode) && StringUtils.equals((String) mobile, uMobile)) {
                 codeError = false;
             }
         }
@@ -94,6 +99,7 @@ public class WxAuthController {
         // generate code and put into redis
         String mobile = map.get("mobile");
         String code = RandomStringUtils.randomNumeric(6);
+        redisTemplate.opsForValue().set("mobile", mobile, 300, TimeUnit.SECONDS);
         redisTemplate.opsForValue().set("code", code, 300, TimeUnit.SECONDS);
 
         // send msg
@@ -112,26 +118,30 @@ public class WxAuthController {
     @PostMapping("register")
     public BaseRespVo register(@RequestBody WxAuthRegisterBO wxAuthRegisterBO) {
 
-        // get code from redis
+        // get code and mobile from redis
         Object code = redisTemplate.opsForValue().get("code");
+        Object mobile = redisTemplate.opsForValue().get("mobile");
+
         String uCode = wxAuthRegisterBO.getCode();
+        String uMobile = wxAuthRegisterBO.getMobile();
 
         Boolean codeError = true;
         // 判断验证码是否过期
         if (code != null) {
-            // 仅当用户验证码不空，且与验证码相同，false 通过
-            if (!StringUtils.isEmpty(uCode) && StringUtils.equals((String) code, uCode)) {
+            // 仅当用户验证码,手机号不空，且与发送验证码的手机和验证码相同，false 通过
+            if (!StringUtils.isEmpty(uCode) && !StringUtils.isEmpty(uMobile)
+                    && StringUtils.equals((String) code, uCode) && StringUtils.equals((String) mobile, uMobile)) {
                 codeError = false;
             }
         }
 
-        // true means has account
-        Boolean hasAccount = wxAuthorService.hasAccount(wxAuthRegisterBO.getMobile());
+        // true means has phone
+        Boolean hasPhone = wxAuthorService.hasAccount(wxAuthRegisterBO.getMobile());
 
         if (codeError) {
             return BaseRespVo.codeAndMsg(703, "验证码错误，淦");
         }
-        if (hasAccount) {
+        if (hasPhone) {
             return BaseRespVo.codeAndMsg(705, "手机号已注册，宝");
         }
 
@@ -139,7 +149,14 @@ public class WxAuthController {
         String avatarUrl = "https://yanxuan.nosdn.127.net/80841d741d7fa3073e0ae27bf487339f.jpg?imageView&quality=90&thumbnail=64x64";
 
         // 插入数据
-        wxAuthorService.insertUser(wxAuthRegisterBO, avatarUrl, request);
+        Boolean hasUsername = wxAuthorService.insertUser(wxAuthRegisterBO, avatarUrl, request);
+
+        if (hasUsername) {
+            return BaseRespVo.codeAndMsg(705, "用户名已注册，宝");
+        }
+
+        // 设置验证码失效
+        redisTemplate.opsForValue().set("code", null);
 
         // 跳转登陆授权
         MarketToken authenticationToken = new MarketToken(wxAuthRegisterBO.getUsername(), wxAuthRegisterBO.getPassword(), "wx");
@@ -148,7 +165,7 @@ public class WxAuthController {
             // realm.doGetAuthenticationInfo
             subject.login(authenticationToken);
         } catch (AuthenticationException e) {
-            return BaseRespVo.invalidAuth("用户名或密码不正确");
+            return BaseRespVo.invalidAuth("注册失败");
         }
 
         // 整合响应的请求
