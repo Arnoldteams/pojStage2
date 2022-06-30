@@ -21,4 +21,5 @@ public interface WxAuthorService {
     void insertUser(WxAuthRegisterBO wxAuthRegisterBO, String avatarUrl, HttpServletRequest request);
 
     Boolean updateUserByMobil(WxAuthRegisterBO wxAuthRegisterBO);
+
 }

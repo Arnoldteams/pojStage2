@@ -56,9 +56,10 @@ public class WxCartServiceImpl implements WxCartService {
      */
     @Override
     public int cartAddNewGoodsAndReturnCount(MarketCart cart) {
+        Integer userId = getUserId();
         addGoodsToCart(cart);
         // 获取购物车中的商品数量
-        return cartMapper.selectAllNumber();
+        return cartMapper.selectAllNumberByUserId(userId);
     }
 
     /**

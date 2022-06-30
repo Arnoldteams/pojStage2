@@ -142,4 +142,5 @@ public class WxAuthorServiceImpl implements WxAuthorService {
 
         return false;
     }
+
 }
