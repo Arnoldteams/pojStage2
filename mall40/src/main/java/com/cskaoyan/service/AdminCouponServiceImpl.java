@@ -126,11 +126,12 @@ public class AdminCouponServiceImpl implements AdminCouponService {
         marketCoupon.setType(marketCouponBO.getType());
         marketCoupon.setAddTime(marketCouponBO.getAddTime());
         marketCoupon.setUpdateTime(marketCouponBO.getUpdateTime());
+        //设置随机八位兑换码
+        marketCoupon.setCode(new AdminCouponServiceImpl().genRandomNum());
         int i = marketCouponMapper.insertSelective(marketCoupon);
         System.out.println(i);
         marketCouponBO.setId(marketCoupon.getId());
-        //获取随机八位兑换码
-        marketCouponBO.setCode(new AdminCouponServiceImpl().genRandomNum());
+
         return  marketCouponBO;
     }
 
