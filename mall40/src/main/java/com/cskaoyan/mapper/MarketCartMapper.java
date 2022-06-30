@@ -42,4 +42,5 @@ public interface MarketCartMapper {
 
     Integer selectCartGoodsCount(@Param("userId") Integer userId);
 
+    void deleteCartInfoByUserId(@Param("userId") Integer userId);
 }

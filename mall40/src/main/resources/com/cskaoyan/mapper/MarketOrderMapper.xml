@@ -129,7 +129,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.cskaoyan.bean.MarketOrder">
+  <insert id="insert" parameterType="com.cskaoyan.bean.MarketOrder" useGeneratedKeys="true" keyProperty="id">
     insert into market_order (id, user_id, order_sn, 
       order_status, aftersale_status, consignee, 
       mobile, address, message, 

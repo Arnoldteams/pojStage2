@@ -380,4 +380,9 @@
   <select id="selectCartGoodsCount" resultType="integer">
     select count(id) from market_cart where user_id = #{userId} and deleted = 0
   </select>
+
+  <update id="deleteCartInfoByUserId">
+    update market_cart set deleted = true,number = 0
+      where user_id = #{userId} and checked = 1;
+  </update>
 </mapper>
