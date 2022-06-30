@@ -58,7 +58,7 @@ public class AdminAdminServiceImpl implements AdminAdminService {
             or.andUsernameLike("%" + username + "%");
         }
 
-        or.andDeletedEqualTo(false);
+        or.andDeletedNotEqualTo(true);
 
 //        查询对应的管理员
         List<MarketAdmin> marketAdmins = marketAdminMapper.selectByExample(marketAdminExample);

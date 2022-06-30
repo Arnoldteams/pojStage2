@@ -46,7 +46,7 @@ public class WxCollectionServiceImpl implements WxCollectionService {
         criteria
                 .andUserIdEqualTo(userId)
                 .andTypeEqualTo((byte) type.intValue())
-                .andDeletedEqualTo(false);
+                .andDeletedNotEqualTo(true);
 
         List<MarketCollect> marketCollects = marketCollectMapper.selectByExample(marketCollectExample);
 
