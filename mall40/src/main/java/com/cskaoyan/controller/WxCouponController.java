@@ -115,7 +115,7 @@ public class WxCouponController {
             username=marketUser.getUsername();
         }
 
-        CommonData userCouponList = wxCouponService.getUserCouponList(username, status, info);
+        CommonData userCouponList = wxCouponService.getUserCouponList(username, status,null, info);
         return BaseRespVo.ok(userCouponList);
     }
 
@@ -141,7 +141,7 @@ public class WxCouponController {
         }
         BasePageInfo basePageInfo = new BasePageInfo();
         basePageInfo.setPage(1);
-        CommonData userCouponList = wxCouponService.getUserCouponList(username, 0, basePageInfo);
+        CommonData userCouponList = wxCouponService.getUserCouponList(username, 0,cartId, basePageInfo);
         return BaseRespVo.ok(userCouponList);
     }
 

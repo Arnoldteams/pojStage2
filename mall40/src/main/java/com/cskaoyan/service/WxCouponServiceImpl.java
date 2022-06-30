@@ -99,7 +99,7 @@ public class WxCouponServiceImpl implements WxCouponService {
     }
 
     @Override
-    public CommonData getUserCouponList(String username, Integer status, BasePageInfo info) {
+    public CommonData getUserCouponList(String username, Integer status,Integer cartId ,BasePageInfo info) {
 
         //获得User的id
         MarketUserExample marketUserExample = new MarketUserExample();
@@ -119,7 +119,11 @@ public class WxCouponServiceImpl implements WxCouponService {
         if(info.getLimit() == null){
             MarketCartExample marketCartExample = new MarketCartExample();
             MarketCartExample.Criteria criteria1 = marketCartExample.createCriteria();
-            criteria1.andUserIdEqualTo(id).andCheckedEqualTo(true);
+            if(cartId == null) {
+                criteria1.andUserIdEqualTo(id).andCheckedEqualTo(true);
+            }else {
+                criteria1.andUserIdEqualTo(id).andIdEqualTo(cartId);
+            }
             List<MarketCart> marketCarts = marketCartMapper.selectByExample(marketCartExample);
             //获得购物车内选中商品的总金额
             BigDecimal bigDecimal = new BigDecimal(0);
