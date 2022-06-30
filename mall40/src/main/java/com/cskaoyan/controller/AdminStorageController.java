@@ -7,12 +7,16 @@ import com.cskaoyan.bean.MarketStorage;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.AdminStorageVO;
+import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminStorageService;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.Resource;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -104,8 +108,8 @@ public class AdminStorageController {
      * @param: baseParam - [BaseParam]
      */
     @GetMapping("list")
+    @RequiresPermissions(value = {"admin:storage:list","*"},logical = Logical.OR)
     public BaseRespVo list(BaseParam baseParam,String key,String name) {
-
 
         CommonData<MarketStorage> data = adminStorageService.queryAllStorage(baseParam,key,name);
 
@@ -120,7 +124,9 @@ public class AdminStorageController {
      * @return: com.cskaoyan.bean.BaseRespVo<com.cskaoyan.bean.MarketStorage>
      */
     @PostMapping("update")
-    public BaseRespVo<MarketStorage> update(@RequestBody MarketStorage marketStorage) {
+    @RequiresPermissions(value = {"admin:storage:update","*"},logical = Logical.OR)
+    @LogAnnotation(value = "更新Storage")
+    public BaseRespVo<MarketStorage> update(@RequestBody MarketStorage marketStorage, BindingResult bindingResult) {
         BaseRespVo<MarketStorage> resp = new BaseRespVo<>();
 
         marketStorage.setUpdateTime(new Date());
@@ -138,7 +144,9 @@ public class AdminStorageController {
      * @return: com.cskaoyan.bean.BaseRespVo<java.lang.String>
      */
     @PostMapping("delete")
-    public BaseRespVo<String> delete(@RequestBody MarketStorage marketStorage) {
+    @RequiresPermissions(value = {"admin:storage:delete","*"},logical = Logical.OR)
+    @LogAnnotation(value = "删除Storage")
+    public BaseRespVo<String> delete(@RequestBody MarketStorage marketStorage, BindingResult bindingResult) {
         BaseRespVo<String> resp = new BaseRespVo<>();
 
         adminStorageService.deleteKeywordById(marketStorage);
