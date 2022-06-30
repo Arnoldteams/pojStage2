@@ -351,5 +351,4 @@ public class WxOrderServiceImpl implements WxOrderService {
         MarketUser user = (MarketUser) SecurityUtils.getSubject().getPrincipal();
         return user.getId();
     }
-
 }
