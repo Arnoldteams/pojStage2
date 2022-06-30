@@ -2,6 +2,7 @@ package com.cskaoyan.bean.vo;
 
 import com.cskaoyan.bean.MarketAdmin;
 import com.cskaoyan.bean.bo.AdminCreateBO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,7 +20,11 @@ public class AdminCreateVO {
     private String password;
     private String avatar;
     private Integer[] roleIds;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date addTime;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date updateTime;
 
 ////    根据查询结果设置信息

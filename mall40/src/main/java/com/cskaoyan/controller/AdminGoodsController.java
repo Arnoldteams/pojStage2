@@ -39,15 +39,6 @@ public class AdminGoodsController {
      */
     @RequestMapping("list")
     public BaseRespVo adminGoodsList(BaseParam baseParam, Integer goodsSn, String name, Integer goodsId) {
-        if (baseParam.getPage() == null) {
-            baseParam.setPage(0);
-        }
-        if (baseParam.getOrder() == null) {
-            baseParam.setOrder("");
-        }
-        if (baseParam.getSort() == null) {
-            baseParam.setSort("");
-        }
         CommonData<MarketGoods> data = adminGoodsService.qurryAllGoods(baseParam, goodsSn, name, goodsId);
         return BaseRespVo.ok(data);
     }

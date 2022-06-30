@@ -11,10 +11,14 @@ import com.cskaoyan.bean.vo.wxGoodsList.WxGoodsListVo;
 import com.cskaoyan.mapper.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.security.auth.Subject;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -57,6 +61,9 @@ public class WxGoodsServiceImpl implements WxGoodsService {
 
     @Autowired
     MarketCollectMapper marketCollectMapper;
+
+    @Autowired
+    HttpSession session;
 
     @Override
     public Integer countGoods() {
@@ -133,7 +140,11 @@ public class WxGoodsServiceImpl implements WxGoodsService {
         List<MarketComment> marketComments = marketCommentMapper.selectByExample(commentExample);
         WxGoodsDetailCommentVo wxGoodsDetailCommentVo = new WxGoodsDetailCommentVo();
         wxGoodsDetailCommentVo.setCount(marketComments.size());
-        wxGoodsDetailCommentVo.setData(marketComments);
+        if (marketComments.size() > 2) {
+            wxGoodsDetailCommentVo.setData(marketComments.subList(0, 2));
+        } else {
+            wxGoodsDetailCommentVo.setData(marketComments);
+        }
         wxGoodsDetailVo.setComment(wxGoodsDetailCommentVo);
 
         // 5. 搜索 groupon
@@ -192,13 +203,25 @@ public class WxGoodsServiceImpl implements WxGoodsService {
         wxGoodsDetailVo.setSpecificationList(wxGoodsDetailSpecificationVos);
 
 
-        // 11. 搜索
+        // 11. 搜索 hasCollect
+        PrincipalCollection principals = SecurityUtils.getSubject().getPrincipals();
+        if (principals == null) {
+            wxGoodsDetailVo.setUserHasCollect(0);
+            return wxGoodsDetailVo;
+        }
+        MarketUser marketUser = (MarketUser) principals.getPrimaryPrincipal();
         MarketCollectExample collectExample = new MarketCollectExample();
         MarketCollectExample.Criteria collectExampleCriteria = collectExample.createCriteria();
         collectExampleCriteria.andDeletedEqualTo(false);
+        collectExampleCriteria.andUserIdEqualTo(marketUser.getId());
         collectExampleCriteria.andTypeEqualTo((byte) 0);
-        int count1 = (int) marketCollectMapper.countByExample(collectExample);
-        wxGoodsDetailVo.setUserHasCollect(count1);
+        collectExampleCriteria.andValueIdEqualTo(id);
+        List<MarketCollect> marketCollects = marketCollectMapper.selectByExample(collectExample);
+        if (marketCollects.size() == 0) {
+            wxGoodsDetailVo.setUserHasCollect(0);
+        } else {
+            wxGoodsDetailVo.setUserHasCollect(1);
+        }
 
         return wxGoodsDetailVo;
     }
@@ -278,6 +301,7 @@ public class WxGoodsServiceImpl implements WxGoodsService {
         // 3. 有 keyword 和 category
         if (brandId == null && keyword != null && categoryId != null && isHot == null && isNew == null) {
             // 搜索 list
+            session.setAttribute("keyword", keyword);
             MarketGoodsExample goodsExample = new MarketGoodsExample();
             goodsExample.setOrderByClause(baseParam.getSort() + " " + baseParam.getOrder());
             MarketGoodsExample.Criteria goodsExampleCriteria = goodsExample.createCriteria();
