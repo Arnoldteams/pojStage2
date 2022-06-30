@@ -625,7 +625,7 @@
   <update id="updateOrderStatus">
     update market_order
     set
-    order_status=301,ship_sn=#{shipSn},ship_channel=#{shipChannel},ship_time=curtime()
+    order_status=301,ship_sn=#{shipSn},ship_channel=#{shipChannel},ship_time=curtime(),update_time=curtime()
     where id = #{orderId}
   </update>
 
@@ -656,7 +656,7 @@
   <update id="updateOrderRefund">
     update market_order
     set
-    refund_amount=#{refundMoney},refund_time=curtime(),order_status=203
+    refund_amount=#{refundMoney},refund_time=curtime(),order_status=203,update_time=curtime(),aftersale_status=3
     where id=#{orderId}
   </update>
 
