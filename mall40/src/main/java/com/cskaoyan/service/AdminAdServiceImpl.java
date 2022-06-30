@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +22,8 @@ public class AdminAdServiceImpl implements AdminAdService {
     @Autowired
     MarketAdMapper marketAdMapper;
 
+    @Autowired
+    HttpSession session;
 
 
     /**
@@ -70,6 +73,7 @@ public class AdminAdServiceImpl implements AdminAdService {
         int i = marketAdMapper.updateByPrimaryKeySelective(marketAd);
         //修改成功在控制台输出影响行数
         System.out.println(i);
+        session.setAttribute("log",marketAd.getName());
         return marketAd;
     }
 
@@ -90,6 +94,7 @@ public class AdminAdServiceImpl implements AdminAdService {
         int i = marketAdMapper.insertSelective(marketAd);
         //插入成功在控制台输出影响行数
         System.out.println(i);
+        session.setAttribute("log",marketAd.getName());
         return marketAd;
     }
 
@@ -105,6 +110,7 @@ public class AdminAdServiceImpl implements AdminAdService {
     @Override
     public Boolean deleteAdById(MarketAd marketAd) {
         int i = marketAdMapper.deleteByPrimaryKey(marketAd.getId());
+        session.setAttribute("log",marketAd.getName());
         return i > 0;
     }
 

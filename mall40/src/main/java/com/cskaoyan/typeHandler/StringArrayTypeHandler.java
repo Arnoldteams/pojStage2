@@ -65,6 +65,7 @@ public class StringArrayTypeHandler implements TypeHandler<String[]> {
     }
 
     private String[] transfer(String result) {
+        // 使用jackson将字符串转换Integer[]
         String[] strings = new String[0];
         // 使用jackson将字符串转换Integer[]
         try {

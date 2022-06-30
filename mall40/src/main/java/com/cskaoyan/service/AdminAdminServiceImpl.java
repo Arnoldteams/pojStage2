@@ -58,7 +58,7 @@ public class AdminAdminServiceImpl implements AdminAdminService {
             or.andUsernameLike("%" + username + "%");
         }
 
-        or.andDeletedEqualTo(false);
+        or.andDeletedNotEqualTo(true);
 
 //        查询对应的管理员
         List<MarketAdmin> marketAdmins = marketAdminMapper.selectByExample(marketAdminExample);
@@ -136,11 +136,13 @@ public class AdminAdminServiceImpl implements AdminAdminService {
 
         MarketAdminExample marketAdminExample = new MarketAdminExample();
         MarketAdminExample.Criteria criteria = marketAdminExample.createCriteria();
-        criteria.andUsernameEqualTo(marketAdmin.getUsername());
+        criteria
+                .andUsernameEqualTo(marketAdmin.getUsername())
+                .andIdNotEqualTo(marketAdmin.getId());
 
         List<MarketAdmin> marketAdmins = marketAdminMapper.selectByExample(marketAdminExample);
 
-        if(marketAdmins.size() == 0){
+        if(marketAdmins.size() != 0){
             return null;
         }
         marketAdminMapper.updateByPrimaryKeySelective(marketAdmin);

@@ -4,8 +4,11 @@ import com.cskaoyan.bean.BasePageInfo;
 import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.MarketIssue;
 import com.cskaoyan.bean.param.CommonData;
+import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminIssueService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +37,7 @@ public class AdminIssueController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("list")
+    @RequiresPermissions(value = {"admin:issue:list","*"},logical = Logical.OR)
     public BaseRespVo list(BasePageInfo basePageInfo, String question) {
         CommonData<MarketIssue> data = marketIssueService.queryMarketIssue(basePageInfo, question);
         return BaseRespVo.ok(data);
@@ -47,6 +51,8 @@ public class AdminIssueController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("create")
+    @RequiresPermissions(value = {"admin:issue:create","*"},logical = Logical.OR)
+    @LogAnnotation(value = "新增问答")
     public BaseRespVo create(@RequestBody MarketIssue marketIssue) {
         if (StringUtils.isEmpty(marketIssue.getQuestion()) || StringUtils.isEmpty(marketIssue.getAnswer())) {
             return BaseRespVo.errParam();
@@ -64,6 +70,8 @@ public class AdminIssueController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("delete")
+    @RequiresPermissions(value = {"admin:issue:delete","*"},logical = Logical.OR)
+    @LogAnnotation(value = "删除问答")
     public BaseRespVo delete(@RequestBody MarketIssue marketIssue) {
         //marketIssueService.deleteMarketIssue(marketIssue);
         marketIssueService.updateMarketIssueStatus(marketIssue);
@@ -79,6 +87,8 @@ public class AdminIssueController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("update")
+    @RequiresPermissions(value = {"admin:issue:update","*"},logical = Logical.OR)
+    @LogAnnotation(value = "更新问答")
     public BaseRespVo update(@RequestBody MarketIssue marketIssue) {
         MarketIssue data = marketIssueService.updateMarketIssue(marketIssue);
         return BaseRespVo.ok(data);

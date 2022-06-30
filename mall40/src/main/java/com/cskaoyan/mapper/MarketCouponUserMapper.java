@@ -30,4 +30,6 @@ public interface MarketCouponUserMapper {
     int updateByPrimaryKey(MarketCouponUser record);
 
     void updateUserCouponNumberByCouponId(@Param("userCouponId") Integer userCouponId);
+
+    int selectValuableCoupon(@Param("userId") Integer userId, @Param("price") double price);
 }

@@ -7,9 +7,12 @@ import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.WxCouponRespVO;
 import com.cskaoyan.bean.vo.WxUserCouponVO;
+import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminCouponService;
 import com.cskaoyan.service.WxCouponService;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -43,11 +46,24 @@ public class WxCouponController {
      * @since 2022/6/29 9:11
      */
 
+
     @RequestMapping("list")
     public BaseRespVo getAllList(String name,Short type , Short status,BasePageInfo info){
         CommonData couponList = adminCouponService.getCouponList(name, type, status, info);
         return BaseRespVo.ok(couponList);
     }
+
+
+    /**
+     * 根据条件为用户领取优惠券
+     *
+     * @param
+     * @param
+     * @param
+     * @return
+     * @author yn1609853@163.com
+     * @since 2022/6/30 17:22
+     */
 
 
     @RequestMapping("receive")
@@ -78,6 +94,18 @@ public class WxCouponController {
         return wxCouponRespVO;
     }
 
+    /**
+     * 展示用户个人优惠券信息
+     *
+     * @param
+     * @param
+     * @param
+     * @return
+     * @author yn1609853@163.com
+     * @since 2022/6/30 17:23
+     */
+
+
     @RequestMapping("mylist")
     public BaseRespVo getUserList(Integer status,BasePageInfo info){
         Subject subject = SecurityUtils.getSubject();
@@ -87,9 +115,21 @@ public class WxCouponController {
             username=marketUser.getUsername();
         }
 
-        CommonData userCouponList = wxCouponService.getUserCouponList(username, status, info);
+        CommonData userCouponList = wxCouponService.getUserCouponList(username, status,null, info);
         return BaseRespVo.ok(userCouponList);
     }
+
+    /**
+     * 展示用户订单中的优惠券信息
+     *
+     * @param
+     * @param
+     * @param
+     * @return
+     * @author yn1609853@163.com
+     * @since 2022/6/30 17:23
+     */
+
 
     @GetMapping("selectlist")
     public BaseRespVo getUserCartList(Integer cartId , Integer grouponRulesId){
@@ -101,8 +141,50 @@ public class WxCouponController {
         }
         BasePageInfo basePageInfo = new BasePageInfo();
         basePageInfo.setPage(1);
-        CommonData userCouponList = wxCouponService.getUserCouponList(username, 0, basePageInfo);
+        CommonData userCouponList = wxCouponService.getUserCouponList(username, 0,cartId, basePageInfo);
         return BaseRespVo.ok(userCouponList);
     }
 
+    /**
+     * 通过兑换码为用户领取优惠券
+     *
+     * @param
+     * @param
+     * @param
+     * @return
+     * @author yn1609853@163.com
+     * @since 2022/6/30 17:23
+     */
+
+
+    @RequestMapping("exchange")
+    public WxCouponRespVO addCouponByCode(@RequestBody Map map) {
+        String code = (String) map.get("code");
+        Subject subject = SecurityUtils.getSubject();
+        String username = null;
+        if (subject.isAuthenticated()) {
+            MarketUser marketUser = (MarketUser) subject.getPrincipals().getPrimaryPrincipal();
+            username = marketUser.getUsername();
+        }
+        int couponId = wxCouponService.addCouponByCode(code);
+        int statusId = wxCouponService.getCouponForUser(username, couponId);
+        WxCouponRespVO wxCouponRespVO = new WxCouponRespVO();
+        if (statusId == 0) {
+            wxCouponRespVO.setErrmsg("优惠券已领完");
+            wxCouponRespVO.setErrno(740);
+        } else if (statusId == 1) {
+            wxCouponRespVO.setErrmsg("优惠券已经领取");
+            wxCouponRespVO.setErrno(740);
+        } else if (statusId == 2) {
+            wxCouponRespVO.setErrmsg("成功");
+            wxCouponRespVO.setErrno(0);
+        } else if (statusId == -1) {
+            wxCouponRespVO.setErrmsg("请登录");
+            wxCouponRespVO.setErrno(501);
+        } else if (statusId == -2) {
+            wxCouponRespVO.setErrmsg("优惠券不正确");
+            wxCouponRespVO.setErrno(742);
+        }
+        return wxCouponRespVO;
+    }
 }

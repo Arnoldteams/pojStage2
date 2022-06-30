@@ -6,6 +6,7 @@ import com.cskaoyan.bean.bo.adminGoodsDeleteBo.AdminGoodsDeleteBo;
 import com.cskaoyan.bean.bo.adminGoodsUpdateBo.AdminGoodsUpdateBo;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
+import com.cskaoyan.bean.validParam.ValidParam;
 import com.cskaoyan.bean.vo.adminGoodsCatAndBrand.AdminGoodsCatAndBrandVo;
 import com.cskaoyan.bean.vo.adminGoodsCatAndBrand.BrandListEntity;
 import com.cskaoyan.bean.vo.adminGoodsCatAndBrand.CategoryListEntity;
@@ -18,9 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +36,7 @@ import java.util.List;
  */
 @Transactional
 @Service
-public class AdminGoodsServiceImpl implements AdminGoodsService{
+public class AdminGoodsServiceImpl implements AdminGoodsService {
 
     @Autowired
     MarketGoodsMapper marketGoodsMapper;
@@ -51,44 +56,46 @@ public class AdminGoodsServiceImpl implements AdminGoodsService{
     @Autowired
     HttpSession session;
 
-    @Autowired
-    RedisTemplate redisTemplate;
-
     @Override
     public CommonData<MarketGoods> qurryAllGoods(BaseParam baseParam, Integer goodsSn, String name, Integer goodsId) {
+        ValidParam validParam = new ValidParam();
+        validParam.setGoodsId(goodsId);
+        validParam.setGoodsSn(goodsSn);
+        validParam.setName(name);
 
         MarketGoodsExample example = new MarketGoodsExample();
         String orderByClause = baseParam.getSort() + " " + baseParam.getOrder();
 
         // 查询 deleted = 0 （false） 的所有商品
-        MarketGoodsExample.Criteria or = example.or();
-        or.andDeletedEqualTo(false);
+        MarketGoodsExample.Criteria exampleCriteria = example.createCriteria();
+        exampleCriteria.andDeletedEqualTo(false);
 
         // 商品名称模糊查询
         if (name != null) {
             String sqlName = "%" + name + "%";
-            or.andNameLike(sqlName);
+            exampleCriteria.andNameLike(sqlName);
         }
 
         // 商品编号查询
         if (goodsSn != null) {
             String sqlGoodsSn = "%" + goodsSn + "%";
-            or.andGoodsSnLike(sqlGoodsSn);
+            exampleCriteria.andGoodsSnLike(sqlGoodsSn);
         }
 
         // 商品 id 查询
         if (goodsId != null) {
-            or.andIdEqualTo(goodsId);
+            exampleCriteria.andIdEqualTo(goodsId);
         }
 
         // 设置排序语句
-        example.setOrderByClause(orderByClause);
-
+        if (baseParam.getSort() != null && baseParam.getOrder() != null) {
+            example.setOrderByClause(orderByClause);
+        }
         // 配置分页工具, 注意写前面
-        PageHelper.startPage(baseParam.getPage(), baseParam.getLimit());
-
+        if (baseParam.getPage() != null) {
+            PageHelper.startPage(baseParam.getPage(), baseParam.getLimit());
+        }
         List<MarketGoods> marketGoods = marketGoodsMapper.selectByExample(example);
-
         // 分页工具
         PageInfo<MarketGoods> marketGoodsPageInfo = new PageInfo<>(marketGoods);
         return CommonData.data(marketGoodsPageInfo);
@@ -151,7 +158,7 @@ public class AdminGoodsServiceImpl implements AdminGoodsService{
             marketGoodsSpecificationMapper.insertSelective(specification);
         }
 
-        session.setAttribute("log", goods.getId());
+        session.setAttribute("log", String.valueOf(goods.getId()));
     }
 
     @Override
@@ -161,7 +168,13 @@ public class AdminGoodsServiceImpl implements AdminGoodsService{
         AdminGoodsDetailVo adminGoodsDetailVo = new AdminGoodsDetailVo();
 
         // 搜索 category 的 id 列表
-        List<Integer> categoryIds = marketCategoryMapper.selectCatIds(id);
+        List<Integer> integers = new ArrayList<>();
+        MarketGoods marketGoods1 = marketGoodsMapper.selectByPrimaryKey(id);
+        integers.add(marketGoods1.getCategoryId());
+        MarketCategory marketCategory = marketCategoryMapper.selectByPrimaryKey(marketGoods1.getCategoryId());
+        if (marketCategory.getPid() != 0) {
+            integers.add(0, marketCategory.getPid());
+        }
 
         // 搜索 goods
         MarketGoods marketGoods = marketGoodsMapper.selectByPrimaryKey(id);
@@ -189,7 +202,7 @@ public class AdminGoodsServiceImpl implements AdminGoodsService{
         adminGoodsDetailVo.setAttributes(attributes);
         adminGoodsDetailVo.setSpecifications(marketGoodsSpecifications);
         adminGoodsDetailVo.setProducts(marketGoodsProducts);
-        adminGoodsDetailVo.setCategoryIds(categoryIds);
+        adminGoodsDetailVo.setCategoryIds(integers);
 
         return adminGoodsDetailVo;
     }
@@ -227,7 +240,7 @@ public class AdminGoodsServiceImpl implements AdminGoodsService{
             marketGoodsProductMapper.updateByPrimaryKeySelective(product);
         }
 
-        session.setAttribute("log", goods.getId());
+        session.setAttribute("log", String.valueOf(goods.getId()));
     }
 
     @Override
@@ -239,6 +252,6 @@ public class AdminGoodsServiceImpl implements AdminGoodsService{
         marketGoods.setDeleted(true);
         marketGoodsMapper.updateByExampleSelective(marketGoods, example);
 
-        session.setAttribute("log", bo.getId());
+        session.setAttribute("log", String.valueOf(bo.getId()));
     }
 }

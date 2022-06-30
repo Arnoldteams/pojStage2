@@ -12,6 +12,8 @@ import com.cskaoyan.bean.param.CommonData;
 public interface WxCouponService {
     int getCouponForUser(String username, Integer couponId);
 
-    CommonData getUserCouponList(String username, Integer status, BasePageInfo info);
+    CommonData getUserCouponList(String username, Integer status,Integer cartId, BasePageInfo info);
+
+    int addCouponByCode(String code);
 
 }

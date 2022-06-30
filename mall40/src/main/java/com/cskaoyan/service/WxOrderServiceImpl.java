@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.ObjectError;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -118,6 +117,7 @@ public class WxOrderServiceImpl implements WxOrderService {
     /**
      * @author: ZY
      * @createTime: 2022/06/29 23:49:00
+     * @description: 我的订单-订单详情-订单发货后可确认收货，更改订单状态，确认收货时间，更新时间
      * @description: 用户确认收货
      * @param: orderId
      * @return: void
@@ -130,7 +130,7 @@ public class WxOrderServiceImpl implements WxOrderService {
     /**
      * @author: ZY
      * @createTime: 2022/06/29 20:25:34
-     * @description: 退款后可逻辑删除订单
+     * @description: 我的订单-订单详情-退款后可逻辑删除订单，更改订单deleted，更新时间
      * @param: orderId
      * @return: void
      */
@@ -157,7 +157,7 @@ public class WxOrderServiceImpl implements WxOrderService {
     /**
      * @author: ZY
      * @createTime: 2022/06/29 21:27:57
-     * @description: 确认收货后评价商品
+     * @description: 我的订单-订单详情-确认收货后评价商品，更改更新时间，待评价商品数量
      * @param: wxOrderListCommentBO
      * @return: void
      */
@@ -166,14 +166,27 @@ public class WxOrderServiceImpl implements WxOrderService {
         //拿到userId
         Integer userId = getUserId();
 
+        //拿到订单商品表里的主键id
+        Integer orderGoodsId = wxOrderListCommentBO.getOrderGoodsId();
         String picUrls = Arrays.toString(wxOrderListCommentBO.getPicUrls());
+
+        //插入商品评论表，并获得主键id，更改订单商品表的comment
         wxOrderMapper.insertOrderComment(wxOrderListCommentBO, userId, picUrls);
+        Integer commentId = wxOrderListCommentBO.getId();
+
+        //更改订单商品表里，的商品评论状态
+        wxOrderMapper.updateMarketOrderCommentStatus(commentId, orderGoodsId);
+
+        //更改订单待评价商品数量和更新时间
+        Integer orderId = wxOrderMapper.selectOrderIdByOrderGoodsId(orderGoodsId);
+        wxOrderMapper.updateOrder(orderId);
+
     }
 
     /**
      * @author: ZY
      * @createTime: 2022/06/29 22:08:57
-     * @description: 取消订单
+     * @description: 个人-我的订单-取消订单,更改订单状态，关闭时间，更新时间
      * @param: orderId
      * @return: void
      */
@@ -212,6 +225,35 @@ public class WxOrderServiceImpl implements WxOrderService {
         return detailVo;
     }
 
+
+    /**
+     * @author: ZY
+     * @createTime: 2022/06/30 11:13:38
+     * @description: 预支付，更新订单状态，更新时间，付款编号，付款时间
+     * @param: orderId
+     * @return: void
+     */
+    @Override
+    public void prepayOrder(Integer orderId) {
+        //生成payId
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmmss");
+        String format = simpleDateFormat.format(date);
+        int random = (int) ((Math.random() * 9 + 1) * 100000);
+        String num = String.valueOf(random);
+
+        String payId = format.concat(num);
+
+        wxOrderMapper.updateOrderStatuPrepay(orderId, payId);
+    }
+
+    /**
+     * @description: 增加订单
+     * @parameter: [wxOrderSubmitBO]
+     * @return: java.lang.Integer
+     * @author: 帅关
+     * @createTime: 2022/6/30 18:54
+     */
     @Override
     public Integer addOrder(WxOrderSubmitBO wxOrderSubmitBO) {
 
@@ -230,17 +272,17 @@ public class WxOrderServiceImpl implements WxOrderService {
         // 获取收货人信息
         getReceiverInfo(marketOrder);
         // 获取商品总费用
-        getCartInfo(marketOrder,wxOrderSubmitBO);
+        getCartInfo(marketOrder, wxOrderSubmitBO);
         // 获取创建时间
         Date date = new Date();
         marketOrder.setAddTime(date);
         marketOrder.setUpdateTime(date);
         orderMapper.insert(marketOrder);
         Integer orderId = marketOrder.getId();
-        updateSubmitInfo(orderId,wxOrderSubmitBO.getUserCouponId());
+        updateSubmitInfo(orderId,wxOrderSubmitBO);
         return orderId;
-
     }
+
 
     /**
      * @description: 提交订单信息杂七杂八的表修改
@@ -250,26 +292,33 @@ public class WxOrderServiceImpl implements WxOrderService {
      * @createTime: 2022/6/30 12:06
      */
     @Async
-    public void updateSubmitInfo(Integer orderId,Integer userCouponId){
+    public void updateSubmitInfo(Integer orderId,WxOrderSubmitBO wxOrderSubmitBO){
         Integer userId = getUserId();
-        // 查出该用户所有被选中的商品列表
+        Integer cartId = wxOrderSubmitBO.getCartId();
         MarketCartExample example = new MarketCartExample();
-        example.createCriteria().andUserIdEqualTo(userId)
-                .andCheckedEqualTo(true)
-                .andDeletedEqualTo(false);
-        List<MarketCart> marketCarts = cartMapper.selectByExample(example);
-        // 将选中的商品信息添加到订单商品表中
-        for (MarketCart marketCart : marketCarts) {
-            MarketOrderGoods goods = new MarketOrderGoods();
-            BeanUtils.copyProperties(marketCart,goods);
-            goods.setOrderId(orderId);
-            goods.setSpecifications(Arrays.toString(marketCart.getSpecifications()));
+        if(cartId > 0){
+            MarketCart marketCart = cartMapper.selectByPrimaryKey(cartId);
+            MarketOrderGoods goods = getMarketOrderGoods(orderId, marketCart);
             orderGoodsMapper.insertSelective(goods);
+
+            // 更新购物车信息
+            cartMapper.updateCartGoodsDeletedByCartId(cartId);
+        }else{
+            // 查出该用户所有被选中的商品列表
+            example.createCriteria().andUserIdEqualTo(userId)
+                    .andCheckedEqualTo(true)
+                    .andDeletedEqualTo(false);
+            List<MarketCart> marketCarts = cartMapper.selectByExample(example);
+            // 将选中的商品信息添加到订单商品表中
+            for (MarketCart marketCart : marketCarts) {
+                MarketOrderGoods goods = getMarketOrderGoods(orderId, marketCart);
+                orderGoodsMapper.insertSelective(goods);
+            }
+            // 更新购物车信息
+            cartMapper.deleteCartInfoByUserId(userId);
         }
 
-        // 更新购物车信息
-        cartMapper.deleteCartInfoByUserId(userId);
-
+        Integer userCouponId = wxOrderSubmitBO.getUserCouponId();
         // 更新优惠券信息
         if(userCouponId > 0){
             couponUserMapper.updateUserCouponNumberByCouponId(userCouponId);
@@ -279,16 +328,39 @@ public class WxOrderServiceImpl implements WxOrderService {
 
 
     /**
+     * @description: submit中获取MarketOrderGoods对象
+     * @parameter: [orderId, marketCart]
+     * @return: com.cskaoyan.bean.MarketOrderGoods
+     * @author: 帅关
+     * @createTime: 2022/6/30 17:50
+     */
+    private MarketOrderGoods getMarketOrderGoods(Integer orderId, MarketCart marketCart) {
+        MarketOrderGoods goods = new MarketOrderGoods();
+        BeanUtils.copyProperties(marketCart, goods);
+        goods.setOrderId(orderId);
+        goods.setId(null);
+        StringBuffer sb = new StringBuffer();
+        String[] specifications = marketCart.getSpecifications();
+        sb.append("[");
+        for (String specification : specifications) {
+            sb.append("\"").append(specification).append("\"").append(",");
+        }
+        String res = sb.toString();
+        String s = res.substring(0,res.length()-1)+ "]";
+        goods.setSpecifications(s);
+        return goods;
+    }
+
+    /**
      * @description: 获取购物车费用
      * @parameter: [marketOrder]
      * @return: void
      * @author: 帅关
      * @createTime: 2022/6/30 10:20
      */
-    private void getCartInfo(MarketOrder marketOrder,WxOrderSubmitBO wxOrderSubmitBO) {
+    private void getCartInfo(MarketOrder marketOrder, WxOrderSubmitBO wxOrderSubmitBO) {
         WxCartCheckBo cart = new WxCartCheckBo();
-        cart.setCouponId(wxOrderSubmitBO.getCouponId());
-        cart.setUserCouponId(wxOrderSubmitBO.getUserCouponId());
+        BeanUtils.copyProperties(wxOrderSubmitBO, cart);
         WxCartCheckedVo checked = cartService.queryCartCheckInfo(cart);
         // 封装对象
         marketOrder.setGoodsPrice(BigDecimal.valueOf(checked.getGoodsTotalPrice()));
@@ -312,14 +384,20 @@ public class WxOrderServiceImpl implements WxOrderService {
         Integer userId = getUserId();
         MarketAddress addressInfo = addressMapper.selectPartAddressInfoByUserId(userId);
         marketOrder.setConsignee(addressInfo.getName())
-                    .setMobile(addressInfo.getTel())
-                    .setAddress(addressInfo.getAddressDetail())
-                    .setUserId(userId);
+                .setMobile(addressInfo.getTel())
+                .setAddress(addressInfo.getAddressDetail())
+                .setUserId(userId);
     }
 
-    private Integer getUserId(){
+    /**
+     * @description: 获取用户Id
+     * @parameter: []
+     * @return: java.lang.Integer
+     * @author: 帅关
+     * @createTime: 2022/6/30 18:53
+     */
+    private Integer getUserId() {
         MarketUser user = (MarketUser) SecurityUtils.getSubject().getPrincipal();
         return user.getId();
     }
-
 }

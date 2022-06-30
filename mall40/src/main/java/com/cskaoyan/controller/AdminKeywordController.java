@@ -6,8 +6,12 @@ import com.cskaoyan.bean.MarketKeyword;
 import com.cskaoyan.bean.bo.AdminKeywordBO;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.AdminKeywordVO;
+import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminKeywordService;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
@@ -34,6 +38,7 @@ public class AdminKeywordController {
      * @param: adminKeywordBO - [AdminKeywordBO]
      */
     @GetMapping("list")
+    @RequiresPermissions(value = {"admin:keyword:list","*"},logical = Logical.OR)
     public BaseRespVo list(AdminKeywordBO adminKeywordBO) {
 
         CommonData<MarketKeyword> data = adminKeywordService.queryAllKeywordList(adminKeywordBO);
@@ -49,7 +54,9 @@ public class AdminKeywordController {
      * @return: com.cskaoyan.bean.BaseRespVo<com.cskaoyan.bean.MarketKeyword>
      */
     @PostMapping("create")
-    public BaseRespVo<MarketKeyword> create(@RequestBody AdminKeywordBO adminKeywordBO) {
+    @RequiresPermissions(value = {"admin:keyword:create","*"},logical = Logical.OR)
+    @LogAnnotation(value = "插入keyword")
+    public BaseRespVo<MarketKeyword> create(@RequestBody AdminKeywordBO adminKeywordBO, BindingResult bindingResult) {
 
         BaseRespVo<MarketKeyword> resp = new BaseRespVo<>();
         MarketKeyword marketKeyword = adminKeywordService.insertKeyword(adminKeywordBO);
@@ -67,7 +74,9 @@ public class AdminKeywordController {
       * @return: com.cskaoyan.bean.BaseRespVo<com.cskaoyan.bean.MarketKeyword>
     */
     @PostMapping("update")
-    public BaseRespVo<MarketKeyword> update(@RequestBody MarketKeyword marketKeyword){
+    @RequiresPermissions(value = {"admin:keyword:update","*"},logical = Logical.OR)
+    @LogAnnotation(value = "更新keyword")
+    public BaseRespVo<MarketKeyword> update(@RequestBody MarketKeyword marketKeyword, BindingResult bindingResult){
         BaseRespVo<MarketKeyword> resp = new BaseRespVo<>();
 
         marketKeyword.setUpdateTime(new Date());
@@ -78,7 +87,9 @@ public class AdminKeywordController {
     }
 
     @PostMapping("delete")
-    public BaseRespVo<String> delete(@RequestBody MarketKeyword marketKeyword){
+    @RequiresPermissions(value = {"admin:keyword:delete","*"},logical = Logical.OR)
+    @LogAnnotation(value = "删除keyword")
+    public BaseRespVo<String> delete(@RequestBody MarketKeyword marketKeyword, BindingResult bindingResult){
         BaseRespVo<String> resp = new BaseRespVo<>();
 
         adminKeywordService.deleteKeywordById(marketKeyword);

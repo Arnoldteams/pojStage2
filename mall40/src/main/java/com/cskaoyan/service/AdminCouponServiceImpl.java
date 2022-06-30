@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @Author: 夏一男
@@ -106,13 +107,7 @@ public class AdminCouponServiceImpl implements AdminCouponService {
         marketCoupon.setDiscount(marketCouponBO.getDiscount());
         marketCoupon.setEndTime(marketCouponBO.getEndTime());
         marketCoupon.setGoodsType(marketCouponBO.getGoodsType());
-        String[] goodsValue = marketCouponBO.getGoodsValue();
-        StringBuilder goodsValueString = new StringBuilder("[");
-        for (int i = 0; i < goodsValue.length; i++) {
-            goodsValueString.append(goodsValue[i]);
-        }
-        goodsValueString.append("]");
-        marketCoupon.setGoodsValue(goodsValueString.toString());
+        marketCoupon.setGoodsValue(marketCouponBO.getGoodsValue());
         marketCoupon.setLimit(marketCouponBO.getLimit());
         marketCoupon.setMin(marketCouponBO.getMin());
         marketCoupon.setName(marketCouponBO.getName());
@@ -125,9 +120,12 @@ public class AdminCouponServiceImpl implements AdminCouponService {
         marketCoupon.setType(marketCouponBO.getType());
         marketCoupon.setAddTime(marketCouponBO.getAddTime());
         marketCoupon.setUpdateTime(marketCouponBO.getUpdateTime());
+        //设置随机八位兑换码
+        marketCoupon.setCode(new AdminCouponServiceImpl().genRandomNum());
         int i = marketCouponMapper.insertSelective(marketCoupon);
         System.out.println(i);
         marketCouponBO.setId(marketCoupon.getId());
+
         return  marketCouponBO;
     }
 
@@ -198,4 +196,23 @@ public class AdminCouponServiceImpl implements AdminCouponService {
     }
 
 
+    //获取优惠券兑换码(八位)
+    public String genRandomNum(){
+        int  maxNum = 36;
+        int i;
+        int count = 0;
+        char[] str = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
+                'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+                'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+        StringBuffer pwd = new StringBuffer("");
+        Random r = new Random();
+        while(count < 8){
+            i = Math.abs(r.nextInt(maxNum));
+            if (i >= 0 && i < str.length) {
+                pwd.append(str[i]);
+                count ++;
+            }
+        }
+        return pwd.toString();
+    }
 }

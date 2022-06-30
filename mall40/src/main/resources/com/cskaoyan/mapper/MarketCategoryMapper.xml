@@ -108,8 +108,8 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.cskaoyan.bean.MarketCategory">
-    insert into market_category (id, name, keywords, 
-      `desc`, pid, icon_url, 
+    insert into market_category (id, name, keywords,
+      `desc`, pid, icon_url,
       pic_url, level, sort_order,
       add_time, update_time, deleted
       )

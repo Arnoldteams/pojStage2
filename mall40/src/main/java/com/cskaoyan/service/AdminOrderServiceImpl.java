@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -36,6 +37,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
     @Autowired
     MarketCommentMapper marketCommentMapper;
+
+    @Autowired
+    HttpSession session;
 
     /**
      * @author: ZY
@@ -61,7 +65,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             criteria.andUserIdEqualTo(adminOrderListBO.getUserId());
         }
         if (adminOrderListBO.getOrderSn() != null && !"".equals(adminOrderListBO.getOrderSn())) {
-            criteria.andOrderSnEqualTo(adminOrderListBO.getOrderSn());
+            criteria.andOrderSnEqualTo(adminOrderListBO.getOrderSn().trim());
         }
         example.setOrderByClause(basePageInfo.getSort() + " " + basePageInfo.getOrder());
         List<MarketOrder> adminOrderListVOList = marketOrderMapper.selectByExample(example);
@@ -80,6 +84,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     @Override
     public void changeOrderStatus(AdminOrderShipBO adminOrderShipBO) {
         marketOrderMapper.updateOrderStatus(adminOrderShipBO);
+        session.setAttribute("log",String.valueOf(adminOrderShipBO.getShipSn()));
     }
 
 
@@ -110,6 +115,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     @Override
     public void refundOrderMoney(AdminOrderRefundBO adminOrderRefundBO) {
         marketOrderMapper.updateOrderRefund(adminOrderRefundBO);
+        session.setAttribute("log",String.valueOf(adminOrderRefundBO.getOrderId()));
     }
 
 
@@ -129,6 +135,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     @Override
     public void replyOrderComment(AdminOrderReplyBO adminOrderReplyBO) {
         marketOrderMapper.updateOrderComment(adminOrderReplyBO);
+        session.setAttribute("log",String.valueOf(adminOrderReplyBO.getCommentId()));
     }
 
 }

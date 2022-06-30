@@ -1,9 +1,6 @@
 package com.cskaoyan.service;
 
-import com.cskaoyan.bean.MarketAddress;
-import com.cskaoyan.bean.MarketCart;
-import com.cskaoyan.bean.MarketCartExample;
-import com.cskaoyan.bean.MarketUser;
+import com.cskaoyan.bean.*;
 import com.cskaoyan.bean.bo.WxCartCheckBo;
 import com.cskaoyan.bean.vo.wxCart.WxCartCheckedVo;
 import com.cskaoyan.bean.vo.wxCart.WxCartIndexAllNumberVo;
@@ -45,6 +42,8 @@ public class WxCartServiceImpl implements WxCartService {
     MarketSystemMapper systemMapper;
     @Autowired
     MarketCouponMapper couponMapper;
+    @Autowired
+    MarketCouponUserMapper couponUserMapper;
 
 
     /**
@@ -186,6 +185,12 @@ public class WxCartServiceImpl implements WxCartService {
      */
     @Override
     public int cartAddNewGoodsAndReturnCartId(MarketCart cart) {
+        Integer userId = getUserId();
+        MarketCartExample example = new MarketCartExample();
+        example.createCriteria().andUserIdEqualTo(userId)
+                .andGoodsIdEqualTo(cart.getGoodsId())
+                .andProductIdEqualTo(cart.getProductId());
+        cartMapper.deleteByExample(example);
         return addGoodsToCart(cart);
     }
 
@@ -236,12 +241,17 @@ public class WxCartServiceImpl implements WxCartService {
         // 获得用户信息
         Integer userId = getUserId();
         MarketAddress address = addressMapper.selectAddressInfoByUserId(userId);
-
-        // 订单商品信息
         MarketCartExample example = new MarketCartExample();
-        example.createCriteria().andUserIdEqualTo(userId)
-                .andDeletedEqualTo(false)
-                .andCheckedEqualTo(true);
+        MarketCartExample.Criteria criteria = example.createCriteria();
+
+        if(cartCheckBo.getCartId() != 0){
+            criteria.andIdEqualTo(cartCheckBo.getCartId());
+        }else{
+            // 订单商品信息
+            criteria.andUserIdEqualTo(userId)
+                    .andDeletedEqualTo(false)
+                    .andCheckedEqualTo(true);
+        }
         List<MarketCart> marketCarts = cartMapper.selectByExample(example);
 
         WxCartCheckedVo wxCartCheckedVo = new WxCartCheckedVo();
@@ -251,7 +261,7 @@ public class WxCartServiceImpl implements WxCartService {
             wxCartCheckedVo.setAddressId(address.getId());
         }
 
-        wxCartCheckedVo.setAvailableCouponLength(10);
+
 
         // 获取运费信息
         WxCartIndexAllNumberVo cartTotal = new WxCartIndexAllNumberVo();
@@ -275,6 +285,9 @@ public class WxCartServiceImpl implements WxCartService {
         }else{
             wxCartCheckedVo.setUserCouponId(-1);
             wxCartCheckedVo.setCouponId(-1);
+
+            int count = couponUserMapper.selectValuableCoupon(userId, orderPrice);
+            wxCartCheckedVo.setAvailableCouponLength(count);
         }
 
         // 获取优惠券信息

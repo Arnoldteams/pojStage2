@@ -8,7 +8,10 @@ import com.cskaoyan.bean.vo.wxOrder.WxOrderDetailVo;
 import com.cskaoyan.bean.vo.wxOrder.WxOrderListChildVO;
 import com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO;
 import com.cskaoyan.bean.vo.wxOrder.WxOrderSubmitVO;
+import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.WxOrderService;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,12 +49,12 @@ public class WxOrderController {
     }
 
     /**
-    * @author: ZY
-    * @createTime: 2022/06/29 20:15:42
-    * @description: 个人-我的订单-取消订单
-    * @param:
-    * @return: com.cskaoyan.bean.BaseRespVo
-            */
+     * @author: ZY
+     * @createTime: 2022/06/29 20:15:42
+     * @description: 个人-我的订单-取消订单,更改订单状态，关闭时间，更新时间
+     * @param:
+     * @return: com.cskaoyan.bean.BaseRespVo
+     */
     @RequestMapping("cancel")
     public BaseRespVo cancel(@RequestBody Map map) {
         Integer orderId = (Integer) map.get("orderId");
@@ -62,7 +65,7 @@ public class WxOrderController {
     /**
      * @author:ZY
      * @createTime: 2022/06/28 11:05:33
-     * @description: 我的订单-订单详情-申请退款
+     * @description: 我的订单-订单详情-申请退款，更改售后状态，退款状态，退款金额，退款方式，退款时间，退款备注，更新时间
      * @param:
      * @return: com.cskaoyan.bean.BaseRespVo
      */
@@ -76,7 +79,7 @@ public class WxOrderController {
     /**
      * @author: ZY
      * @createTime: 2022/06/28 11:15:33
-     * @description: 我的订单-订单详情-退款后可逻辑删除订单
+     * @description: 我的订单-订单详情-退款后可逻辑删除订单，更改订单deleted，更新时间
      * @param: map
      * @return: com.cskaoyan.bean.BaseRespVo
      */
@@ -90,7 +93,7 @@ public class WxOrderController {
     /**
      * @author: ZY
      * @createTime: 2022/06/29 11:51:13
-     * @description: 我的订单-订单详情-订单发货后可确认收货
+     * @description: 我的订单-订单详情-订单发货后可确认收货，更改订单状态，确认收货时间，更新时间
      * @param: map
      * @return: com.cskaoyan.bean.BaseRespVo
      */
@@ -116,12 +119,12 @@ public class WxOrderController {
     }
 
     /**
-    * @author: ZY
-    * @createTime: 2022/06/29 21:20:52
-    * @description: 我的订单-订单详情-确认收货后评价商品
-    * @param: wxOrderListCommentBO
-    * @return: com.cskaoyan.bean.BaseRespVo
-            */
+     * @author: ZY
+     * @createTime: 2022/06/29 21:20:52
+     * @description: 我的订单-订单详情-确认收货后评价商品，更改订单状态，更新时间，待评价商品数量
+     * @param: wxOrderListCommentBO
+     * @return: com.cskaoyan.bean.BaseRespVo
+     */
     @RequestMapping("comment")
     public BaseRespVo comment(@RequestBody WxOrderListCommentBO wxOrderListCommentBO) {
         wxOrderService.addOrderComment(wxOrderListCommentBO);
@@ -137,7 +140,7 @@ public class WxOrderController {
      * @createTime: 2022/6/30 7:33
      */
     @RequestMapping("detail")
-    public BaseRespVo detail(Integer orderId){
+    public BaseRespVo detail(Integer orderId) {
         WxOrderDetailVo detail = wxOrderService.selectOrderDetailByOrderId(orderId);
         return BaseRespVo.ok(detail);
     }
@@ -151,4 +154,17 @@ public class WxOrderController {
     }
 
 
+    /**
+    * @author: ZY
+    * @createTime: 2022/06/30 11:12:37
+    * @description: 预支付，更新订单状态，更新时间，付款编号，付款时间
+    * @param: map
+    * @return: com.cskaoyan.bean.BaseRespVo
+            */
+    @RequestMapping("prepay")
+    public BaseRespVo prepay(@RequestBody Map map) {
+        Integer orderId = Integer.valueOf(map.get("orderId").toString());
+        wxOrderService.prepayOrder(orderId);
+        return BaseRespVo.ok(null);
+    }
 }

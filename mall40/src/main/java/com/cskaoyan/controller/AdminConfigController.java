@@ -3,10 +3,16 @@ package com.cskaoyan.controller;
 import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.bo.AdminConfigBO;
 import com.cskaoyan.bean.vo.AdminConfigVO;
+import com.cskaoyan.handler.AdminRequestBodyException;
+import com.cskaoyan.handler.LogAnnotation;
+import com.cskaoyan.handler.ValidationUtils;
 import com.cskaoyan.service.AdminConfigService;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -33,6 +39,7 @@ public class AdminConfigController {
      * @return: com.cskaoyan.bean.BaseRespVo<com.cskaoyan.bean.vo.AdminConfigVO>
      */
     @GetMapping({"mall", "express", "order", "wx"})
+    @RequiresPermissions(value = {"admin:config:mall","admin:config:express","admin:config:order","admin:config:wx","*"},logical = Logical.OR)
     public BaseRespVo<AdminConfigVO> getInfo() {
         BaseRespVo<AdminConfigVO> resp = new BaseRespVo<>();
 
@@ -54,9 +61,11 @@ public class AdminConfigController {
      * @param: adminConfigBO - [AdminConfigBO]
      * @return: com.cskaoyan.bean.BaseRespVo<java.lang.String>
      */
+
     @PostMapping({"mall", "express", "order", "wx"})
-    public BaseRespVo<String> updateInfo(@RequestBody AdminConfigBO adminConfigBO) {
-        BaseRespVo<String> resp = new BaseRespVo<>();
+    @LogAnnotation(value = "update admin config")
+    @RequiresPermissions(value = {"admin:config:mall","admin:config:express","admin:config:order","admin:config:wx","*"},logical = Logical.OR)
+    public BaseRespVo<String> updateInfo(@RequestBody@Validated AdminConfigBO adminConfigBO, BindingResult bindingResult) throws AdminRequestBodyException {
 
         try {
             adminConfigService.updateInfo(adminConfigBO);
@@ -64,7 +73,7 @@ public class AdminConfigController {
             e.printStackTrace();
         }
 
-        return resp;
+        return BaseRespVo.ok();
     }
 
 }
