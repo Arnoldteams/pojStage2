@@ -2,6 +2,7 @@ package com.cskaoyan.service;
 
 import com.cskaoyan.bean.*;
 import com.cskaoyan.bean.param.CommonData;
+import com.cskaoyan.bean.vo.WxCommentCountVO;
 import com.cskaoyan.bean.vo.WxUserCouponVO;
 import com.cskaoyan.mapper.MarketCartMapper;
 import com.cskaoyan.mapper.MarketCouponMapper;
@@ -99,7 +100,7 @@ public class WxCouponServiceImpl implements WxCouponService {
     }
 
     @Override
-    public CommonData getUserCouponList(String username, Integer status, BasePageInfo info) {
+    public CommonData getUserCouponList(String username, Integer status,Integer cartId ,BasePageInfo info) {
 
         //获得User的id
         MarketUserExample marketUserExample = new MarketUserExample();
@@ -116,10 +117,14 @@ public class WxCouponServiceImpl implements WxCouponService {
         //进入购物车下单优惠券展示逻辑
         //判断用户是否需要展示优惠券，不存在值为1
         int listIsExist = 0;
-        if(info.getLimit() == null){
+        if(info.getLimit() == null) {
             MarketCartExample marketCartExample = new MarketCartExample();
             MarketCartExample.Criteria criteria1 = marketCartExample.createCriteria();
-            criteria1.andUserIdEqualTo(id).andCheckedEqualTo(true);
+            if(cartId == 0) {
+                criteria1.andUserIdEqualTo(id).andCheckedEqualTo(true);
+            }else {
+                criteria1.andUserIdEqualTo(id).andIdEqualTo(cartId);
+            }
             List<MarketCart> marketCarts = marketCartMapper.selectByExample(marketCartExample);
             //获得购物车内选中商品的总金额
             BigDecimal bigDecimal = new BigDecimal(0);
@@ -145,9 +150,8 @@ public class WxCouponServiceImpl implements WxCouponService {
             MarketCouponExample.Criteria criteria3 = marketCouponExample.createCriteria();
             criteria3.andIdIn(ids).andMinLessThan(bigDecimal);
             List<MarketCoupon> marketCoupons = marketCouponMapper.selectByExample(marketCouponExample);
-            if(marketCoupons.size() == 0){
+            if (marketCoupons.size() == 0) {
                 listIsExist = 1;
-
             }
 
             //将这些优惠券的id放在一个列表中
@@ -158,8 +162,9 @@ public class WxCouponServiceImpl implements WxCouponService {
 
             criteria.andCouponIdIn(ids1);
         }
-        if(listIsExist== 0) {
 
+
+        if(listIsExist == 0){
             long total = marketCouponUserMapper.countByExample(marketCouponUserExample);
             if (info.getLimit() == null) {
                 info.setLimit(Integer.parseInt(String.valueOf(total)));
@@ -209,12 +214,18 @@ public class WxCouponServiceImpl implements WxCouponService {
 
             return commonData;
         }
+
+        ArrayList<WxUserCouponVO> wxUserCouponVOS = new ArrayList<>();
         CommonData<WxUserCouponVO> commonData = new CommonData<>();
         commonData.setTotal(0);
-        commonData.setLimit(info.getLimit());
+        commonData.setLimit(0);
         commonData.setPages(1);
         commonData.setPage(1);
+        commonData.setList(wxUserCouponVOS);
+
         return commonData;
+
+
     }
 
     @Override

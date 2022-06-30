@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -26,6 +27,9 @@ public class AdminStorageServiceImpl implements AdminStorageService {
 
     @Autowired
     MarketStorageMapper marketStorageMapper;
+
+    @Autowired
+    HttpSession session;
 
     @Override
     public CommonData<MarketStorage> queryAllStorage(BaseParam baseParam, String key, String name) {
@@ -53,6 +57,7 @@ public class AdminStorageServiceImpl implements AdminStorageService {
     @Override
     public void updateStorageById(MarketStorage marketStorage) {
         marketStorageMapper.updateByPrimaryKey(marketStorage);
+        session.setAttribute("log", marketStorage.getName());
     }
 
 
@@ -64,12 +69,13 @@ public class AdminStorageServiceImpl implements AdminStorageService {
     public void addAdminStorage(MarketStorage marketStorage) {
         marketStorage.setDeleted(false);
         marketStorageMapper.insertStorage(marketStorage);
+        session.setAttribute("log", marketStorage.getName());
     }
 
     @Override
     public void deleteKeywordById(MarketStorage marketStorage) {
         marketStorage.setDeleted(true);
         marketStorageMapper.updateByPrimaryKey(marketStorage);
-
+        session.setAttribute("log", marketStorage.getName());
     }
 }

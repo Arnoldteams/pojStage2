@@ -56,10 +56,11 @@ public class WxAuthorServiceImpl implements WxAuthorService {
         for (MarketOrder marketOrder : marketOrders) {
             Short comments = marketOrder.getComments();
 //        Comments中的0表示全部评价完成
-            if (comments != 0) {
+            Short orderStatus = marketOrder.getOrderStatus();
+            if (comments != 0 && orderStatus==401 ) {
                 unCommentCount++;
             }
-            Short orderStatus = marketOrder.getOrderStatus();
+
             switch (orderStatus){
                 case 101:// 表示未付款
                     unpaidCount++;

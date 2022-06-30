@@ -1,6 +1,10 @@
 package com.cskaoyan.bean.bo;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Size;
 
 /**
  * @Author: 于艳帆
@@ -16,16 +20,24 @@ public class AdminConfigBO {
     private String market_mall_latitude;
     private String market_mall_address;
     private String market_mall_qq;
+
+    @Length(min=11,max=11)
+    @DecimalMin("0")
     private String market_mall_phone;
     private String market_mall_name;
 
     // express
+    @DecimalMin("0")
     private String market_express_freight_min;
+    @DecimalMin("0")
     private String market_express_freight_value;
 
     // order
+    @Size(min=0,max=30)
     private String market_order_unconfirm;
+    @Size(min=0,max=30)
     private String market_order_unpaid;
+    @Size(min=0,max=30)
     private String market_order_comment;
 
     // wx

@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -25,6 +26,9 @@ public class AdminKeywordServiceImpl implements AdminKeywordService {
 
     @Autowired
     MarketKeywordMapper marketKeywordMapper;
+
+    @Autowired
+    HttpSession session;
 
     @Override
     public CommonData<MarketKeyword> queryAllKeywordList(AdminKeywordBO adminKeywordBO) {
@@ -62,19 +66,22 @@ public class AdminKeywordServiceImpl implements AdminKeywordService {
         marketKeyword.setDeleted(false);
 
         marketKeywordMapper.insert(marketKeyword);
+        session.setAttribute("log", marketKeyword.getKeyword());
         return marketKeyword;
     }
 
     @Override
     public void updateKeywordById(MarketKeyword marketKeyword) {
         marketKeywordMapper.updateByPrimaryKey(marketKeyword);
+        session.setAttribute("log", marketKeyword.getKeyword());
     }
 
     @Override
     public void deleteKeywordById(MarketKeyword marketKeyword) {
 
         marketKeyword.setDeleted(true);
-
         marketKeywordMapper.updateByPrimaryKey(marketKeyword);
+
+        session.setAttribute("log", marketKeyword.getKeyword());
     }
 }
