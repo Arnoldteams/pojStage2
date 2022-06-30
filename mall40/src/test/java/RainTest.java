@@ -1,9 +1,11 @@
 import com.cskaoyan.MarketApplication;
+import com.cskaoyan.bean.MarketCategory;
 import com.cskaoyan.bean.MarketKeyword;
 
 import com.cskaoyan.bean.bo.wxOrder.OrderStatusConvert;
 
 import com.cskaoyan.bean.vo.WxFootprintVO;
+import com.cskaoyan.mapper.MarketCategoryMapper;
 import com.cskaoyan.mapper.MarketFootprintMapper;
 
 
@@ -36,6 +38,9 @@ public class RainTest {
     @Autowired
     MarketKeywordMapper marketKeywordMapper;
 
+    @Autowired
+    MarketCategoryMapper marketCategoryMapper;
+
 
     @Test
     public void test2(){
@@ -55,4 +60,9 @@ public class RainTest {
         fileService.sendMsg("15602109920","123456");
     }
 
+    @Test
+    public void test3() {
+        MarketCategory marketCategory = marketCategoryMapper.selectByPrimaryKey(1008002);
+
+    }
 }

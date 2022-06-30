@@ -20,13 +20,16 @@ public interface WxGoodsService {
      */
     WxGoodsCategoryVo quarryCategory(Integer id);
 
-    /**
-     * @author: Sssd
-     * @description: 显示商品 List
-     */
-    WxGoodsListVo quarryList(BaseParam baseParam, Integer categoryId, Integer brandId, String keyword);
+
+
 
     WxGoodsDetailVo quarryGoodsDetail(Integer id);
 
     CommonData<MarketGoods> quarryRelatedGoods(Integer id);
+
+    /**
+     * @author: Sssd
+     * @description: 显示商品 List
+     */
+    WxGoodsListVo quarryList(Boolean isHot, Boolean isNew, Integer categoryId, Integer brandId, String keyword, BaseParam baseParam);
 }

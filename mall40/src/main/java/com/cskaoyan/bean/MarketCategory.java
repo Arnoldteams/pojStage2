@@ -136,6 +136,6 @@ public class MarketCategory {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getKeywords(), getDesc(), getPid(), getIconUrl(), getPicUrl(), getLevel(), getSortOrder(), getAddTime(), getUpdateTime(), getDeleted());
+        return Objects.hash(getId(), getName());
     }
 }
