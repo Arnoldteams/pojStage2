@@ -1,22 +1,23 @@
 package com.cskaoyan.service;
 
-import com.cskaoyan.bean.*;
+import com.cskaoyan.bean.MarketOrder;
+import com.cskaoyan.bean.MarketUser;
 import com.cskaoyan.bean.bo.wxOrder.*;
 import com.cskaoyan.bean.param.CommonData;
+import com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO;
 import com.cskaoyan.bean.vo.wxOrder.WxOrderDetailChildVo;
 import com.cskaoyan.bean.vo.wxOrder.WxOrderDetailVo;
 import com.cskaoyan.bean.vo.wxOrder.WxOrderListChildVO;
-import com.cskaoyan.bean.vo.wxOrder.WxOrderSubmitVO;
-import com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO;
 import com.cskaoyan.mapper.WxOrderMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.ObjectError;
 
-import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -26,6 +27,7 @@ import java.util.*;
  */
 
 @Service
+@Transactional
 public class WxOrderServiceImpl implements WxOrderService {
 
     @Autowired
@@ -87,7 +89,6 @@ public class WxOrderServiceImpl implements WxOrderService {
     }
 
 
-
     /**
      * @author: ZY
      * @createTime: 2022/06/29 20:24:11
@@ -101,12 +102,12 @@ public class WxOrderServiceImpl implements WxOrderService {
     }
 
     /**
-    * @author: ZY
-    * @createTime: 2022/06/29 23:49:00
-    * @description: 用户确认收货
-    * @param: orderId
-    * @return: void
-            */
+     * @author: ZY
+     * @createTime: 2022/06/29 23:49:00
+     * @description: 用户确认收货
+     * @param: orderId
+     * @return: void
+     */
     @Override
     public void confirmOrder(Integer orderId) {
         wxOrderMapper.updateUserOrderStatusConfirm(orderId);
@@ -195,6 +196,30 @@ public class WxOrderServiceImpl implements WxOrderService {
         detailVo.setOrderInfo(child);
         detailVo.setExpressInfo(new ArrayList<>());
         return detailVo;
+    }
+
+    @Override
+    public Integer addOrder(WxOrderSubmitBO wxOrderSubmitBO) {
+        // 生成订单
+        MarketOrder marketOrder = new MarketOrder();
+        // 生成订单编号
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String prefix = sdf.format(new Date());
+        String postfix = String.valueOf(System.currentTimeMillis());
+        String orderSn = prefix + postfix.substring(postfix.length() - 6);
+        marketOrder.setOrderSn(orderSn);
+        // 生成订单订单状态
+        marketOrder.setOrderStatus((short) 101);
+        //
+
+
+        // 生成订单商品关联信息
+
+        // 删除购物车信息
+
+        // 删除优惠券信息
+
+        return marketOrder.getId();
     }
 
 }
