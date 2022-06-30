@@ -21,7 +21,7 @@ public interface UserService {
      * @description:admin/user/list
      * @return: com.cskaoyan.bean.vo.userManager.AdminUserListVO
      */
-    AdminUserListVO queryUserList(AdminUserListBO userListBO, BasePageInfo pageInfo);
+    CommonData<AdminUserListVO> queryUserList(String username,String mobile,Integer id, BasePageInfo pageInfo);
 
     /**
      * @author: 文陶

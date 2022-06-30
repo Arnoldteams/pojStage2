@@ -361,8 +361,8 @@
     </select>
 
 
-  <insert id="insertAddress"  useGeneratedKeys="true" keyProperty="id" >
-    insert into market_address (name,tel,province,city,county,area_code,address_detail,is_default) values(#{address.name},#{address.tel},#{address.province},#{address.city},#{address.county},#{address.areaCode},#{address.addressDetail},#{address.isDefault})
+  <insert id="insertAddress"  useGeneratedKeys="true" keyProperty="address.id" >
+    insert into market_address (name,tel,province,city,county,area_code,address_detail,is_default,user_id) values(#{address.name},#{address.tel},#{address.province},#{address.city},#{address.county},#{address.areaCode},#{address.addressDetail},#{address.isDefault},#{userId})
     </insert>
 
   <select id="selectPartAddressInfoByUserId" resultMap="BaseResultMap">

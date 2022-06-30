@@ -5,11 +5,13 @@ import com.cskaoyan.bean.MarketAddress;
 import com.cskaoyan.bean.bo.wxAdressBo.WxAddressSaveBO;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.service.WxAddressService;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Security;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +31,9 @@ public class WxAddressController {
 
     @RequestMapping("list")
     public BaseRespVo list() {
+        if (SecurityUtils.getSubject().getPrincipals()==null){
+            return  BaseRespVo.codeAndMsg(501,"请登入");
+        }
         CommonData<MarketAddress> data = addressService.queryAddressList();
         return BaseRespVo.ok(data);
     }
@@ -47,7 +52,10 @@ public class WxAddressController {
     }
 
     @RequestMapping("save")
-    public BaseRespVo save(WxAddressSaveBO address) {
+    public BaseRespVo save(@RequestBody WxAddressSaveBO address) {
+        if (SecurityUtils.getSubject().getPrincipals()==null){
+            return  BaseRespVo.codeAndMsg(501,"请登入");
+        }
         Integer addressId = addressService.save(address);
         return BaseRespVo.ok(addressId);
     }

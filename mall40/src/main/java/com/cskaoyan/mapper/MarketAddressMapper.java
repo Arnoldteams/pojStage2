@@ -33,7 +33,7 @@ public interface MarketAddressMapper {
     MarketAddress selectAddressInfoByUserId(@Param("userId") Integer userId);
 
 
-    Integer insertAddress(@Param("address") WxAddressSaveBO address);
+    Integer insertAddress(@Param("userId") Integer userId,@Param("address") WxAddressSaveBO address);
 
     MarketAddress selectPartAddressInfoByUserId(@Param("userId") Integer userId);
 

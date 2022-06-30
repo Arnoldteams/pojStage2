@@ -38,9 +38,17 @@ public class WxAddressServiceImpl implements WxAddressService {
      */
     @Override
     public CommonData<MarketAddress> queryAddressList() {
-
+        //查询当前用户信息
+        Subject subject = SecurityUtils.getSubject();
+        MarketUser user = (MarketUser) subject.getPrincipals().getPrimaryPrincipal();
+        if (user == null) {
+            CommonData<MarketAddress> data = new CommonData<>();
+            return data;
+        }
+        //根据userId 查找未删除信息
         MarketAddressExample example = new MarketAddressExample();
         MarketAddressExample.Criteria criteria = example.createCriteria();
+        criteria.andUserIdEqualTo(user.getId());
         criteria.andDeletedEqualTo(false);
         List<MarketAddress> marketAddressList = addressMapper.selectByExample(example);
         for (MarketAddress address : marketAddressList) {
@@ -70,7 +78,14 @@ public class WxAddressServiceImpl implements WxAddressService {
      */
     @Override
     public MarketAddress queryAddressById(Integer id) {
+
         MarketAddress address = addressMapper.selectByPrimaryKey(id);
+        String province = regionMapper.selectByPrimaryKey(Integer.parseInt(address.getProvince())).getName();
+        String city = regionMapper.selectByPrimaryKey(Integer.parseInt(address.getCity())).getName();
+        String country = regionMapper.selectByPrimaryKey(Integer.parseInt(address.getCounty())).getName();
+        address.setProvince(province);
+        address.setCity(city);
+        address.setCounty(country);
         return address;
     }
 
@@ -92,37 +107,46 @@ public class WxAddressServiceImpl implements WxAddressService {
         addressMapper.updateByExampleSelective(address, example);
     }
 
+
+    /***
+     * @author: 文陶
+     * @createTime: 2022/06/30 15:35:13
+     * @description: 保存修改
+     * @param: address - [null]
+     * @return: java.lang.Integer
+     */
     @Override
     public Integer save(WxAddressSaveBO address) {
         Subject subject = SecurityUtils.getSubject();
         MarketUser user = (MarketUser) subject.getPrincipals().getPrimaryPrincipal();
-        if (user==null){
+        if (user == null) {
             return null;
         }
-        //根据region信息，查询对应region id
-        Integer provinceId = regionMapper.selectIdByName(address.getProvince());
-        Integer cityId = regionMapper.selectIdByName(address.getCity());
-        Integer countyId = regionMapper.selectIdByName(address.getCounty());
-        address.setProvince(provinceId.toString());
-        address.setCounty(countyId.toString());
-        address.setCity(cityId.toString());
 
+        //查询对应region id
+        Integer countryId = regionMapper.selectIdByCode(address.getAreaCode());
+        Integer cityId = regionMapper.selectIdBySonId(countryId);
+        Integer provinceId=regionMapper.selectIdBySonId(cityId);
+        address.setProvince(provinceId.toString());
+        address.setCity(cityId.toString());
+        address.setCounty(countryId.toString());
         //判断当前保存地址是否设为默认地址，如果是默认地址，将当前用户原本的默认地址改为非默认
-        if (address.getIsDefault()){
+        if (address.getIsDefault()) {
             MarketAddress marketAddress = new MarketAddress();
             marketAddress.setIsDefault(false);
             MarketAddressExample example = new MarketAddressExample();
             MarketAddressExample.Criteria criteria = example.createCriteria();
             criteria.andUserIdEqualTo(user.getId());
             criteria.andIsDefaultEqualTo(true);
-            addressMapper.updateByExampleSelective(marketAddress,example);
+            addressMapper.updateByExampleSelective(marketAddress, example);
         }
 
         //判断是保存新建还是保存修改
         if (address.getId() == 0) {
             //插入新建地址信息
-            Integer id = addressMapper.insertAddress(address);
-            return id;
+            Integer userId = user.getId();
+            addressMapper.insertAddress(userId, address);
+            return address.getId();
         }
         //修改地址信息
 
@@ -138,7 +162,7 @@ public class WxAddressServiceImpl implements WxAddressService {
         MarketAddressExample example = new MarketAddressExample();
         MarketAddressExample.Criteria criteria = example.createCriteria();
         criteria.andIdEqualTo(address.getId());
-        addressMapper.updateByExampleSelective(marketAddress,example);
+        addressMapper.updateByExampleSelective(marketAddress, example);
         return address.getId();
     }
 

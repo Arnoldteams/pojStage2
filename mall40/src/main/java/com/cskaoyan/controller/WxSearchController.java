@@ -5,6 +5,7 @@ import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.vo.wxSearch.WxSearchIndexVo;
 import com.cskaoyan.bean.vo.wxSearch.WxSearchListVO;
 import com.cskaoyan.service.WxSearchService;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +24,9 @@ public class WxSearchController {
 
     @RequestMapping("index")
     public BaseRespVo index() {
+        if (SecurityUtils.getSubject().getPrincipals()==null){
+            return  BaseRespVo.codeAndMsg(501,"请登入");
+        }
         WxSearchIndexVo data = wxSearchService.index();
         return BaseRespVo.ok(data);
     }
@@ -35,6 +39,9 @@ public class WxSearchController {
 
     @RequestMapping("clearhistory")
     public BaseRespVo clearhistory(){
+        if (SecurityUtils.getSubject().getPrincipals()==null){
+            return  BaseRespVo.codeAndMsg(501,"请登入");
+        }
         wxSearchService.clearhistory();
         return BaseRespVo.ok();
     }

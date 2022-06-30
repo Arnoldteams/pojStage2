@@ -8,6 +8,7 @@ import com.cskaoyan.mapper.MarketCategoryMapper;
 import com.cskaoyan.mapper.MarketGoodsMapper;
 import com.cskaoyan.mapper.MarketKeywordMapper;
 import com.cskaoyan.mapper.MarketSearchHistoryMapper;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.security.Security;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -76,25 +79,51 @@ public class WxSearchServiceImpl implements WxSearchService {
         wxSearchIndexVo.setHotKeywordList(hotKeywordList);
 
         //查询用户搜索历史
-        //从redis取出， 存入数据库
-        String keywowrd = (String) redisTemplate.opsForValue().get("keywowrd");
-
         //得到当前用户信息
         Subject subject = SecurityUtils.getSubject();
         MarketUser user = (MarketUser) subject.getPrincipals().getPrimaryPrincipal();
         //判断用户是否存在
-        if (user==null){
-            wxSearchIndexVo.setHistoryKeywordList(null);
+        if (user == null) {
+            List<HistoryKeywordListEntity> historyKeywordListEntityList = new ArrayList<>();
+            wxSearchIndexVo.setHistoryKeywordList(historyKeywordListEntityList);
             return wxSearchIndexVo;
         }
-        //用户存在
+        //用户存在，查询该用户的搜索信息
+        //从redis取出最新搜索信息，存入数据库
+//        String keywowrd = (String) redisTemplate.opsForValue().get("keyword");
+        String keywowrd = (String) session.getAttribute("keyword");
+        session.removeAttribute("keyword");
+        //根据id查询用户搜索历史
         Integer userId = user.getId();
         List<HistoryKeywordListEntity> historyKeywordListEntityList = searchHistoryMapper.selectKeyWordByUserId(userId);
+        if (keywowrd == null || "".equals(keywowrd)) {
+            //redis没有keyword，返回查询信息
+            wxSearchIndexVo.setHistoryKeywordList(historyKeywordListEntityList);
+            return wxSearchIndexVo;
+        }
+        //redis有keyword
+        //判断数据库是否已经存在该搜索关键字
         HistoryKeywordListEntity historyKeyword = new HistoryKeywordListEntity();
         historyKeyword.setKeyword(keywowrd);
-        //判断数据库是否已经存在该搜索历史
-        if (!historyKeywordListEntityList.contains(historyKeyword)){
+        if (!historyKeywordListEntityList.contains(historyKeyword)) {
+            //数据库不存在,插入
+            MarketSearchHistory historyToInsert = new MarketSearchHistory();
+            historyToInsert.setKeyword(keywowrd);
+            historyToInsert.setUserId(userId);
+            historyToInsert.setAddTime(new Date());
+            historyToInsert.setUpdateTime(new Date());
+            historyToInsert.setDeleted(false);
+            historyToInsert.setFrom("app");
+            searchHistoryMapper.insertSelective(historyToInsert);
             historyKeywordListEntityList.add(historyKeyword);
+        } else {
+            //已存在，修改update_time
+            MarketSearchHistory historyToUpdate = new MarketSearchHistory();
+            historyToUpdate.setUpdateTime(new Date());
+            MarketSearchHistoryExample historyExample = new MarketSearchHistoryExample();
+            MarketSearchHistoryExample.Criteria exampleCriteria = historyExample.createCriteria();
+            exampleCriteria.andKeywordEqualTo(keywowrd);
+            searchHistoryMapper.updateByExampleSelective(historyToUpdate, historyExample);
         }
 
         wxSearchIndexVo.setHistoryKeywordList(historyKeywordListEntityList);
@@ -125,8 +154,8 @@ public class WxSearchServiceImpl implements WxSearchService {
         }
 
         //将keyword存入redis,每次覆盖前面的value
-        redisTemplate.opsForValue().set("keyword",keyword,300, TimeUnit.SECONDS);
-
+//        redisTemplate.opsForValue().set("keyword", keyword, 300, TimeUnit.SECONDS);
+//        session.setAttribute("keyword", keyword);
         return helperList;
     }
 
@@ -135,7 +164,7 @@ public class WxSearchServiceImpl implements WxSearchService {
         //获取当前用户信息
         Subject subject = SecurityUtils.getSubject();
         MarketUser user = (MarketUser) subject.getPrincipals().getPrimaryPrincipal();
-        if(user==null){
+        if (user == null) {
             return;
         }
         Integer userId = user.getId();
@@ -145,7 +174,7 @@ public class WxSearchServiceImpl implements WxSearchService {
         MarketSearchHistoryExample example = new MarketSearchHistoryExample();
         MarketSearchHistoryExample.Criteria criteria = example.createCriteria();
         criteria.andUserIdEqualTo(userId);
-        searchHistoryMapper.updateByExampleSelective(history,example);
+        searchHistoryMapper.updateByExampleSelective(history, example);
     }
 
 

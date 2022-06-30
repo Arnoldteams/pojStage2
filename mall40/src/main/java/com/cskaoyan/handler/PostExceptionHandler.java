@@ -72,5 +72,7 @@ public class PostExceptionHandler {
     public BaseRespVo JsonExceptionHandle(AdminRequestBodyException e){
         return BaseRespVo.invalidJson(e.getMessage());
     }
+    
+
 
 }

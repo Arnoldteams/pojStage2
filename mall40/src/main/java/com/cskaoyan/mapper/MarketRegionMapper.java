@@ -29,5 +29,9 @@ public interface MarketRegionMapper {
 
     int updateByPrimaryKey(MarketRegion record);
 
-    Integer selectIdByName(@Param("regionName") String name);
+    Integer[] selectIdByName(@Param("regionName") String name);
+
+    Integer selectIdByCode(@Param("areaCode") String areaCode);
+
+    Integer selectIdBySonId(@Param("id") Integer id);
 }
