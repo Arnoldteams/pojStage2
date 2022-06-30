@@ -1,9 +1,6 @@
 package com.cskaoyan.service;
 
-import com.cskaoyan.bean.MarketAddress;
-import com.cskaoyan.bean.MarketCart;
-import com.cskaoyan.bean.MarketCartExample;
-import com.cskaoyan.bean.MarketUser;
+import com.cskaoyan.bean.*;
 import com.cskaoyan.bean.bo.WxCartCheckBo;
 import com.cskaoyan.bean.vo.wxCart.WxCartCheckedVo;
 import com.cskaoyan.bean.vo.wxCart.WxCartIndexAllNumberVo;
@@ -45,6 +42,8 @@ public class WxCartServiceImpl implements WxCartService {
     MarketSystemMapper systemMapper;
     @Autowired
     MarketCouponMapper couponMapper;
+    @Autowired
+    MarketCouponUserMapper couponUserMapper;
 
 
     /**
@@ -287,7 +286,8 @@ public class WxCartServiceImpl implements WxCartService {
             wxCartCheckedVo.setUserCouponId(-1);
             wxCartCheckedVo.setCouponId(-1);
 
-            wxCartCheckedVo.setAvailableCouponLength(10);
+            int count = couponUserMapper.selectValuableCoupon(userId, orderPrice);
+            wxCartCheckedVo.setAvailableCouponLength(count);
         }
 
         // 获取优惠券信息

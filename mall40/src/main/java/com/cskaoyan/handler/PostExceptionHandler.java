@@ -62,10 +62,10 @@ public class PostExceptionHandler {
      * @author xyg2597@163.com
      * @since 2022/06/27 14:16
      */
-    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ExceptionHandler({HttpMessageNotReadableException.class})
     @ResponseBody
     @LogAnnotation(value = "编辑专题信息")
-    public BaseRespVo JsonExceptionHandle(HttpMessageNotReadableException e){
+    public BaseRespVo jsonExceptionHandle(HttpMessageNotReadableException e){
         e.printStackTrace();
         return BaseRespVo.invalidJson("参数值错误");
     }
@@ -85,6 +85,15 @@ public class PostExceptionHandler {
         }
 
         return BaseRespVo.invalidJson(e.getMessage());
+    }
+
+    /**
+     * @author: 帅的一塌糊涂的 Sssd
+     */
+    @ExceptionHandler(NumberFormatException.class)
+    @ResponseBody
+    public BaseRespVo paramExceptionHandle(NumberFormatException e){
+        return BaseRespVo.invalidJson("输入格式错误哟");
     }
 
 }

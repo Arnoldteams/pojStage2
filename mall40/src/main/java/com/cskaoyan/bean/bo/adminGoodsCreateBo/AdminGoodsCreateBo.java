@@ -15,7 +15,6 @@ import java.util.List;
  * @date: 2022年06月27日 8:09
  */
 @Data
-
 public class AdminGoodsCreateBo {
 
     private MarketGoods goods;

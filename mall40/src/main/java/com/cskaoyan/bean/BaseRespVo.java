@@ -126,7 +126,7 @@ public class BaseRespVo<T> {
     public static <T> BaseRespVo wrongLength() {
         BaseRespVo baseRespVo = new BaseRespVo();
         baseRespVo.setErrno(602);
-        baseRespVo.setErrmsg("物流单号必须为8-14为数字或字符");
+        baseRespVo.setErrmsg("物流单号必须为8-14位的数字或字符");
         return baseRespVo;
     }
 
