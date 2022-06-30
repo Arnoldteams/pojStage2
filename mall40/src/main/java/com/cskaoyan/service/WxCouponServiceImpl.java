@@ -114,7 +114,9 @@ public class WxCouponServiceImpl implements WxCouponService {
         criteria.andUserIdEqualTo(id).andStatusEqualTo(Short.valueOf(String.valueOf(status)));
 
         //进入购物车下单优惠券展示逻辑
-        if(info.getLimit() == null){
+        //判断用户是否需要展示优惠券，不存在值为1
+        int listIsExist = 0;
+        if(info.getLimit() == null) {
             MarketCartExample marketCartExample = new MarketCartExample();
             MarketCartExample.Criteria criteria1 = marketCartExample.createCriteria();
             criteria1.andUserIdEqualTo(id).andCheckedEqualTo(true);
@@ -143,6 +145,9 @@ public class WxCouponServiceImpl implements WxCouponService {
             MarketCouponExample.Criteria criteria3 = marketCouponExample.createCriteria();
             criteria3.andIdIn(ids).andMinLessThan(bigDecimal);
             List<MarketCoupon> marketCoupons = marketCouponMapper.selectByExample(marketCouponExample);
+            if (marketCoupons.size() == 0) {
+                listIsExist = 1;
+            }
 
             //将这些优惠券的id放在一个列表中
             ArrayList<Integer> ids1 = new ArrayList<>();
@@ -153,11 +158,12 @@ public class WxCouponServiceImpl implements WxCouponService {
             criteria.andCouponIdIn(ids1);
         }
 
+
         long total = marketCouponUserMapper.countByExample(marketCouponUserExample);
-        if(info.getLimit() == null){
+        if (info.getLimit() == null) {
             info.setLimit(Integer.parseInt(String.valueOf(total)));
         }
-        PageHelper.startPage(info.getPage(),info.getLimit());
+        PageHelper.startPage(info.getPage(), info.getLimit());
         List<MarketCouponUser> marketCouponUsers = marketCouponUserMapper.selectByExample(marketCouponUserExample);
         //创建可以存入返回信息的列表
         LinkedList<WxUserCouponVO> userCoupons = new LinkedList<WxUserCouponVO>();
@@ -173,19 +179,19 @@ public class WxCouponServiceImpl implements WxCouponService {
             wxUserCouponVO.setTag(marketCoupon.getTag());
             wxUserCouponVO.setMin(marketCoupon.getMin());
             wxUserCouponVO.setDiscount(marketCoupon.getDiscount());
-            if(marketCoupon.getStartTime()!=null) {
+            if (marketCoupon.getStartTime() != null) {
                 wxUserCouponVO.setStartTime(marketCoupon.getStartTime());
-            }else{
+            } else {
                 Date addTime = marketCouponUser.getAddTime();
                 wxUserCouponVO.setStartTime(addTime);
             }
-            if(marketCoupon.getEndTime()!=null){
+            if (marketCoupon.getEndTime() != null) {
                 wxUserCouponVO.setEndTime(marketCoupon.getEndTime());
-            }else {
+            } else {
                 Short days = marketCoupon.getDays();
                 Date date = marketCouponUser.getAddTime();
                 int currentDays = Integer.parseInt(String.valueOf(days));
-                date.setTime(date.getTime()+currentDays*24*60*60*1000);
+                date.setTime(date.getTime() + currentDays * 24 * 60 * 60 * 1000);
                 wxUserCouponVO.setEndTime(date);
             }
 
@@ -201,6 +207,8 @@ public class WxCouponServiceImpl implements WxCouponService {
 
 
         return commonData;
+
+
     }
 
     @Override

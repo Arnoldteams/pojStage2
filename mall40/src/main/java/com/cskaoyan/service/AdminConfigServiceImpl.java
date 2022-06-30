@@ -49,7 +49,7 @@ public class AdminConfigServiceImpl implements AdminConfigService {
 
         MarketSystemExample example = new MarketSystemExample();
         MarketSystemExample.Criteria criteria = example.createCriteria();
-        criteria.andDeletedEqualTo(false); // 显示没有删除的数据
+        criteria.andDeletedNotEqualTo(true); // 显示没有删除的数据
 
         HashMap<String, String> hashMap = new HashMap<>();
         for (MarketSystem marketSystem : marketSystemMapper.selectByExample(example)) {
@@ -92,9 +92,10 @@ public class AdminConfigServiceImpl implements AdminConfigService {
             marketSystem.setId(id);
             marketSystem.setKeyName(key);
             marketSystem.setKeyValue(map.get(key));
+            marketSystem.setDeleted(false);
 
             // 更新
-            marketSystemMapper.updateByPrimaryKey(marketSystem);
+            marketSystemMapper.updateByPrimaryKeySelective(marketSystem);
         }
 
     }

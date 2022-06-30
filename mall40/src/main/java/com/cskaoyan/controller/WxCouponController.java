@@ -7,9 +7,12 @@ import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.WxCouponRespVO;
 import com.cskaoyan.bean.vo.WxUserCouponVO;
+import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminCouponService;
 import com.cskaoyan.service.WxCouponService;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -43,11 +46,24 @@ public class WxCouponController {
      * @since 2022/6/29 9:11
      */
 
+
     @RequestMapping("list")
     public BaseRespVo getAllList(String name,Short type , Short status,BasePageInfo info){
         CommonData couponList = adminCouponService.getCouponList(name, type, status, info);
         return BaseRespVo.ok(couponList);
     }
+
+
+    /**
+     * 根据条件为用户领取优惠券
+     *
+     * @param
+     * @param
+     * @param
+     * @return
+     * @author yn1609853@163.com
+     * @since 2022/6/30 17:22
+     */
 
 
     @RequestMapping("receive")
@@ -78,6 +94,18 @@ public class WxCouponController {
         return wxCouponRespVO;
     }
 
+    /**
+     * 展示用户个人优惠券信息
+     *
+     * @param
+     * @param
+     * @param
+     * @return
+     * @author yn1609853@163.com
+     * @since 2022/6/30 17:23
+     */
+
+
     @RequestMapping("mylist")
     public BaseRespVo getUserList(Integer status,BasePageInfo info){
         Subject subject = SecurityUtils.getSubject();
@@ -90,6 +118,18 @@ public class WxCouponController {
         CommonData userCouponList = wxCouponService.getUserCouponList(username, status, info);
         return BaseRespVo.ok(userCouponList);
     }
+
+    /**
+     * 展示用户订单中的优惠券信息
+     *
+     * @param
+     * @param
+     * @param
+     * @return
+     * @author yn1609853@163.com
+     * @since 2022/6/30 17:23
+     */
+
 
     @GetMapping("selectlist")
     public BaseRespVo getUserCartList(Integer cartId , Integer grouponRulesId){
@@ -104,6 +144,18 @@ public class WxCouponController {
         CommonData userCouponList = wxCouponService.getUserCouponList(username, 0, basePageInfo);
         return BaseRespVo.ok(userCouponList);
     }
+
+    /**
+     * 通过兑换码为用户领取优惠券
+     *
+     * @param
+     * @param
+     * @param
+     * @return
+     * @author yn1609853@163.com
+     * @since 2022/6/30 17:23
+     */
+
 
     @RequestMapping("exchange")
     public WxCouponRespVO addCouponByCode(@RequestBody Map map) {

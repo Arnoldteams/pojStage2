@@ -385,4 +385,9 @@
     update market_cart set deleted = true,number = 0
       where user_id = #{userId} and checked = 1;
   </update>
+
+  <update id="updateCartGoodsDeletedByCartId">
+    update market_cart set deleted = true,number = 0
+      where id = #{cartId};
+    </update>
 </mapper>

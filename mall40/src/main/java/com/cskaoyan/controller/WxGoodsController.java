@@ -46,8 +46,8 @@ public class WxGoodsController {
     }
 
     @RequestMapping("list")
-    public BaseRespVo wxGoodsList(String keyword, Integer brandId, Integer categoryId,BaseParam baseParam) {
-        WxGoodsListVo vo = wxGoodsService.quarryList(baseParam, categoryId, brandId, keyword);
+    public BaseRespVo wxGoodsList(Boolean isHot, Boolean isNew, String keyword, Integer brandId, Integer categoryId,BaseParam baseParam) {
+        WxGoodsListVo vo = wxGoodsService.quarryList(isHot, isNew, categoryId, brandId, keyword, baseParam);
         return BaseRespVo.ok(vo);
     }
 

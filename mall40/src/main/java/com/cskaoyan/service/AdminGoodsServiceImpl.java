@@ -151,7 +151,7 @@ public class AdminGoodsServiceImpl implements AdminGoodsService{
             marketGoodsSpecificationMapper.insertSelective(specification);
         }
 
-        session.setAttribute("log", goods.getId());
+        session.setAttribute("log", String.valueOf(goods.getId()));
     }
 
     @Override
@@ -227,7 +227,7 @@ public class AdminGoodsServiceImpl implements AdminGoodsService{
             marketGoodsProductMapper.updateByPrimaryKeySelective(product);
         }
 
-        session.setAttribute("log", goods.getId());
+        session.setAttribute("log", String.valueOf(goods.getId()));
     }
 
     @Override
@@ -239,6 +239,6 @@ public class AdminGoodsServiceImpl implements AdminGoodsService{
         marketGoods.setDeleted(true);
         marketGoodsMapper.updateByExampleSelective(marketGoods, example);
 
-        session.setAttribute("log", bo.getId());
+        session.setAttribute("log", String.valueOf(bo.getId()));
     }
 }

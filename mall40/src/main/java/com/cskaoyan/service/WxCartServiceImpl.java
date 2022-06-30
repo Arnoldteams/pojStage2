@@ -186,6 +186,12 @@ public class WxCartServiceImpl implements WxCartService {
      */
     @Override
     public int cartAddNewGoodsAndReturnCartId(MarketCart cart) {
+        Integer userId = getUserId();
+        MarketCartExample example = new MarketCartExample();
+        example.createCriteria().andUserIdEqualTo(userId)
+                .andGoodsIdEqualTo(cart.getGoodsId())
+                .andProductIdEqualTo(cart.getProductId());
+        cartMapper.deleteByExample(example);
         return addGoodsToCart(cart);
     }
 
@@ -236,12 +242,17 @@ public class WxCartServiceImpl implements WxCartService {
         // 获得用户信息
         Integer userId = getUserId();
         MarketAddress address = addressMapper.selectAddressInfoByUserId(userId);
-
-        // 订单商品信息
         MarketCartExample example = new MarketCartExample();
-        example.createCriteria().andUserIdEqualTo(userId)
-                .andDeletedEqualTo(false)
-                .andCheckedEqualTo(true);
+        MarketCartExample.Criteria criteria = example.createCriteria();
+
+        if(cartCheckBo.getCartId() != 0){
+            criteria.andIdEqualTo(cartCheckBo.getCartId());
+        }else{
+            // 订单商品信息
+            criteria.andUserIdEqualTo(userId)
+                    .andDeletedEqualTo(false)
+                    .andCheckedEqualTo(true);
+        }
         List<MarketCart> marketCarts = cartMapper.selectByExample(example);
 
         WxCartCheckedVo wxCartCheckedVo = new WxCartCheckedVo();
