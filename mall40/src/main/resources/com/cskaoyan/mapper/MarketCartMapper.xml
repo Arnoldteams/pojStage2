@@ -351,8 +351,8 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="selectAllNumber" resultType="int">
-    select count(number) from market_cart
+  <select id="selectAllNumberByUserId" resultType="int">
+    select count(number) from market_cart where user_id = #{userId} and deleted = 0
   </select>
 
   <select id="selectIdByUserIdAndProductId" resultType="java.lang.Integer">
@@ -360,7 +360,7 @@
     </select>
 
   <update id="updateCartInfo">
-    update market_cart set number = number + ${number},update_time = #{date} where id = #{cartId}
+    update market_cart set number = number + ${number},update_time = #{date},deleted = 0 where id = #{cartId}
   </update>
 
   <update id="updateCartGoodsChecked">
@@ -372,7 +372,7 @@
 
   <update id="updateCartGoodsDeleted">
     <foreach collection="productIds" item="product">
-      update market_cart set deleted = true
+      update market_cart set deleted = true,number = 0
       where user_id = #{userId} and product_id = #{product};
     </foreach>
   </update>
@@ -380,4 +380,9 @@
   <select id="selectCartGoodsCount" resultType="integer">
     select count(id) from market_cart where user_id = #{userId} and deleted = 0
   </select>
+
+  <update id="deleteCartInfoByUserId">
+    update market_cart set deleted = true,number = 0
+      where user_id = #{userId} and checked = 1;
+  </update>
 </mapper>

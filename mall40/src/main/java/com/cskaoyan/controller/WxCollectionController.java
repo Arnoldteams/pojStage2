@@ -7,6 +7,7 @@ import com.cskaoyan.bean.MarketUser;
 import com.cskaoyan.bean.vo.wx.WxListVO;
 import com.cskaoyan.service.WxCollectionService;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
@@ -58,8 +59,13 @@ public class WxCollectionController {
     @PostMapping("addordelete")
     public BaseRespVo addOrDelete(@RequestBody MarketCollect marketCollect){
 
-        Subject subject = SecurityUtils.getSubject();
-        MarketUser primaryPrincipal = (MarketUser) subject.getPrincipals().getPrimaryPrincipal();
+        PrincipalCollection principals = SecurityUtils.getSubject().getPrincipals();
+
+//        如果未认证，需要登录
+        if(principals == null){
+            return BaseRespVo.codeAndMsg(501,"请登录");
+        }
+        MarketUser primaryPrincipal = (MarketUser) principals.getPrimaryPrincipal();
 
         wxCollectionService.addOrDelete(marketCollect, primaryPrincipal.getId());
 

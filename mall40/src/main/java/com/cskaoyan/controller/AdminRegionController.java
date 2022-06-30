@@ -4,6 +4,8 @@ import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.MarketRegion;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.service.AdminRegionService;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +34,7 @@ public class AdminRegionController {
      */
 
     @RequestMapping("list")
+    @RequiresPermissions(value = {"admin:region:list","*"},logical = Logical.OR)
     public BaseRespVo getRegionList(){
         CommonData data = adminRegionService.getRegionList();
         return BaseRespVo.ok(data);
