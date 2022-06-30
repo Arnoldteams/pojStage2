@@ -107,13 +107,7 @@ public class AdminCouponServiceImpl implements AdminCouponService {
         marketCoupon.setDiscount(marketCouponBO.getDiscount());
         marketCoupon.setEndTime(marketCouponBO.getEndTime());
         marketCoupon.setGoodsType(marketCouponBO.getGoodsType());
-        String[] goodsValue = marketCouponBO.getGoodsValue();
-        StringBuilder goodsValueString = new StringBuilder("[");
-        for (int i = 0; i < goodsValue.length; i++) {
-            goodsValueString.append(goodsValue[i]);
-        }
-        goodsValueString.append("]");
-        marketCoupon.setGoodsValue("[]");
+        marketCoupon.setGoodsValue(marketCouponBO.getGoodsValue());
         marketCoupon.setLimit(marketCouponBO.getLimit());
         marketCoupon.setMin(marketCouponBO.getMin());
         marketCoupon.setName(marketCouponBO.getName());

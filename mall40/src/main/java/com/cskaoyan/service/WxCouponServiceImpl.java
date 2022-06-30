@@ -2,6 +2,7 @@ package com.cskaoyan.service;
 
 import com.cskaoyan.bean.*;
 import com.cskaoyan.bean.param.CommonData;
+import com.cskaoyan.bean.vo.WxCommentCountVO;
 import com.cskaoyan.bean.vo.WxUserCouponVO;
 import com.cskaoyan.mapper.MarketCartMapper;
 import com.cskaoyan.mapper.MarketCouponMapper;
@@ -119,7 +120,7 @@ public class WxCouponServiceImpl implements WxCouponService {
         if(info.getLimit() == null) {
             MarketCartExample marketCartExample = new MarketCartExample();
             MarketCartExample.Criteria criteria1 = marketCartExample.createCriteria();
-            if(cartId == null) {
+            if(cartId == 0) {
                 criteria1.andUserIdEqualTo(id).andCheckedEqualTo(true);
             }else {
                 criteria1.andUserIdEqualTo(id).andIdEqualTo(cartId);
@@ -163,52 +164,64 @@ public class WxCouponServiceImpl implements WxCouponService {
         }
 
 
-        long total = marketCouponUserMapper.countByExample(marketCouponUserExample);
-        if (info.getLimit() == null) {
-            info.setLimit(Integer.parseInt(String.valueOf(total)));
-        }
-        PageHelper.startPage(info.getPage(), info.getLimit());
-        List<MarketCouponUser> marketCouponUsers = marketCouponUserMapper.selectByExample(marketCouponUserExample);
-        //创建可以存入返回信息的列表
-        LinkedList<WxUserCouponVO> userCoupons = new LinkedList<WxUserCouponVO>();
-        for (int i = 0; i < marketCouponUsers.size(); i++) {
-            MarketCouponUser marketCouponUser = marketCouponUsers.get(i);
-            Integer couponId = marketCouponUser.getCouponId();
-            WxUserCouponVO wxUserCouponVO = new WxUserCouponVO();
-            wxUserCouponVO.setId(marketCouponUser.getId());
-            wxUserCouponVO.setCid(couponId);
-            MarketCoupon marketCoupon = marketCouponMapper.selectByPrimaryKey(couponId);
-            wxUserCouponVO.setName(marketCoupon.getName());
-            wxUserCouponVO.setDesc(marketCoupon.getDesc());
-            wxUserCouponVO.setTag(marketCoupon.getTag());
-            wxUserCouponVO.setMin(marketCoupon.getMin());
-            wxUserCouponVO.setDiscount(marketCoupon.getDiscount());
-            if (marketCoupon.getStartTime() != null) {
-                wxUserCouponVO.setStartTime(marketCoupon.getStartTime());
-            } else {
-                Date addTime = marketCouponUser.getAddTime();
-                wxUserCouponVO.setStartTime(addTime);
+        if(listIsExist == 0){
+            long total = marketCouponUserMapper.countByExample(marketCouponUserExample);
+            if (info.getLimit() == null) {
+                info.setLimit(Integer.parseInt(String.valueOf(total)));
             }
-            if (marketCoupon.getEndTime() != null) {
-                wxUserCouponVO.setEndTime(marketCoupon.getEndTime());
-            } else {
-                Short days = marketCoupon.getDays();
-                Date date = marketCouponUser.getAddTime();
-                int currentDays = Integer.parseInt(String.valueOf(days));
-                date.setTime(date.getTime() + currentDays * 24 * 60 * 60 * 1000);
-                wxUserCouponVO.setEndTime(date);
+            PageHelper.startPage(info.getPage(), info.getLimit());
+            List<MarketCouponUser> marketCouponUsers = marketCouponUserMapper.selectByExample(marketCouponUserExample);
+            //创建可以存入返回信息的列表
+            LinkedList<WxUserCouponVO> userCoupons = new LinkedList<WxUserCouponVO>();
+            for (int i = 0; i < marketCouponUsers.size(); i++) {
+                MarketCouponUser marketCouponUser = marketCouponUsers.get(i);
+                Integer couponId = marketCouponUser.getCouponId();
+                WxUserCouponVO wxUserCouponVO = new WxUserCouponVO();
+                wxUserCouponVO.setId(marketCouponUser.getId());
+                wxUserCouponVO.setCid(couponId);
+                MarketCoupon marketCoupon = marketCouponMapper.selectByPrimaryKey(couponId);
+                wxUserCouponVO.setName(marketCoupon.getName());
+                wxUserCouponVO.setDesc(marketCoupon.getDesc());
+                wxUserCouponVO.setTag(marketCoupon.getTag());
+                wxUserCouponVO.setMin(marketCoupon.getMin());
+                wxUserCouponVO.setDiscount(marketCoupon.getDiscount());
+                if (marketCoupon.getStartTime() != null) {
+                    wxUserCouponVO.setStartTime(marketCoupon.getStartTime());
+                } else {
+                    Date addTime = marketCouponUser.getAddTime();
+                    wxUserCouponVO.setStartTime(addTime);
+                }
+                if (marketCoupon.getEndTime() != null) {
+                    wxUserCouponVO.setEndTime(marketCoupon.getEndTime());
+                } else {
+                    Short days = marketCoupon.getDays();
+                    Date date = marketCouponUser.getAddTime();
+                    int currentDays = Integer.parseInt(String.valueOf(days));
+                    date.setTime(date.getTime() + currentDays * 24 * 60 * 60 * 1000);
+                    wxUserCouponVO.setEndTime(date);
+                }
+
+                userCoupons.add(wxUserCouponVO);
             }
 
-            userCoupons.add(wxUserCouponVO);
+            CommonData<WxUserCouponVO> commonData = new CommonData<>();
+            commonData.setTotal(Integer.parseInt(String.valueOf(total)));
+            commonData.setLimit(info.getLimit());
+            commonData.setPages(1);
+            commonData.setPage(1);
+            commonData.setList(userCoupons);
+
+
+            return commonData;
         }
 
+        ArrayList<WxUserCouponVO> wxUserCouponVOS = new ArrayList<>();
         CommonData<WxUserCouponVO> commonData = new CommonData<>();
-        commonData.setTotal(Integer.parseInt(String.valueOf(total)));
-        commonData.setLimit(info.getLimit());
+        commonData.setTotal(0);
+        commonData.setLimit(0);
         commonData.setPages(1);
         commonData.setPage(1);
-        commonData.setList(userCoupons);
-
+        commonData.setList(wxUserCouponVOS);
 
         return commonData;
 
