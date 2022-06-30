@@ -1,6 +1,7 @@
 package com.cskaoyan.controller;
 
 import com.cskaoyan.bean.BaseRespVo;
+import com.cskaoyan.bean.vo.WxHomeAboutVO;
 import com.cskaoyan.bean.vo.wxHomeIndex.WxHomeIndexVo;
 import com.cskaoyan.service.WxHomeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,17 @@ public class WxHomeController {
     @RequestMapping("index")
     public BaseRespVo homeIndex() {
         WxHomeIndexVo vo = wxHomeService.homeIndex();
+        return BaseRespVo.ok(vo);
+    }
+
+    /**
+     * @description: 小程序主页
+     * @author: 小帅的 sprinkle
+     * @date: 2022年06月29日 23:17
+     */
+    @RequestMapping("about")
+    public BaseRespVo about() {
+        WxHomeAboutVO vo = wxHomeService.getAbout();
         return BaseRespVo.ok(vo);
     }
 }

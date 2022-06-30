@@ -122,4 +122,24 @@ public class WxAuthorServiceImpl implements WxAuthorService {
 
         userMapper.insert(user);
     }
+
+    @Override
+    public Boolean updateUserByMobil(WxAuthRegisterBO wxAuthRegisterBO) {
+        MarketUserExample example = new MarketUserExample();
+        MarketUserExample.Criteria criteria = example.createCriteria();
+        criteria.andMobileEqualTo(wxAuthRegisterBO.getMobile()).andDeletedEqualTo(false);
+
+        List<MarketUser> marketUsers = userMapper.selectByExample(example);
+
+        if (marketUsers.size() == 0){
+            return true;
+        }
+
+        MarketUser marketUser = marketUsers.get(0);
+        marketUser.setPassword(wxAuthRegisterBO.getPassword());
+
+        userMapper.updateByPrimaryKeySelective(marketUser);
+
+        return false;
+    }
 }

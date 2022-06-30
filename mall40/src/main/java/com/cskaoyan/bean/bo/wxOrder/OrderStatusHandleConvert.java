@@ -5,16 +5,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum OrderStatusHandleConvert {
-    NOT_PAY(101, new WxOrderListHandleOption()),
-    USER_CANCALED(102, new WxOrderListHandleOption()),
-    SYSTEM_CANCALED(103, new WxOrderListHandleOption()),
+    NOT_PAY(101, new WxOrderListHandleOption().setCancel(true).setPay(true)),
+    USER_CANCALED(102, new WxOrderListHandleOption().setDelete(true)),
+    SYSTEM_CANCALED(103, new WxOrderListHandleOption().setDelete(true)),
     PAYED(201, new WxOrderListHandleOption().setRefund(true)),
     REFUND_APPLIED(202, new WxOrderListHandleOption()),
     REFUNDED(203, new WxOrderListHandleOption().setDelete(true)),
     SHIPED(301, new WxOrderListHandleOption().setConfirm(true)),
     USER_RECEIVED(401, new WxOrderListHandleOption().setAftersale(true).setComment(true).
             setDelete(true).setRebuy(true)),
-    SYSTEM_RECEIVED(402, new WxOrderListHandleOption());
+    SYSTEM_RECEIVED(402, new WxOrderListHandleOption().setAftersale(true).setComment(true).
+            setDelete(true).setRebuy(true));
 
 
     private static Map OrderStatusMap;

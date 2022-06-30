@@ -1,16 +1,20 @@
 
 package com.cskaoyan.controller;
 
-import com.cskaoyan.bean.*;
+
+import com.cskaoyan.bean.BasePageInfo;
+import com.cskaoyan.bean.MarketAddress;
+import com.cskaoyan.bean.MarketCollect;
+import com.cskaoyan.bean.MarketFootprint;
+import com.cskaoyan.bean.MarketSearchHistory;
+import com.cskaoyan.bean.MarketFeedback;
+import com.cskaoyan.bean.MarketLog;
 import com.cskaoyan.bean.bo.userManager.AdminUserListBO;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.userManager.AdminUserListVO;
 import com.cskaoyan.bean.vo.userManager.UserEntity;
 import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.*;
-import com.cskaoyan.bean.BasePageInfo;
-import com.cskaoyan.bean.BaseRespVo;
-import com.cskaoyan.bean.MarketLog;
 import com.cskaoyan.bean.bo.userManager.AdminUserListBO;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.vo.AdminListVO;

@@ -33,97 +33,92 @@ public class WxOrderServiceImpl implements WxOrderService {
 
 
     /**
-    * @author: ZY
-    * @createTime: 2022/06/29 20:18:19
-    * @description: 个人-我的订单，list
-    * @param: showType
- * @param: page
- * @param: limit
-    * @return: com.cskaoyan.bean.param.CommonData<com.cskaoyan.bean.vo.wxOrder.WxOrderListChildVO>
-            */
+     * @author: ZY
+     * @createTime: 2022/06/29 20:18:19
+     * @description: 个人-我的订单，list
+     * @param: showType
+     * @param: page
+     * @param: limit
+     * @return: com.cskaoyan.bean.param.CommonData<com.cskaoyan.bean.vo.wxOrder.WxOrderListChildVO>
+     */
     @Override
     public CommonData<WxOrderListChildVO> queryAllOrder(Integer showType, Integer page, Integer limit) {
         PageHelper.startPage(page, limit);
 
         //拿到userId
-//        PrincipalCollection principals = SecurityUtils.getSubject().getPrincipals();
-//        MarketUser user = (MarketUser) principals.getPrimaryPrincipal();
         MarketUser user = (MarketUser) SecurityUtils.getSubject().getPrincipal();
         Integer userId = user.getId();
 
         //根据userId和订单状态找出该用户该状态的订单列表
-        List<MarketOrder> orderList = new ArrayList<>();
+        List<WxOrderListChildVO> wxOrderListChildVOList = new ArrayList<>();
         if (showType == 0) {
-            orderList = wxOrderMapper.selectAllorderListByUserId(userId);
+            wxOrderListChildVOList = wxOrderMapper.selectAllorderListByUserId(userId);
         } else {
             Map instance = OrderStatusConvert.getInstance();
             OrderStatusConvert o = (OrderStatusConvert) instance.get(showType);
             Integer orderStatus = o.getOrderStatus();
-            orderList = wxOrderMapper.selectOrderListByStatusByUserId(orderStatus, userId);
+            wxOrderListChildVOList = wxOrderMapper.selectOrderListByStatusByUserId(orderStatus, userId);
         }
 
-        //遍历找出来的orderList，给VO里的wxOrderListChildVOList赋值
-        List<WxOrderListChildVO> wxOrderListChildVOList = new ArrayList<>();
-        for (MarketOrder order : orderList) {
-            WxOrderListChildVO wxOrderListChildVO = new WxOrderListChildVO();
-            //给WxOrderListChildVO的各个成员变量赋值
-            wxOrderListChildVO.setActualPrice(order.getActualPrice());
-            wxOrderListChildVO.setAftersaleStatus(order.getAftersaleStatus());
-            wxOrderListChildVO.setId(order.getId());
+        for (WxOrderListChildVO wxOrderListChildVO : wxOrderListChildVOList) {
             wxOrderListChildVO.setIsGroupin(false);
-            wxOrderListChildVO.setOrderSn(order.getOrderSn());
-
+            Integer orderId = wxOrderListChildVO.getId();
+            Integer orderStatus = wxOrderMapper.selectOrderStatusById(orderId);
             //根据订单状态，查状态码信息
-            Integer orderStatus = Integer.valueOf(order.getOrderStatus());
             Map instance1 = OrderStatusContentConvert.getInstance();
             OrderStatusContentConvert o1 = (OrderStatusContentConvert) instance1.get(orderStatus);
             String orderStatusContent = o1.getOrderStatusContent();
             wxOrderListChildVO.setOrderStatusText(orderStatusContent);
-           //根据订单状态，查可操作信息
+            //根据订单状态，查可操作信息
             Map instance2 = OrderStatusHandleConvert.getInstance();
             OrderStatusHandleConvert o2 = (OrderStatusHandleConvert) instance2.get(orderStatus);
             WxOrderListHandleOption handler = o2.getHandler();
             wxOrderListChildVO.setHandleOption(handler);
 
             //根据orderId查找该订单里的商品信息
-            Integer orderId = order.getId();
             List<AdminOrderDetailGoodsVO> goodsList =
                     wxOrderMapper.selectAllOrderGoodsByOrderId(orderId);
             wxOrderListChildVO.setGoodsList(goodsList);
-
-            //将封装好的VO加进List
-            wxOrderListChildVOList.add(wxOrderListChildVO);
         }
 
         PageInfo<WxOrderListChildVO> wxOrderListChildVOPageInfo = new PageInfo<>(wxOrderListChildVOList);
         return CommonData.data(wxOrderListChildVOPageInfo);
+
     }
 
 
+
     /**
-    * @author: ZY
-    * @createTime: 2022/06/29 20:24:11
-    * @description: 用户申请退款
-    * @param: orderId
-    * @return: void
-            */
+     * @author: ZY
+     * @createTime: 2022/06/29 20:24:11
+     * @description: 用户申请退款
+     * @param: orderId
+     * @return: void
+     */
     @Override
     public void refundOrder(Integer orderId) {
         wxOrderMapper.updateUserOrderStatusRefund(orderId);
     }
 
+    /**
+    * @author: ZY
+    * @createTime: 2022/06/29 23:49:00
+    * @description: 用户确认收货
+    * @param: orderId
+    * @return: void
+            */
     @Override
     public void confirmOrder(Integer orderId) {
         wxOrderMapper.updateUserOrderStatusConfirm(orderId);
     }
 
     /**
-    * @author: ZY
-    * @createTime: 2022/06/29 20:25:34
-    * @description: 退款后可逻辑删除订单
-    * @param: orderId
-    * @return: void
-            */
+     * @author: ZY
+     * @createTime: 2022/06/29 20:25:34
+     * @description: 退款后可逻辑删除订单
+     * @param: orderId
+     * @return: void
+     */
     @Override
     public void deleteOrder(Integer orderId) {
         wxOrderMapper.updateUserOrderStatusDeleted(orderId);
@@ -131,13 +126,13 @@ public class WxOrderServiceImpl implements WxOrderService {
 
 
     /**
-    * @author: ZY
-    * @createTime: 2022/06/29 20:33:16
-    * @description: 确认收货后评价商品，信息回显
-    * @param: orderId
- * @param: goodsId
-    * @return: com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO
-            */
+     * @author: ZY
+     * @createTime: 2022/06/29 20:33:16
+     * @description: 确认收货后评价商品，信息回显
+     * @param: orderId
+     * @param: goodsId
+     * @return: com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO
+     */
     @Override
     public AdminOrderDetailGoodsVO queryOrdersGoods(Integer orderId, Integer goodsId) {
         AdminOrderDetailGoodsVO adminOrderDetailGoodsVO = wxOrderMapper.selectOrdersGoods(orderId, goodsId);
@@ -145,12 +140,12 @@ public class WxOrderServiceImpl implements WxOrderService {
     }
 
     /**
-    * @author: ZY
-    * @createTime: 2022/06/29 21:27:57
-    * @description: 确认收货后评价商品
-    * @param: wxOrderListCommentBO
-    * @return: void
-            */
+     * @author: ZY
+     * @createTime: 2022/06/29 21:27:57
+     * @description: 确认收货后评价商品
+     * @param: wxOrderListCommentBO
+     * @return: void
+     */
     @Override
     public void addOrderComment(WxOrderListCommentBO wxOrderListCommentBO) {
         //拿到userId
@@ -158,20 +153,43 @@ public class WxOrderServiceImpl implements WxOrderService {
         Integer userId = user.getId();
 
         String picUrls = Arrays.toString(wxOrderListCommentBO.getPicUrls());
-        wxOrderMapper.insertOrderComment(wxOrderListCommentBO,userId,picUrls);
+        wxOrderMapper.insertOrderComment(wxOrderListCommentBO, userId, picUrls);
     }
 
+    /**
+     * @author: ZY
+     * @createTime: 2022/06/29 22:08:57
+     * @description: 取消订单
+     * @param: orderId
+     * @return: void
+     */
+    @Override
+    public void cancelOrder(Integer orderId) {
+        wxOrderMapper.updateUserOrderStatusCancel(orderId);
+    }
+
+    /**
+     * @description: 根据指定订单id获取订单和商品信息
+     * @parameter: [orderId]
+     * @return: com.cskaoyan.bean.vo.wxOrder.WxOrderDetailVo
+     * @author: 帅关
+     * @createTime: 2022/6/30 7:32
+     */
     @Override
     public WxOrderDetailVo selectOrderDetailByOrderId(Integer orderId) {
         // 查询订单
         WxOrderDetailChildVo child = wxOrderMapper.selectOrderInfoByOrderId(orderId);
-        WxOrderListHandleOption handler = (WxOrderListHandleOption) OrderStatusHandleConvert.getInstance().get(child.getOrderStatus());
-        String statusText = (String) OrderStatusContentConvert.getInstance().get(orderId);
+        Map instance = OrderStatusHandleConvert.getInstance();
+        OrderStatusHandleConvert convert = (OrderStatusHandleConvert) instance.get(child.getOrderStatus());
+        WxOrderListHandleOption handler = convert.getHandler();
+
+        OrderStatusContentConvert statusConvert = (OrderStatusContentConvert) OrderStatusContentConvert.getInstance().get(child.getOrderStatus());
+        String statusText = statusConvert.getOrderStatusContent();
         child.setHandleOption(handler);
         child.setOrderStatusText(statusText);
 
         // 查询商品
-        List<AdminOrderDetailGoodsVO> list = wxOrderMapper.selectAllOrderGoodsByOrderId(orderId);
+        List<AdminOrderDetailGoodsVO> list = wxOrderMapper.selectAllInfoOrderGoodsByOrderId(orderId);
         WxOrderDetailVo detailVo = new WxOrderDetailVo();
         detailVo.setOrderGoods(list);
         detailVo.setOrderInfo(child);

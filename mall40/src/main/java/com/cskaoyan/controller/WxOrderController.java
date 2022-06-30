@@ -46,12 +46,14 @@ public class WxOrderController {
     /**
     * @author: ZY
     * @createTime: 2022/06/29 20:15:42
-    * @description: 还没找到在哪
+    * @description: 个人-我的订单-取消订单
     * @param:
     * @return: com.cskaoyan.bean.BaseRespVo
             */
     @RequestMapping("cancel")
-    public BaseRespVo cancel() {
+    public BaseRespVo cancel(@RequestBody Map map) {
+        Integer orderId = (Integer) map.get("orderId");
+        wxOrderService.cancelOrder(orderId);
         return BaseRespVo.ok(null);
     }
 
@@ -125,6 +127,13 @@ public class WxOrderController {
     }
 
 
+    /**
+     * @description: 获取订单详情商品信息
+     * @parameter: [orderId]
+     * @return: com.cskaoyan.bean.BaseRespVo
+     * @author: 帅关
+     * @createTime: 2022/6/30 7:33
+     */
     @RequestMapping("detail")
     public BaseRespVo detail(Integer orderId){
         WxOrderDetailVo detail = wxOrderService.selectOrderDetailByOrderId(orderId);

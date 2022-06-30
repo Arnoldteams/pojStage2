@@ -19,4 +19,6 @@ public interface WxAuthorService {
     Boolean hasAccount(String mobile);
 
     void insertUser(WxAuthRegisterBO wxAuthRegisterBO, String avatarUrl, HttpServletRequest request);
+
+    Boolean updateUserByMobil(WxAuthRegisterBO wxAuthRegisterBO);
 }
