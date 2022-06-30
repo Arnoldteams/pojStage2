@@ -125,21 +125,26 @@ public class WxAuthorServiceImpl implements WxAuthorService {
 
     @Override
     public Boolean updateUserByMobil(WxAuthRegisterBO wxAuthRegisterBO) {
+
+        // 判断用户是否注册了手机号
         MarketUserExample example = new MarketUserExample();
         MarketUserExample.Criteria criteria = example.createCriteria();
         criteria.andMobileEqualTo(wxAuthRegisterBO.getMobile()).andDeletedEqualTo(false);
 
         List<MarketUser> marketUsers = userMapper.selectByExample(example);
 
+        // 查询结果为0，就是没有注册
         if (marketUsers.size() == 0){
             return true;
         }
 
+        // 有注册直接修改密码，更新
         MarketUser marketUser = marketUsers.get(0);
         marketUser.setPassword(wxAuthRegisterBO.getPassword());
 
         userMapper.updateByPrimaryKeySelective(marketUser);
 
+        // 修改成功
         return false;
     }
 }
