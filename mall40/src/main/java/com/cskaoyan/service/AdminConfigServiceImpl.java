@@ -8,6 +8,7 @@ import com.cskaoyan.mapper.MarketSystemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -26,6 +27,9 @@ public class AdminConfigServiceImpl implements AdminConfigService {
 
     @Autowired
     MarketSystemMapper marketSystemMapper;
+
+    @Autowired
+    HttpSession session;
 
     @Override
     public Object getMapByKey(Class clazz) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
@@ -96,6 +100,8 @@ public class AdminConfigServiceImpl implements AdminConfigService {
 
             // 更新
             marketSystemMapper.updateByPrimaryKeySelective(marketSystem);
+
+            session.setAttribute("log", marketSystem.getKeyName());
         }
 
     }
