@@ -44,4 +44,5 @@ public interface WxAuthorService {
      * @return: java.lang.Boolean true 表示手机号不存在
      */
     Boolean updateUserByMobil(WxAuthRegisterBO wxAuthRegisterBO);
+
 }

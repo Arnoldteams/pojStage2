@@ -27,4 +27,5 @@ public interface WxOrderService {
 
     WxOrderDetailVo selectOrderDetailByOrderId(Integer orderId);
 
+    Integer addOrder(WxOrderSubmitBO wxOrderSubmitBO);
 }

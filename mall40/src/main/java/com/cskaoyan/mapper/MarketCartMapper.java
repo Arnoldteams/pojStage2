@@ -30,7 +30,7 @@ public interface MarketCartMapper {
 
     int updateByPrimaryKey(MarketCart record);
 
-    int selectAllNumber();
+    int selectAllNumberByUserId(@Param("userId") Integer userId);
 
     Integer selectIdByUserIdAndProductId(@Param("userId") Integer userId, @Param("productId") Integer productId);
 
