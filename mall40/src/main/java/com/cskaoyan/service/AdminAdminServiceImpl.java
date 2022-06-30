@@ -136,7 +136,9 @@ public class AdminAdminServiceImpl implements AdminAdminService {
 
         MarketAdminExample marketAdminExample = new MarketAdminExample();
         MarketAdminExample.Criteria criteria = marketAdminExample.createCriteria();
-        criteria.andUsernameEqualTo(marketAdmin.getUsername());
+        criteria
+                .andUsernameEqualTo(marketAdmin.getUsername())
+                .andIdNotEqualTo(marketAdmin.getId());
 
         List<MarketAdmin> marketAdmins = marketAdminMapper.selectByExample(marketAdminExample);
 
