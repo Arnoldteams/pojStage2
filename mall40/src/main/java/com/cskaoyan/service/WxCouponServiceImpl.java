@@ -2,6 +2,7 @@ package com.cskaoyan.service;
 
 import com.cskaoyan.bean.*;
 import com.cskaoyan.bean.param.CommonData;
+import com.cskaoyan.bean.vo.WxCommentCountVO;
 import com.cskaoyan.bean.vo.WxUserCouponVO;
 import com.cskaoyan.mapper.MarketCartMapper;
 import com.cskaoyan.mapper.MarketCouponMapper;
@@ -213,11 +214,14 @@ public class WxCouponServiceImpl implements WxCouponService {
 
             return commonData;
         }
+
+        ArrayList<WxUserCouponVO> wxUserCouponVOS = new ArrayList<>();
         CommonData<WxUserCouponVO> commonData = new CommonData<>();
         commonData.setTotal(0);
-        commonData.setLimit(info.getLimit());
+        commonData.setLimit(0);
         commonData.setPages(1);
         commonData.setPage(1);
+        commonData.setList(wxUserCouponVOS);
 
         return commonData;
 
