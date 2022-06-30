@@ -120,7 +120,9 @@ public class WxCouponServiceImpl implements WxCouponService {
             BigDecimal bigDecimal = new BigDecimal(0);
             for (MarketCart marketCart : marketCarts) {
                 BigDecimal price = marketCart.getPrice();
-                bigDecimal.add(price);
+                Short number = marketCart.getNumber();
+                price = price.multiply(new BigDecimal(number));
+                bigDecimal = bigDecimal.add(price);
             }
             //获得用户拥有的所有优惠券id
             MarketCouponUserExample marketCouponUserExample1 = new MarketCouponUserExample();
@@ -173,6 +175,7 @@ public class WxCouponServiceImpl implements WxCouponService {
 
         CommonData<WxUserCouponVO> commonData = new CommonData<>();
         commonData.setTotal(Integer.parseInt(String.valueOf(total)));
+        commonData.setLimit(info.getLimit());
         commonData.setPages(1);
         commonData.setPage(1);
         commonData.setList(userCoupons);

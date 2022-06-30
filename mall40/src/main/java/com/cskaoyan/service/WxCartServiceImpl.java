@@ -313,6 +313,9 @@ public class WxCartServiceImpl implements WxCartService {
         // 获取当前登录的用户信息
         Subject subject = SecurityUtils.getSubject();
         MarketUser user = (MarketUser) subject.getPrincipal();
+        if(user == null){
+            return -1;
+        }
         return user.getId();
     }
 }

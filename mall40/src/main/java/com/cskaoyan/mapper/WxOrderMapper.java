@@ -7,6 +7,7 @@ import com.cskaoyan.bean.bo.wxOrder.WxOrderListHandleOption;
 import com.cskaoyan.bean.bo.wxOrder.WxOrderSubmitBO;
 import com.cskaoyan.bean.vo.statForm.OrderRowsEntity;
 import com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO;
+import com.cskaoyan.bean.vo.wxOrder.WxOrderListChildVO;
 import com.cskaoyan.bean.vo.wxOrder.WxOrderDetailChildVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -80,17 +81,24 @@ public interface WxOrderMapper {
     AdminOrderDetailGoodsVO selectOrdersGoods(@Param("orderId") Integer orderId, @Param("goodsId") Integer goodsId);
 
     void insertOrderComment(@Param("wxOrderListCommentBO") WxOrderListCommentBO wxOrderListCommentBO,
-                            @Param("userId") Integer userId,@Param("picUrls") String picUrls);
-
-    List<MarketOrder> selectAllorderListByUserId(Integer userId);
-
-    List<MarketOrder> selectOrderListByStatusByUserId(@Param("orderStatus") Integer orderStatus, @Param("userId") Integer userId);
+                            @Param("userId") Integer userId, @Param("picUrls") String picUrls);
 
     List<AdminOrderDetailGoodsVO> selectAllOrderGoodsByOrderId(Integer orderId);
 
     WxOrderListHandleOption selectHandleOption(Integer orderId);
 
+
+    void updateUserOrderStatusCancel(Integer orderId);
+
+    List<WxOrderListChildVO> selectAllorderListByUserId(Integer userId);
+
+    List<WxOrderListChildVO> selectOrderListByStatusByUserId(@Param("orderStatus") Integer orderStatus, @Param("userId") Integer userId);
+
+    Integer selectOrderStatusById(Integer orderId);
+
+
     WxOrderDetailChildVo selectOrderInfoByOrderId(@Param("orderId") Integer orderId);
 
     List<AdminOrderDetailGoodsVO> selectAllInfoOrderGoodsByOrderId(Integer orderId);
+
 }

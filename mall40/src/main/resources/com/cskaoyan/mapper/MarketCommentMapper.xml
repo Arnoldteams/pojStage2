@@ -320,4 +320,8 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectUserInfo" resultType="com.cskaoyan.bean.vo.UserInfo">
+    select nickname,avatar from market_user where id = #{id}
+  </select>
 </mapper>

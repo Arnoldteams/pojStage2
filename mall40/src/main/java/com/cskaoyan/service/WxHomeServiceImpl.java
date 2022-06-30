@@ -1,6 +1,7 @@
 package com.cskaoyan.service;
 
 import com.cskaoyan.bean.*;
+import com.cskaoyan.bean.vo.WxHomeAboutVO;
 import com.cskaoyan.bean.vo.wxHomeIndex.FloorGoodsVo;
 import com.cskaoyan.bean.vo.wxHomeIndex.WxHomeIndexVo;
 import com.cskaoyan.mapper.*;
@@ -35,6 +36,9 @@ public class WxHomeServiceImpl implements WxHomeService{
 
     @Autowired
     MarketTopicMapper marketTopicMapper;
+
+    @Autowired
+    MarketSystemMapper marketSystemMapper;
 
 
     @Override
@@ -110,5 +114,50 @@ public class WxHomeServiceImpl implements WxHomeService{
         wxHomeIndexVo.setTopicList(marketTopics);
 
         return wxHomeIndexVo;
+    }
+
+    /**
+     * @description:
+     * @author: 帅的批爆 的 sprinkle
+     * @date: 2022年06月29日 23:20
+     */
+    @Override
+    public WxHomeAboutVO getAbout() {
+        MarketSystemExample example = new MarketSystemExample();
+        MarketSystemExample.Criteria criteria = example.createCriteria();
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add("market_mall_longitude");
+        strings.add("market_mall_latitude");
+        strings.add("market_mall_address");
+        strings.add("market_mall_qq");
+        strings.add("market_mall_phone");
+        strings.add("market_mall_name");
+        criteria.andKeyNameIn(strings);
+
+        List<MarketSystem> marketSystems = marketSystemMapper.selectByExample(example);
+        WxHomeAboutVO wxHomeAboutVO = new WxHomeAboutVO();
+
+        for (MarketSystem marketSystem : marketSystems) {
+            if(marketSystem.getKeyName().equals("market_mall_longitude")){
+                wxHomeAboutVO.setLongitude(marketSystem.getKeyValue());
+            }
+            if(marketSystem.getKeyName().equals("market_mall_latitude")){
+                wxHomeAboutVO.setLatitude(marketSystem.getKeyValue());
+            }
+            if(marketSystem.getKeyName().equals("market_mall_address")){
+                wxHomeAboutVO.setAddress(marketSystem.getKeyValue());
+            }
+            if(marketSystem.getKeyName().equals("market_mall_qq")){
+                wxHomeAboutVO.setQq(marketSystem.getKeyValue());
+            }
+            if(marketSystem.getKeyName().equals("market_mall_phone")){
+                wxHomeAboutVO.setPhone(marketSystem.getKeyValue());
+            }
+            if(marketSystem.getKeyName().equals("market_mall_name")){
+                wxHomeAboutVO.setName(marketSystem.getKeyValue());
+            }
+        }
+
+        return wxHomeAboutVO;
     }
 }

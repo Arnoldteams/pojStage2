@@ -5,6 +5,7 @@ import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.wxGoodsCategory.WxGoodsCategoryVo;
 import com.cskaoyan.bean.vo.wxGoodsDetailVo.WxGoodsDetailCommentVo;
+import com.cskaoyan.bean.vo.wxGoodsDetailVo.WxGoodsDetailSpecificationVo;
 import com.cskaoyan.bean.vo.wxGoodsDetailVo.WxGoodsDetailVo;
 import com.cskaoyan.bean.vo.wxGoodsList.WxGoodsListVo;
 import com.cskaoyan.mapper.*;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -175,11 +178,10 @@ public class WxGoodsServiceImpl implements WxGoodsService {
         MarketCommentExample.Criteria commentExampleCriteria = commentExample.createCriteria();
         commentExampleCriteria.andTypeEqualTo((byte) 0);
         commentExampleCriteria.andDeletedEqualTo(false);
-        int count = (int) marketCommentMapper.countByExample(commentExample);
         commentExampleCriteria.andValueIdEqualTo(id);
         List<MarketComment> marketComments = marketCommentMapper.selectByExample(commentExample);
         WxGoodsDetailCommentVo wxGoodsDetailCommentVo = new WxGoodsDetailCommentVo();
-        wxGoodsDetailCommentVo.setCount(count);
+        wxGoodsDetailCommentVo.setCount(marketComments.size());
         wxGoodsDetailCommentVo.setData(marketComments);
         wxGoodsDetailVo.setComment(wxGoodsDetailCommentVo);
 
@@ -212,12 +214,32 @@ public class WxGoodsServiceImpl implements WxGoodsService {
         }
 
         // 10. 搜索 specificationList
-        MarketGoodsSpecificationExample goodsSpecificationExample = new MarketGoodsSpecificationExample();
-        MarketGoodsSpecificationExample.Criteria goodsSpecificationExampleCriteria = goodsSpecificationExample.createCriteria();
+        MarketGoodsSpecificationExample marketGoodsSpecificationExample = new MarketGoodsSpecificationExample();
+        MarketGoodsSpecificationExample.Criteria goodsSpecificationExampleCriteria = marketGoodsSpecificationExample.createCriteria();
         goodsSpecificationExampleCriteria.andDeletedEqualTo(false);
         goodsSpecificationExampleCriteria.andGoodsIdEqualTo(id);
-        List<MarketGoodsSpecification> marketGoodsSpecifications = marketGoodsSpecificationMapper.selectByExample(goodsSpecificationExample);
-        wxGoodsDetailVo.setSpecificationList(marketGoodsSpecifications);
+        List<MarketGoodsSpecification> marketGoodsSpecifications = marketGoodsSpecificationMapper.selectByExample(marketGoodsSpecificationExample);
+
+        // 利用 hashSet 存储名字用于分组
+        HashSet<String> set = new HashSet<>();
+        for (MarketGoodsSpecification marketGoodsSpecification : marketGoodsSpecifications) {
+            set.add(marketGoodsSpecification.getSpecification());
+        }
+
+        ArrayList<WxGoodsDetailSpecificationVo> wxGoodsDetailSpecificationVos = new ArrayList<>();
+
+        // 根据名子再次查找
+        for (String s : set) {
+            WxGoodsDetailSpecificationVo wxGoodsDetailSpecificationVo = new WxGoodsDetailSpecificationVo();
+            wxGoodsDetailSpecificationVo.setName(s);
+
+            goodsSpecificationExampleCriteria.andSpecificationEqualTo(s);
+            List<MarketGoodsSpecification> marketGoodsSpecifications1 = marketGoodsSpecificationMapper.selectByExample(marketGoodsSpecificationExample);
+            wxGoodsDetailSpecificationVo.setValueList(marketGoodsSpecifications1);
+            wxGoodsDetailSpecificationVos.add(wxGoodsDetailSpecificationVo);
+        }
+        wxGoodsDetailVo.setSpecificationList(wxGoodsDetailSpecificationVos);
+
 
         // 11. 搜索
         MarketCollectExample collectExample = new MarketCollectExample();
@@ -228,5 +250,24 @@ public class WxGoodsServiceImpl implements WxGoodsService {
         wxGoodsDetailVo.setUserHasCollect(count1);
 
         return wxGoodsDetailVo;
+    }
+
+    @Override
+    public CommonData<MarketGoods> quarryRelatedGoods(Integer id) {
+
+        MarketGoods marketGoods = marketGoodsMapper.selectByPrimaryKey(id);
+
+        MarketGoodsExample goodsExample = new MarketGoodsExample();
+        MarketGoodsExample.Criteria criteria = goodsExample.createCriteria();
+        criteria.andDeletedEqualTo(false);
+        criteria.andCategoryIdEqualTo(marketGoods.getCategoryId());
+        criteria.andIdNotEqualTo(id);
+
+        PageHelper.startPage(1, 6);
+        List<MarketGoods> goods = marketGoodsMapper.selectByExample(goodsExample);
+
+        PageInfo<MarketGoods> marketGoodsPageInfo = new PageInfo<>(goods);
+
+        return CommonData.data(marketGoodsPageInfo);
     }
 }
