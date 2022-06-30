@@ -1,8 +1,10 @@
 package com.cskaoyan.bean.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @Author: 夏一男
@@ -20,5 +22,9 @@ public class WxUserCouponVO {
     String tag;
     BigDecimal min;
     BigDecimal discount;
-    Boolean available;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    Date startTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    Date endTime;
+    Boolean available = true;
 }

@@ -242,5 +242,7 @@
                 LEFT JOIN market_goods as g on f.goods_id = g.id
         WHERE
             f.user_id = #{userId}
+        ORDER BY
+            f.update_time desc
     </select>
 </mapper>

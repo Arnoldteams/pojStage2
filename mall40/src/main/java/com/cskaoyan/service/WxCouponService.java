@@ -14,4 +14,6 @@ public interface WxCouponService {
 
     CommonData getUserCouponList(String username, Integer status, BasePageInfo info);
 
+    int addCouponByCode(String code);
+
 }
