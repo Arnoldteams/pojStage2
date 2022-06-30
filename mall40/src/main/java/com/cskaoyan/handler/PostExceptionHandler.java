@@ -1,6 +1,9 @@
 package com.cskaoyan.handler;
 
 import com.cskaoyan.bean.BaseRespVo;
+import com.cskaoyan.bean.MarketUser;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -70,6 +73,17 @@ public class PostExceptionHandler {
     @ExceptionHandler(AdminRequestBodyException.class)
     @ResponseBody
     public BaseRespVo JsonExceptionHandle(AdminRequestBodyException e){
+
+        Subject subject = SecurityUtils.getSubject();
+        Object principal = subject.getPrincipals().getPrimaryPrincipal();
+
+        try {
+            MarketUser user = (MarketUser) principal;
+            return BaseRespVo.codeAndMsg(705, "数据格式不对");
+        } catch (ClassCastException ce) {
+
+        }
+
         return BaseRespVo.invalidJson(e.getMessage());
     }
 

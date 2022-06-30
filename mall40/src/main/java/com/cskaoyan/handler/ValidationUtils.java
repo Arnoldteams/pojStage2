@@ -23,7 +23,7 @@ public class ValidationUtils {
             String field = fieldError.getField();//请求参数名
             Object rejectedValue = fieldError.getRejectedValue();//错误的值
             String defaultMessage = fieldError.getDefaultMessage(); //错误的消息
-            String msg = "请求参数" + field + "没有通过校验：值为" + rejectedValue + ";" + defaultMessage;
+            String msg = "请求参数" + field + "没有通过校验";
             throw new AdminRequestBodyException(msg);
         }
     }
