@@ -105,4 +105,34 @@ public class WxCouponController {
         return BaseRespVo.ok(userCouponList);
     }
 
+    @RequestMapping("exchange")
+    public WxCouponRespVO addCouponByCode(@RequestBody Map map) {
+        String code = (String) map.get("code");
+        Subject subject = SecurityUtils.getSubject();
+        String username = null;
+        if (subject.isAuthenticated()) {
+            MarketUser marketUser = (MarketUser) subject.getPrincipals().getPrimaryPrincipal();
+            username = marketUser.getUsername();
+        }
+        int couponId = wxCouponService.addCouponByCode(code);
+        int statusId = wxCouponService.getCouponForUser(username, couponId);
+        WxCouponRespVO wxCouponRespVO = new WxCouponRespVO();
+        if (statusId == 0) {
+            wxCouponRespVO.setErrmsg("优惠券已领完");
+            wxCouponRespVO.setErrno(740);
+        } else if (statusId == 1) {
+            wxCouponRespVO.setErrmsg("优惠券已经领取");
+            wxCouponRespVO.setErrno(740);
+        } else if (statusId == 2) {
+            wxCouponRespVO.setErrmsg("成功");
+            wxCouponRespVO.setErrno(0);
+        } else if (statusId == -1) {
+            wxCouponRespVO.setErrmsg("请登录");
+            wxCouponRespVO.setErrno(501);
+        } else if (statusId == -2) {
+            wxCouponRespVO.setErrmsg("优惠券不正确");
+            wxCouponRespVO.setErrno(742);
+        }
+        return wxCouponRespVO;
+    }
 }

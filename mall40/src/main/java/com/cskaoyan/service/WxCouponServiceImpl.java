@@ -46,6 +46,9 @@ public class WxCouponServiceImpl implements WxCouponService {
         //得到对应的优惠券信息
         MarketCoupon marketCoupon = marketCouponMapper.selectByPrimaryKey(couponId);
 
+        if(couponId == -2){
+            return -2;
+        }
 
         if(username == null){
             return -1;
@@ -170,6 +173,22 @@ public class WxCouponServiceImpl implements WxCouponService {
             wxUserCouponVO.setTag(marketCoupon.getTag());
             wxUserCouponVO.setMin(marketCoupon.getMin());
             wxUserCouponVO.setDiscount(marketCoupon.getDiscount());
+            if(marketCoupon.getStartTime()!=null) {
+                wxUserCouponVO.setStartTime(marketCoupon.getStartTime());
+            }else{
+                Date addTime = marketCouponUser.getAddTime();
+                wxUserCouponVO.setStartTime(addTime);
+            }
+            if(marketCoupon.getEndTime()!=null){
+                wxUserCouponVO.setEndTime(marketCoupon.getEndTime());
+            }else {
+                Short days = marketCoupon.getDays();
+                Date date = marketCouponUser.getAddTime();
+                int currentDays = Integer.parseInt(String.valueOf(days));
+                date.setTime(date.getTime()+currentDays*24*60*60*1000);
+                wxUserCouponVO.setEndTime(date);
+            }
+
             userCoupons.add(wxUserCouponVO);
         }
 
@@ -182,5 +201,19 @@ public class WxCouponServiceImpl implements WxCouponService {
 
 
         return commonData;
+    }
+
+    @Override
+    public int addCouponByCode(String code) {
+        MarketCouponExample marketCouponExample = new MarketCouponExample();
+        MarketCouponExample.Criteria criteria = marketCouponExample.createCriteria();
+        criteria.andCodeEqualTo(code);
+        List<MarketCoupon> marketCoupons = marketCouponMapper.selectByExample(marketCouponExample);
+        if(marketCoupons.size() == 0){
+            return -2;
+        }
+        MarketCoupon marketCoupon = marketCoupons.get(0);
+        Integer id = marketCoupon.getId();
+        return id;
     }
 }
