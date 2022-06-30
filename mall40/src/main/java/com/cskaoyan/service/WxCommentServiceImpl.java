@@ -57,7 +57,7 @@ public class WxCommentServiceImpl implements WxCommentService{
             wxCommentVO.setUserInfo(userInfo);
             wxCommentVOS.add(wxCommentVO);
         }
-        
+
         CommonData data = CommonData.data(pageInfo);
         data.setList(wxCommentVOS);
         return data;
