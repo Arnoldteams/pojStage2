@@ -7,6 +7,7 @@ import com.cskaoyan.mapper.MarketFootprintMapper;
 import com.cskaoyan.mapper.MarketGoodsMapper;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -41,14 +42,16 @@ public class FootPrintAspectHandler {
 //        获得商品id
         Integer goodsId = (Integer) args[0];
 
-        MarketUser principals = (MarketUser) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal();
+        PrincipalCollection principals = SecurityUtils.getSubject().getPrincipals();
 
 //        如果未登录，不记录浏览记录
         if (principals == null) {
             return proceed;
         }
+
+        MarketUser primaryPrincipal = (MarketUser) principals.getPrimaryPrincipal();
 //        获得用户id
-        Integer userId = principals.getId();
+        Integer userId = primaryPrincipal.getId();
         Date date = new Date();
 
 //        根据用户id和商品id查询是否存在浏览记录

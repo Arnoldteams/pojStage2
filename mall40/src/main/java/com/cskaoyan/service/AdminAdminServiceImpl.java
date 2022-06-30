@@ -140,7 +140,7 @@ public class AdminAdminServiceImpl implements AdminAdminService {
 
         List<MarketAdmin> marketAdmins = marketAdminMapper.selectByExample(marketAdminExample);
 
-        if(marketAdmins.size() == 0){
+        if(marketAdmins.size() != 0){
             return null;
         }
         marketAdminMapper.updateByPrimaryKeySelective(marketAdmin);

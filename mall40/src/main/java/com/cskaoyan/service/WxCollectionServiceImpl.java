@@ -42,6 +42,7 @@ public class WxCollectionServiceImpl implements WxCollectionService {
 //        设置查询条件，获得用户的收藏列表
         MarketCollectExample marketCollectExample = new MarketCollectExample();
         MarketCollectExample.Criteria criteria = marketCollectExample.createCriteria();
+        marketCollectExample.setOrderByClause("update_time desc");
         criteria
                 .andUserIdEqualTo(userId)
                 .andTypeEqualTo((byte) type.intValue())
