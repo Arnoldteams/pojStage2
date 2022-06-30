@@ -39,6 +39,8 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/admin/auth/logout", "anon");
         filterChainDefinitionMap.put("/admin/auth/info", "anon");
 
+        filterChainDefinitionMap.put("/wx/auth/register", "anon");
+        filterChainDefinitionMap.put("/wx/auth/regCaptcha", "anon");
         filterChainDefinitionMap.put("/wx/auth/login", "anon");
         filterChainDefinitionMap.put("/wx/auth/logout", "anon");
 
