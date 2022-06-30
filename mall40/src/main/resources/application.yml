@@ -27,6 +27,7 @@ spring:
     port: 6379
     lettuce:
       shutdown-timeout: 0
+
   # Sssd 配置上传文件大小
   servlet:
     multipart:

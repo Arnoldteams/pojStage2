@@ -262,7 +262,7 @@ public class WxCartServiceImpl implements WxCartService {
             wxCartCheckedVo.setAddressId(address.getId());
         }
 
-        wxCartCheckedVo.setAvailableCouponLength(10);
+
 
         // 获取运费信息
         WxCartIndexAllNumberVo cartTotal = new WxCartIndexAllNumberVo();
@@ -286,6 +286,8 @@ public class WxCartServiceImpl implements WxCartService {
         }else{
             wxCartCheckedVo.setUserCouponId(-1);
             wxCartCheckedVo.setCouponId(-1);
+
+            wxCartCheckedVo.setAvailableCouponLength(10);
         }
 
         // 获取优惠券信息
