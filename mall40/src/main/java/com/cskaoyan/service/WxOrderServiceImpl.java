@@ -12,6 +12,7 @@ import com.cskaoyan.bean.vo.wxOrder.WxOrderListChildVO;
 import com.cskaoyan.mapper.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import jdk.internal.org.objectweb.asm.tree.MultiANewArrayInsnNode;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -237,7 +238,7 @@ public class WxOrderServiceImpl implements WxOrderService {
         marketOrder.setUpdateTime(date);
         orderMapper.insert(marketOrder);
         Integer orderId = marketOrder.getId();
-        updateSubmitInfo(orderId,wxOrderSubmitBO.getUserCouponId());
+        updateSubmitInfo(orderId,wxOrderSubmitBO);
         return orderId;
 
     }
@@ -250,33 +251,61 @@ public class WxOrderServiceImpl implements WxOrderService {
      * @createTime: 2022/6/30 12:06
      */
     @Async
-    public void updateSubmitInfo(Integer orderId,Integer userCouponId){
+    public void updateSubmitInfo(Integer orderId,WxOrderSubmitBO wxOrderSubmitBO){
         Integer userId = getUserId();
+        Integer cartId = wxOrderSubmitBO.getCartId();
         // 查出该用户所有被选中的商品列表
-        MarketCartExample example = new MarketCartExample();
-        example.createCriteria().andUserIdEqualTo(userId)
-                .andCheckedEqualTo(true)
-                .andDeletedEqualTo(false);
-        List<MarketCart> marketCarts = cartMapper.selectByExample(example);
-        // 将选中的商品信息添加到订单商品表中
-        for (MarketCart marketCart : marketCarts) {
-            MarketOrderGoods goods = new MarketOrderGoods();
-            BeanUtils.copyProperties(marketCart,goods);
-            goods.setOrderId(orderId);
-            goods.setSpecifications(Arrays.toString(marketCart.getSpecifications()));
+        // 判断快速购买还是购物车购买
+        if(cartId > 0){
+            // 将选中的商品信息添加到订单商品表中
+            MarketCart marketCart = cartMapper.selectByPrimaryKey(cartId);
+            MarketOrderGoods goods = getMarketOrderGoods(orderId,marketCart);
             orderGoodsMapper.insertSelective(goods);
+            // 更新购物车信息
+            cartMapper.updateCartGoodsDeletedByCartId(cartId);
+        }else{
+            MarketCartExample example = new MarketCartExample();
+            example.createCriteria().andUserIdEqualTo(userId)
+                    .andCheckedEqualTo(true)
+                    .andDeletedEqualTo(false);
+            List<MarketCart> marketCarts = cartMapper.selectByExample(example);
+            // 将选中的商品信息添加到订单商品表中
+            for (MarketCart marketCart : marketCarts) {
+                MarketOrderGoods goods = getMarketOrderGoods(orderId,marketCart);
+                orderGoodsMapper.insertSelective(goods);
+            }
+            // 更新购物车信息
+            cartMapper.deleteCartInfoByUserId(userId);
         }
 
-        // 更新购物车信息
-        cartMapper.deleteCartInfoByUserId(userId);
+
+
+
+
 
         // 更新优惠券信息
+        Integer userCouponId = wxOrderSubmitBO.getUserCouponId();
         if(userCouponId > 0){
             couponUserMapper.updateUserCouponNumberByCouponId(userCouponId);
         }
 
     }
 
+    /**
+     * @description: submit中获取MarketOrderGoods对象
+     * @parameter: [orderId, marketCart]
+     * @return: com.cskaoyan.bean.MarketOrderGoods
+     * @author: 帅关
+     * @createTime: 2022/6/30 17:50
+     */
+    private MarketOrderGoods getMarketOrderGoods(Integer orderId,MarketCart marketCart){
+        MarketOrderGoods goods = new MarketOrderGoods();
+        BeanUtils.copyProperties(marketCart,goods);
+        goods.setOrderId(orderId);
+        goods.setId(null);
+        goods.setSpecifications(Arrays.toString(marketCart.getSpecifications()));
+        return goods;
+    }
 
     /**
      * @description: 获取购物车费用
@@ -287,8 +316,7 @@ public class WxOrderServiceImpl implements WxOrderService {
      */
     private void getCartInfo(MarketOrder marketOrder,WxOrderSubmitBO wxOrderSubmitBO) {
         WxCartCheckBo cart = new WxCartCheckBo();
-        cart.setCouponId(wxOrderSubmitBO.getCouponId());
-        cart.setUserCouponId(wxOrderSubmitBO.getUserCouponId());
+        BeanUtils.copyProperties(wxOrderSubmitBO,cart);
         WxCartCheckedVo checked = cartService.queryCartCheckInfo(cart);
         // 封装对象
         marketOrder.setGoodsPrice(BigDecimal.valueOf(checked.getGoodsTotalPrice()));
