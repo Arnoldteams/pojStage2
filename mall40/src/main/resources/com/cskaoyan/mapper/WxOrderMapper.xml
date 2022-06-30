@@ -706,7 +706,7 @@
   </select>
 
   <update id="updateUserOrderStatusRefund">
-    update market_order set order_status=202
+    update market_order set order_status=202,update_time=curtime(),aftersale_status=1
     where id=#{orderId}
   </update>
 
@@ -760,6 +760,7 @@
     aftersale_status as afterStatus,id,order_sn as orderSn
     from market_order
     where user_id=#{userId} and deleted=0
+    order by id desc
   </select>
 
   <select id="selectOrderListByStatusByUserId" resultType="com.cskaoyan.bean.vo.wxOrder.WxOrderListChildVO">
@@ -767,6 +768,7 @@
      aftersale_status as afterStatus,id,order_sn as orderSn
       from market_order
      where user_id=#{userId} and order_status=#{orderStatus} and deleted=0
+      order by id desc
   </select>
 
   <select id="selectOrderStatusById" resultType="java.lang.Integer">
@@ -808,5 +810,6 @@
   <update id="updateMarketOrderCommentStatus">
     update market_order_goods
     set comment=#{commentId},update_time=curtime()
+    where id=#{orderGoodsId}
   </update>
 </mapper>

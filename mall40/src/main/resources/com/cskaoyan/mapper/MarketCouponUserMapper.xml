@@ -303,4 +303,9 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <update id="updateUserCouponNumberByCouponId">
+    update market_coupon_user set deleted = 1
+    where id =#{userCouponId}
+    </update>
 </mapper>

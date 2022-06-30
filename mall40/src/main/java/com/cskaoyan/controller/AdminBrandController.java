@@ -8,6 +8,8 @@ import com.cskaoyan.bean.vo.AdminBrandVO;
 import com.cskaoyan.bean.vo.AdminStorageVO;
 import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminBrandService;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +38,7 @@ public class AdminBrandController {
      * @param: name - [String] brand 的name
      */
     @GetMapping("list")
+    @RequiresPermissions(value = {"admin:brand:list","*"},logical = Logical.OR)
     public BaseRespVo list(BaseParam baseParam, String id, String name) {
 
         CommonData<MarketBrand> data = adminBrandService.queryAllBrand(baseParam, id, name);
@@ -52,6 +55,7 @@ public class AdminBrandController {
      */
     @PostMapping("update")
     @LogAnnotation(value = "更新品牌制造商", comment = "来自sprinkle")
+    @RequiresPermissions(value = {"admin:brand:update","*"},logical = Logical.OR)
     public BaseRespVo update(@RequestBody MarketBrand marketBrand) {
         MarketBrand brand = adminBrandService.updateOneBrand(marketBrand);
         return BaseRespVo.ok(brand);
@@ -65,6 +69,7 @@ public class AdminBrandController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @PostMapping("delete")
+    @RequiresPermissions(value = {"admin:brand:delete","*"},logical = Logical.OR)
     @LogAnnotation(value = "删除品牌制造商", comment = "来自sprinkle")
     public BaseRespVo delete(@RequestBody MarketBrand marketBrand) {
         adminBrandService.deleteOneBrand(marketBrand);
@@ -80,6 +85,7 @@ public class AdminBrandController {
      */
     @PostMapping("create")
     @LogAnnotation(value = "增加品牌制造商", comment = "来自sprinkle")
+    @RequiresPermissions(value = {"admin:brand:create","*"},logical = Logical.OR)
     public BaseRespVo create(@RequestBody MarketBrand marketBrand) {
         MarketBrand brand = adminBrandService.createOneBrand(marketBrand);
         return BaseRespVo.ok(brand);

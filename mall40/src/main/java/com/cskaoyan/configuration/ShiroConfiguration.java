@@ -41,22 +41,24 @@ public class ShiroConfiguration {
 
         filterChainDefinitionMap.put("/wx/auth/login", "anon");
         filterChainDefinitionMap.put("/wx/auth/logout", "anon");
-        filterChainDefinitionMap.put("/wx/goods/index", "anon");
-        filterChainDefinitionMap.put("/wx/search/index", "anon");
-        filterChainDefinitionMap.put("/wx/brand/list", "anon");
+
+//        filterChainDefinitionMap.put("/wx/home/**", "anon");
+//        filterChainDefinitionMap.put("/wx/brand/**", "anon");
+//        filterChainDefinitionMap.put("/wx/goods/**", "anon");
+//        filterChainDefinitionMap.put("/wx/search/**", "anon");
+//
+//        filterChainDefinitionMap.put("/wx/user/index", "authc");
+//        filterChainDefinitionMap.put("/wx/cart/**", "authc");
 
         filterChainDefinitionMap.put("/wx/**", "anon");
         filterChainDefinitionMap.put("/admin/auth/noAuthc", "anon");
-        filterChainDefinitionMap.put("/wx/cart/goodscount", "anon");
+//        filterChainDefinitionMap.put("/wx/cart/goodscount", "anon");
 
-        filterChainDefinitionMap.put("/wx/order/**", "anon");
+//        filterChainDefinitionMap.put("/wx/order/**", "anon");
 
-        /*在开发的时候打开，测试的时候关闭*/
 
 //        filterChainDefinitionMap.put("/admin/profile/nnotice", "anon");
         filterChainDefinitionMap.put("/admin/**", "authc");
-        /*在开发的时候关闭，测试的时候打开*/
-//        filterChainDefinitionMap.put("/wx/**", "authc");
 
 
 

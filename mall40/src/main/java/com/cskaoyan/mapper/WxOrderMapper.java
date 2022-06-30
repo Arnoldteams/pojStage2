@@ -107,6 +107,6 @@ public interface WxOrderMapper {
 
     void updateOrder(Integer orderId);
 
-    void updateMarketOrderCommentStatus(Integer commentId);
+    void updateMarketOrderCommentStatus(@Param("commentId") Integer commentId, @Param("orderGoodsId") Integer orderGoodsId);
 
 }

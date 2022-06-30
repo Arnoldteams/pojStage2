@@ -6,15 +6,18 @@ import com.cskaoyan.bean.MarketCommentExample;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.UserInfo;
+import com.cskaoyan.bean.vo.WxCommentCountVO;
 import com.cskaoyan.bean.vo.WxCommentVO;
 import com.cskaoyan.mapper.MarketCategoryMapper;
 import com.cskaoyan.mapper.MarketCommentMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.aspectj.weaver.ast.Var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,27 +32,27 @@ public class WxCommentServiceImpl implements WxCommentService{
 
     @Override
     public CommonData<WxCommentVO> quarryAllComment(BaseParam baseParam, byte type, Integer valueId, Integer showType) {
+        PageHelper.startPage(baseParam.getPage(), baseParam.getLimit());
+
         MarketCommentExample example = new MarketCommentExample();
         MarketCommentExample.Criteria criteria = example.createCriteria();
-        criteria.andTypeEqualTo(type);
+        MarketCommentExample.Criteria criteria1 = criteria.andTypeEqualTo(type).andValueIdEqualTo(valueId);
         if(showType == 1){
-            criteria.andHasPictureEqualTo(true);
+            criteria1.andHasPictureEqualTo(true);
         }
-        if(showType == 0){
-            criteria.andHasPictureEqualTo(false);
-        }
-        criteria.andValueIdEqualTo(valueId);
-        //分页插件 PageHelper，辅助我们做分页以及分页信息的获得
-        PageHelper.startPage(baseParam.getPage(), baseParam.getLimit());
-        List<MarketComment> marketComments = marketCommentMapper.selectByExample(example);
 
-        List<WxCommentVO> wxCommentVOS = new ArrayList<WxCommentVO>();
+
+        //分页插件 PageHelper，辅助我们做分页以及分页信息的获得
+        List<MarketComment> marketComments = marketCommentMapper.selectByExample(example);
+        PageInfo<MarketComment> pageInfo = new PageInfo<>(marketComments);
+
+        List<WxCommentVO> wxCommentVOS = new ArrayList<>();
         for (MarketComment marketComment : marketComments) {
             WxCommentVO wxCommentVO = new WxCommentVO();
             wxCommentVO.setContent(marketComment.getContent());
             wxCommentVO.setAddTime(marketComment.getAddTime());
             wxCommentVO.setAdminContent(marketComment.getAdminContent());
-            wxCommentVO.setPicUrls(marketComment.getPicUrls());
+            wxCommentVO.setPicList(marketComment.getPicUrls());
 
             UserInfo userInfo = marketCommentMapper.selectUserInfo(marketComment.getUserId());
 
@@ -57,9 +60,41 @@ public class WxCommentServiceImpl implements WxCommentService{
             wxCommentVOS.add(wxCommentVO);
         }
 
-        //TODO 可能有错
-        PageInfo<WxCommentVO> pageInfo = new PageInfo<>(wxCommentVOS);
+        CommonData data = CommonData.data(pageInfo);
+        data.setList(wxCommentVOS);
+        return data;
+    }
 
-        return CommonData.data(pageInfo);
+    @Override
+    public WxCommentCountVO getConmmentCount(Integer valueId, Integer type) {
+        int hasPicCount = 0;
+        int allCount = 0;
+
+        MarketCommentExample marketCommentExample = new MarketCommentExample();
+        MarketCommentExample.Criteria criteria = marketCommentExample.createCriteria();
+        criteria.andValueIdEqualTo(valueId).andTypeEqualTo(Byte.valueOf(String.valueOf(type)));
+        List<MarketComment> marketComments = marketCommentMapper.selectByExample(marketCommentExample);
+        for (MarketComment marketComment : marketComments) {
+            if(marketComment.getHasPicture()){
+                hasPicCount++;
+                allCount++;
+            }else{
+                allCount++;
+            }
+        }
+
+        WxCommentCountVO wxCommentCountVO = new WxCommentCountVO();
+        wxCommentCountVO.setHasPicCount(hasPicCount);
+        wxCommentCountVO.setAllCount(allCount);
+        return wxCommentCountVO;
+    }
+
+    @Override
+    public MarketComment addTopicComment(MarketComment marketComment) {
+        marketComment.setAddTime(new Date(System.currentTimeMillis()));
+        marketComment.setUpdateTime(new Date(System.currentTimeMillis()));
+        int i = marketCommentMapper.insertSelective(marketComment);
+        System.out.println(i);
+        return marketComment;
     }
 }

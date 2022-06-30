@@ -357,7 +357,13 @@
     tel,is_default as isDefault,add_time as addTime,
     update_time as updateTime,deleted
     from market_address
-    where user_id = #{userId}
+    where user_id = #{userId} and deleted = 0;
     </select>
+
+  <select id="selectPartAddressInfoByUserId" resultMap="BaseResultMap">
+    select name,tel,address_detail
+    from market_address
+    where user_id = #{userId} and deleted = 0
+  </select>
 </mapper>
 

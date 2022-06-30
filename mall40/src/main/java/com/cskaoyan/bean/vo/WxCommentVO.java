@@ -21,7 +21,7 @@ public class WxCommentVO {
 
     private String content;
 
-    private String[] picUrls;
+    private String[] picList;
 
     private UserInfo userInfo;
 }

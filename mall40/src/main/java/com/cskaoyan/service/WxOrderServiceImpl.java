@@ -1,20 +1,24 @@
 package com.cskaoyan.service;
 
 import com.cskaoyan.bean.*;
+import com.cskaoyan.bean.bo.WxCartCheckBo;
 import com.cskaoyan.bean.bo.wxOrder.*;
 import com.cskaoyan.bean.param.CommonData;
+import com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO;
+import com.cskaoyan.bean.vo.wxCart.WxCartCheckedVo;
 import com.cskaoyan.bean.vo.wxOrder.WxOrderDetailChildVo;
 import com.cskaoyan.bean.vo.wxOrder.WxOrderDetailVo;
 import com.cskaoyan.bean.vo.wxOrder.WxOrderListChildVO;
-import com.cskaoyan.bean.vo.wxOrder.WxOrderSubmitVO;
-import com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO;
-import com.cskaoyan.mapper.WxOrderMapper;
+import com.cskaoyan.mapper.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.PrincipalCollection;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.ObjectError;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -27,11 +31,23 @@ import java.util.*;
  */
 
 @Service
+@Transactional
 public class WxOrderServiceImpl implements WxOrderService {
 
     @Autowired
     WxOrderMapper wxOrderMapper;
-
+    @Autowired
+    MarketAddressMapper addressMapper;
+    @Autowired
+    WxCartService cartService;
+    @Autowired
+    MarketCartMapper cartMapper;
+    @Autowired
+    MarketOrderMapper orderMapper;
+    @Autowired
+    MarketCouponUserMapper couponUserMapper;
+    @Autowired
+    MarketOrderGoodsMapper orderGoodsMapper;
 
     /**
      * @author: ZY
@@ -47,8 +63,7 @@ public class WxOrderServiceImpl implements WxOrderService {
         PageHelper.startPage(page, limit);
 
         //拿到userId
-        MarketUser user = (MarketUser) SecurityUtils.getSubject().getPrincipal();
-        Integer userId = user.getId();
+        Integer userId = getUserId();
 
         //根据userId和订单状态找出该用户该状态的订单列表
         List<WxOrderListChildVO> wxOrderListChildVOList = new ArrayList<>();
@@ -104,6 +119,7 @@ public class WxOrderServiceImpl implements WxOrderService {
      * @author: ZY
      * @createTime: 2022/06/29 23:49:00
      * @description: 我的订单-订单详情-订单发货后可确认收货，更改订单状态，确认收货时间，更新时间
+     * @description: 用户确认收货
      * @param: orderId
      * @return: void
      */
@@ -149,8 +165,7 @@ public class WxOrderServiceImpl implements WxOrderService {
     @Override
     public void addOrderComment(WxOrderListCommentBO wxOrderListCommentBO) {
         //拿到userId
-        MarketUser user = (MarketUser) SecurityUtils.getSubject().getPrincipal();
-        Integer userId = user.getId();
+        Integer userId = getUserId();
 
         //拿到订单商品表里的主键id
         Integer orderGoodsId = wxOrderListCommentBO.getOrderGoodsId();
@@ -161,7 +176,7 @@ public class WxOrderServiceImpl implements WxOrderService {
         Integer commentId = wxOrderListCommentBO.getId();
 
         //更改订单商品表里，的商品评论状态
-        wxOrderMapper.updateMarketOrderCommentStatus(commentId);
+        wxOrderMapper.updateMarketOrderCommentStatus(commentId,orderGoodsId);
 
         //更改订单待评价商品数量和更新时间
         Integer orderId = wxOrderMapper.selectOrderIdByOrderGoodsId(orderGoodsId);
@@ -196,6 +211,7 @@ public class WxOrderServiceImpl implements WxOrderService {
         OrderStatusHandleConvert convert = (OrderStatusHandleConvert) instance.get(child.getOrderStatus());
         WxOrderListHandleOption handler = convert.getHandler();
 
+        // 根据状态码获取handler和statusText
         OrderStatusContentConvert statusConvert = (OrderStatusContentConvert) OrderStatusContentConvert.getInstance().get(child.getOrderStatus());
         String statusText = statusConvert.getOrderStatusContent();
         child.setHandleOption(handler);
@@ -230,6 +246,117 @@ public class WxOrderServiceImpl implements WxOrderService {
         String payId = format.concat(num);
 
         wxOrderMapper.updateOrderStatuPrepay(orderId, payId);
+    }
+
+    @Override
+    public Integer addOrder(WxOrderSubmitBO wxOrderSubmitBO) {
+
+        // 生成订单
+        MarketOrder marketOrder = new MarketOrder();
+        // 生成订单编号
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String prefix = sdf.format(new Date());
+        String postfix = String.valueOf(System.currentTimeMillis());
+        String orderSn = prefix + postfix.substring(postfix.length() - 6);
+        marketOrder.setOrderSn(orderSn);
+        // 生成订单订单状态
+        marketOrder.setOrderStatus((short) 101);
+        // 获取留言信息
+        marketOrder.setMessage(wxOrderSubmitBO.getMessage());
+        // 获取收货人信息
+        getReceiverInfo(marketOrder);
+        // 获取商品总费用
+        getCartInfo(marketOrder, wxOrderSubmitBO);
+        // 获取创建时间
+        Date date = new Date();
+        marketOrder.setAddTime(date);
+        marketOrder.setUpdateTime(date);
+        orderMapper.insert(marketOrder);
+        Integer orderId = marketOrder.getId();
+        updateSubmitInfo(orderId, wxOrderSubmitBO.getUserCouponId());
+        return orderId;
+
+    }
+
+    /**
+     * @description: 提交订单信息杂七杂八的表修改
+     * @parameter: [orderId, userCouponId]
+     * @return: void
+     * @author: 帅关
+     * @createTime: 2022/6/30 12:06
+     */
+    @Async
+    public void updateSubmitInfo(Integer orderId, Integer userCouponId) {
+        Integer userId = getUserId();
+        // 查出该用户所有被选中的商品列表
+        MarketCartExample example = new MarketCartExample();
+        example.createCriteria().andUserIdEqualTo(userId)
+                .andCheckedEqualTo(true)
+                .andDeletedEqualTo(false);
+        List<MarketCart> marketCarts = cartMapper.selectByExample(example);
+        // 将选中的商品信息添加到订单商品表中
+        for (MarketCart marketCart : marketCarts) {
+            MarketOrderGoods goods = new MarketOrderGoods();
+            BeanUtils.copyProperties(marketCart, goods);
+            goods.setOrderId(orderId);
+            goods.setId(null);
+            goods.setSpecifications(Arrays.toString(marketCart.getSpecifications()));
+            orderGoodsMapper.insertSelective(goods);
+        }
+
+        // 更新购物车信息
+        cartMapper.deleteCartInfoByUserId(userId);
+
+        // 更新优惠券信息
+        if (userCouponId > 0) {
+            couponUserMapper.updateUserCouponNumberByCouponId(userCouponId);
+        }
+
+    }
+
+
+    /**
+     * @description: 获取购物车费用
+     * @parameter: [marketOrder]
+     * @return: void
+     * @author: 帅关
+     * @createTime: 2022/6/30 10:20
+     */
+    private void getCartInfo(MarketOrder marketOrder, WxOrderSubmitBO wxOrderSubmitBO) {
+        WxCartCheckBo cart = new WxCartCheckBo();
+        cart.setCouponId(wxOrderSubmitBO.getCouponId());
+        cart.setUserCouponId(wxOrderSubmitBO.getUserCouponId());
+        WxCartCheckedVo checked = cartService.queryCartCheckInfo(cart);
+        // 封装对象
+        marketOrder.setGoodsPrice(BigDecimal.valueOf(checked.getGoodsTotalPrice()));
+        marketOrder.setFreightPrice(BigDecimal.valueOf(checked.getFreightPrice()));
+        marketOrder.setCouponPrice(BigDecimal.valueOf(checked.getCouponPrice()));
+        marketOrder.setOrderPrice(BigDecimal.valueOf(checked.getOrderTotalPrice()));
+        marketOrder.setActualPrice(BigDecimal.valueOf(checked.getActualPrice()));
+        marketOrder.setComments((short) checked.getCheckedGoodsList().size());
+        marketOrder.setIntegralPrice(BigDecimal.valueOf(0));
+        marketOrder.setGrouponPrice(BigDecimal.valueOf(0));
+    }
+
+    /**
+     * @description: 提供订单获取收货人信息
+     * @parameter: [marketOrder]
+     * @return: void
+     * @author: 帅关
+     * @createTime: 2022/6/30 10:04
+     */
+    private void getReceiverInfo(MarketOrder marketOrder) {
+        Integer userId = getUserId();
+        MarketAddress addressInfo = addressMapper.selectPartAddressInfoByUserId(userId);
+        marketOrder.setConsignee(addressInfo.getName())
+                .setMobile(addressInfo.getTel())
+                .setAddress(addressInfo.getAddressDetail())
+                .setUserId(userId);
+    }
+
+    private Integer getUserId() {
+        MarketUser user = (MarketUser) SecurityUtils.getSubject().getPrincipal();
+        return user.getId();
     }
 
 }
