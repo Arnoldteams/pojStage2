@@ -1,5 +1,6 @@
 import com.cskaoyan.MarketApplication;
 import com.cskaoyan.bean.MarketCategory;
+import com.cskaoyan.bean.MarketGoods;
 import com.cskaoyan.bean.MarketKeyword;
 
 import com.cskaoyan.bean.bo.wxOrder.OrderStatusConvert;
@@ -9,7 +10,7 @@ import com.cskaoyan.mapper.MarketCategoryMapper;
 import com.cskaoyan.mapper.MarketFootprintMapper;
 
 
-
+import com.cskaoyan.mapper.MarketGoodsMapper;
 import com.cskaoyan.mapper.MarketKeywordMapper;
 import com.cskaoyan.service.FileService;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -20,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -40,6 +42,9 @@ public class RainTest {
 
     @Autowired
     MarketCategoryMapper marketCategoryMapper;
+
+    @Autowired
+    MarketGoodsMapper marketGoodsMapper;
 
 
     @Test
@@ -63,6 +68,8 @@ public class RainTest {
     @Test
     public void test3() {
         MarketCategory marketCategory = marketCategoryMapper.selectByPrimaryKey(1008002);
+
+        List<MarketGoods> marketGoods = marketGoodsMapper.selectByExample(null);
 
     }
 }
