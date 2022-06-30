@@ -32,5 +32,5 @@ public class WxIssueServiceImpl implements WxIssueService{
 
         return CommonData.data(pageInfo);
     }
-    
+
 }

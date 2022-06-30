@@ -98,7 +98,7 @@ public class WxAuthorServiceImpl implements WxAuthorService {
     }
 
     @Override
-    public void insertUser(WxAuthRegisterBO wxAuthRegisterBO, String avatarUrl, HttpServletRequest req) {
+    public Boolean insertUser(WxAuthRegisterBO wxAuthRegisterBO, String avatarUrl, HttpServletRequest req) {
         MarketUser user = new MarketUser();
         user.setUsername(wxAuthRegisterBO.getUsername());
         user.setNickname(wxAuthRegisterBO.getUsername());
@@ -117,7 +117,14 @@ public class WxAuthorServiceImpl implements WxAuthorService {
         user.setSessionKey(req.getSession().getId());
         user.setStatus((byte) 0);
 
-        userMapper.insert(user);
+        try {
+            userMapper.insert(user);
+        } catch (Exception e) {
+            System.out.println("Err：插入失败");
+            return true;
+        }
+
+        return false;
     }
 
     @Override

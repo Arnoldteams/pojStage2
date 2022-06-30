@@ -2,10 +2,12 @@ package com.cskaoyan.controller;
 
 import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.bo.wxOrder.WxOrderListCommentBO;
+import com.cskaoyan.bean.bo.wxOrder.WxOrderSubmitBO;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.wxOrder.WxOrderDetailVo;
 import com.cskaoyan.bean.vo.wxOrder.WxOrderListChildVO;
 import com.cskaoyan.bean.vo.userManager.AdminOrderDetailGoodsVO;
+import com.cskaoyan.bean.vo.wxOrder.WxOrderSubmitVO;
 import com.cskaoyan.service.WxOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -138,6 +140,14 @@ public class WxOrderController {
     public BaseRespVo detail(Integer orderId){
         WxOrderDetailVo detail = wxOrderService.selectOrderDetailByOrderId(orderId);
         return BaseRespVo.ok(detail);
+    }
+
+    @RequestMapping("submit")
+    public BaseRespVo submit(@RequestBody WxOrderSubmitBO wxOrderSubmitBO){
+        WxOrderSubmitVO wxOrderSubmitVO = new WxOrderSubmitVO();
+        Integer orderId = wxOrderService.addOrder(wxOrderSubmitBO);
+        wxOrderSubmitVO.setOrderId(orderId);
+        return BaseRespVo.ok(wxOrderSubmitVO);
     }
 
 
