@@ -760,7 +760,7 @@
     aftersale_status as afterStatus,id,order_sn as orderSn
     from market_order
     where user_id=#{userId} and deleted=0
-    order by id desc
+    order by update_time desc
   </select>
 
   <select id="selectOrderListByStatusByUserId" resultType="com.cskaoyan.bean.vo.wxOrder.WxOrderListChildVO">
@@ -768,7 +768,7 @@
      aftersale_status as afterStatus,id,order_sn as orderSn
       from market_order
      where user_id=#{userId} and order_status=#{orderStatus} and deleted=0
-      order by id desc
+      order by update_time desc
   </select>
 
   <select id="selectOrderStatusById" resultType="java.lang.Integer">
