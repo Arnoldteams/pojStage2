@@ -26,6 +26,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -111,7 +113,7 @@ public class AdminController {
     @RequestMapping("user/update")
     @RequiresPermissions(value = {"admin:user:update","*"},logical = Logical.OR)
     @LogAnnotation(value = "修改用户",successResult = "成功",unSuccessResult = "修改失败")
-    public BaseRespVo update(@RequestBody UserEntity user) {
+    public BaseRespVo update(@RequestBody @Validated UserEntity user, BindingResult bindingResult) {
         userService.updateUser(user);
         return BaseRespVo.ok(1);
     }

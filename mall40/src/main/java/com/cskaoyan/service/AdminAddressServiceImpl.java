@@ -42,7 +42,7 @@ public class AdminAddressServiceImpl implements AdminAddressService {
             or.andNameLike(name);
         }
         if (userId !=null){
-            or.andIdEqualTo(userId);
+            or.andUserIdEqualTo(userId);
         }
         or.andDeletedEqualTo(false);
         String orderByClause = pageInfo.getSort()+" " +pageInfo.getOrder();
