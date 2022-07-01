@@ -24,6 +24,8 @@ public class WxIssueServiceImpl implements WxIssueService{
     @Override
     public CommonData<MarketIssue> queryAllIssue(Integer page, Integer limit) {
         MarketIssueExample example = new MarketIssueExample();
+        MarketIssueExample.Criteria criteria = example.createCriteria();
+        criteria.andDeletedEqualTo(false);
 
         PageHelper.startPage(page,limit);
         List<MarketIssue> marketIssues = marketIssueMapper.selectByExample(example);
