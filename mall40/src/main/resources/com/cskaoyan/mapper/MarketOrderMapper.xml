@@ -670,4 +670,8 @@
     admin_content=#{content}
     where id=#{commentId}
   </update>
+
+  <select id="selectAllOrderId" resultType="java.lang.Integer">
+    select id from market_order
+  </select>
 </mapper>

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author: ZY
@@ -43,7 +44,7 @@ public class AdminOrderController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("channel")
-    @RequiresPermissions(value = {"admin:order:channel","*"},logical = Logical.OR)
+    @RequiresPermissions(value = {"admin:order:channel", "*"}, logical = Logical.OR)
     public BaseRespVo channel() {
         ArrayList<AdminOrderChannelVO> data = new ArrayList<>();
         data.add(new AdminOrderChannelVO("ZTO", "中通快递"));
@@ -72,7 +73,7 @@ public class AdminOrderController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("list")
-    @RequiresPermissions(value = {"admin:order:list","*"},logical = Logical.OR)
+    @RequiresPermissions(value = {"admin:order:list", "*"}, logical = Logical.OR)
     public BaseRespVo list(BasePageInfo basePageInfo, AdminOrderListBO adminOrderListBO) {
         CommonData<MarketOrder> data = adminOrderService.queryOrderList(basePageInfo, adminOrderListBO);
         return BaseRespVo.ok(data);
@@ -87,7 +88,7 @@ public class AdminOrderController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("ship")
-    @RequiresPermissions(value = {"admin:order:ship","*"},logical = Logical.OR)
+    @RequiresPermissions(value = {"admin:order:ship", "*"}, logical = Logical.OR)
     @LogAnnotation(value = "订单发货")
     public BaseRespVo ship(@RequestBody AdminOrderShipBO adminOrderShipBO) {
         String shipSn = adminOrderShipBO.getShipSn();
@@ -112,11 +113,19 @@ public class AdminOrderController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("detail")
-    @RequiresPermissions(value = {"admin:order:detail","*"},logical = Logical.OR)
+    @RequiresPermissions(value = {"admin:order:detail", "*"}, logical = Logical.OR)
     public BaseRespVo detail(Integer id) {
-        AdminOrderDetailVO adminOrderDetailVO = adminOrderService.detailOrderList(id);
-        return BaseRespVo.ok(adminOrderDetailVO);
+        //判断orderId是否存在
+        List<Integer> orderIdList = adminOrderService.queryAllOrderId();
+        for (Integer orderId : orderIdList) {
+            if (orderId==Integer.valueOf(id.toString().trim())) {
+                AdminOrderDetailVO adminOrderDetailVO = adminOrderService.detailOrderList(id);
+                return BaseRespVo.ok(adminOrderDetailVO);
+            }
+        }
+        return BaseRespVo.wrongOrderId();
     }
+
 
     /**
      * @author: ZY
@@ -126,7 +135,7 @@ public class AdminOrderController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("delete")
-    @RequiresPermissions(value = {"admin:order:delete","*"},logical = Logical.OR)
+    @RequiresPermissions(value = {"admin:order:delete", "*"}, logical = Logical.OR)
     public BaseRespVo delete(Integer orderId) {
         return BaseRespVo.unableDelete();
     }
@@ -141,7 +150,7 @@ public class AdminOrderController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("refund")
-    @RequiresPermissions(value = {"admin:order:refund","*"},logical = Logical.OR)
+    @RequiresPermissions(value = {"admin:order:refund", "*"}, logical = Logical.OR)
     @LogAnnotation(value = "订单退款")
     public BaseRespVo refund(@RequestBody AdminOrderRefundBO adminOrderRefundBO) {
         adminOrderService.refundOrderMoney(adminOrderRefundBO);
@@ -157,7 +166,7 @@ public class AdminOrderController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("reply")
-    @RequiresPermissions(value = {"admin:order:reply","*"},logical = Logical.OR)
+    @RequiresPermissions(value = {"admin:order:reply", "*"}, logical = Logical.OR)
     @LogAnnotation(value = "管理员回复商品评论")
     public BaseRespVo reply(@RequestBody AdminOrderReplyBO adminOrderReplyBO) {
         if (!StringUtils.isEmpty(adminOrderService.queryAdminComment(adminOrderReplyBO.getCommentId()))) {
