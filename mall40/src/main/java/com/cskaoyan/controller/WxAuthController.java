@@ -9,16 +9,21 @@ import com.cskaoyan.bean.vo.WxAuthRegisterVO;
 import com.cskaoyan.bean.vo.wx.user.WxLoginUserVO;
 import com.cskaoyan.bean.vo.wx.user.WxUserBean;
 import com.cskaoyan.configuration.realm.MarketToken;
+import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.FileService;
 import com.cskaoyan.service.WxAuthorService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -95,10 +100,10 @@ public class WxAuthController {
      */
 
     @PostMapping("regCaptcha")
-    public BaseRespVo regCaptcha(@RequestBody Map<String, String> map) {
+    public BaseRespVo regCaptcha(@RequestBody WxAuthRegisterBO wxAuthRegisterBO, BindingResult bindingResult) {
 
         // generate code and put into redis
-        String mobile = map.get("mobile");
+        String mobile = wxAuthRegisterBO.getMobile();
         String code = RandomStringUtils.randomNumeric(6);
         redisTemplate.opsForValue().set("mobile", mobile, 300, TimeUnit.SECONDS);
         redisTemplate.opsForValue().set("code", code, 300, TimeUnit.SECONDS);
@@ -117,7 +122,7 @@ public class WxAuthController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @PostMapping("register")
-    public BaseRespVo register(@RequestBody WxAuthRegisterBO wxAuthRegisterBO) {
+    public BaseRespVo register(@RequestBody WxAuthRegisterBO wxAuthRegisterBO, BindingResult bindingResult) {
 
         // get code and mobile from redis
         Object code = redisTemplate.opsForValue().get("code");

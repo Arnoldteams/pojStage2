@@ -208,4 +208,16 @@
       code = #{code,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectIdByName" resultType="java.lang.Integer">
+    select id from market_region where name = #{regionName}
+    </select>
+
+  <select id="selectIdByCode" resultType="java.lang.Integer">
+    select id from market_region where code=#{areaCode}
+  </select>
+
+  <select id="selectIdBySonId" resultType="java.lang.Integer">
+    select pid from market_region where id =#{id}
+  </select>
 </mapper>

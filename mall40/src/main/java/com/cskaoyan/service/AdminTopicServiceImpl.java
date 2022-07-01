@@ -190,7 +190,7 @@ public class AdminTopicServiceImpl implements AdminTopicService {
         MarketTopic marketTopic = new MarketTopic();
         marketTopic.setDeleted(true);
 
-        session.setAttribute("log", idList);
+        session.setAttribute("log", idList.toString());
 
         marketTopicMapper.updateByExampleSelective(marketTopic, marketTopicExample);
     }

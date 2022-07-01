@@ -1,9 +1,6 @@
 package com.cskaoyan.service;
 
-import com.cskaoyan.bean.BasePageInfo;
-import com.cskaoyan.bean.MarketLog;
-import com.cskaoyan.bean.MarketLogExample;
-import com.cskaoyan.bean.MarketUser;
+import com.cskaoyan.bean.*;
 import com.cskaoyan.bean.bo.userManager.AdminUserListBO;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
@@ -12,6 +9,7 @@ import com.cskaoyan.bean.vo.AdminListVO;
 import com.cskaoyan.bean.vo.userManager.AdminUserListVO;
 import com.cskaoyan.bean.vo.userManager.UserEntity;
 import com.cskaoyan.mapper.MarketLogMapper;
+import com.cskaoyan.mapper.MarketUserMapper;
 import com.cskaoyan.mapper.UserMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -20,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +34,13 @@ public class UserServiceImpl implements UserService {
     UserMapper userMapper;
 
     @Autowired
+    MarketUserMapper marketUserMapper;
+
+    @Autowired
     MarketLogMapper marketLogMapper;
+
+    @Autowired
+    HttpSession httpSession;
 
 
     @Override
@@ -50,25 +55,43 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AdminUserListVO queryUserList(AdminUserListBO userListBO, BasePageInfo pageInfo) {
+    public CommonData<AdminUserListVO> queryUserList(String username,String mobile,Integer id,BasePageInfo pageInfo) {
         PageHelper.startPage(pageInfo.getPage(), pageInfo.getLimit());
-        if (userListBO != null) {
-            if (userListBO.getUsername() != null) {
-                userListBO.setUsername("%" + userListBO.getUsername() + "%");
-            }
+
+        MarketUserExample marketUserExample = new MarketUserExample();
+        MarketUserExample.Criteria criteria = marketUserExample.createCriteria();
+        if (username!=null && username!=""){
+            criteria.andUsernameLike("%"+username+"%");
         }
-        List<UserEntity> userList = userMapper.selectUserList(userListBO, pageInfo.getSort(), pageInfo.getOrder());
+        if (mobile != null && mobile != "") {
+            criteria.andMobileLike("%"+mobile+"%");
+        }
+        if (id!=null){
+            criteria.andIdEqualTo(id);
+        }
+        criteria.andDeletedNotEqualTo(true);
+        marketUserExample.setOrderByClause(pageInfo.getSort()+" "+pageInfo.getOrder());
 
-        PageInfo<UserEntity> pageInfoVo = new PageInfo<UserEntity>(userList);
+        List<MarketUser> list = marketUserMapper.selectByExample(marketUserExample);
 
-        AdminUserListVO userListVO = new AdminUserListVO();
-        userListVO.setLimit(pageInfoVo.getPageSize());
-        userListVO.setList(pageInfoVo.getList());
-        userListVO.setPage(pageInfoVo.getPageNum());
-        userListVO.setPages(pageInfoVo.getPages());
-        userListVO.setTotal((int) pageInfoVo.getTotal());
+        PageInfo<MarketUser> marketUserPageInfo = new PageInfo<>(list);
 
-        return userListVO;
+        return CommonData.data(marketUserPageInfo);
+
+//        if (userListBO != null) {
+//                if (userListBO.getUsername() != null) {
+//                    userListBO.setUsername("%" + userListBO.getUsername() + "%");
+//                }
+//        }
+//        List<UserEntity> userList = userMapper.selectUserList(userListBO, pageInfo.getSort(), pageInfo.getOrder());
+//        PageInfo<UserEntity> pageInfoVo = new PageInfo<UserEntity>(userList);
+//        AdminUserListVO userListVO = new AdminUserListVO();
+//        userListVO.setLimit(pageInfoVo.getPageSize());
+//        userListVO.setList(pageInfoVo.getList());
+//        userListVO.setPage(pageInfoVo.getPageNum());
+//        userListVO.setPages(pageInfoVo.getPages());
+//        userListVO.setTotal((int) pageInfoVo.getTotal());
+//        return userListVO;
     }
 
     @Override
@@ -80,6 +103,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(UserEntity user) {
         userMapper.updateUser(user);
+        httpSession.setAttribute("log","修改用户,用户id:"+user.getId());
     }
 
     /**

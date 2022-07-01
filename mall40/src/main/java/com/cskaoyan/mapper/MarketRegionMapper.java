@@ -28,4 +28,10 @@ public interface MarketRegionMapper {
     int updateByPrimaryKeySelective(MarketRegion record);
 
     int updateByPrimaryKey(MarketRegion record);
+
+    Integer[] selectIdByName(@Param("regionName") String name);
+
+    Integer selectIdByCode(@Param("areaCode") String areaCode);
+
+    Integer selectIdBySonId(@Param("id") Integer id);
 }

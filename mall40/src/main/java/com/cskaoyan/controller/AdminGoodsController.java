@@ -1,5 +1,6 @@
 package com.cskaoyan.controller;
 
+import com.cskaoyan.bean.MarketGoodsProduct;
 import com.cskaoyan.bean.bo.adminGoodsCreateBo.AdminGoodsCreateBo;
 
 import com.cskaoyan.bean.BaseRespVo;
@@ -8,6 +9,7 @@ import com.cskaoyan.bean.bo.adminGoodsDeleteBo.AdminGoodsDeleteBo;
 import com.cskaoyan.bean.bo.adminGoodsUpdateBo.AdminGoodsUpdateBo;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
+import com.cskaoyan.bean.validParam.ValidParamAdminGoodsCreate;
 import com.cskaoyan.bean.vo.adminGoodsCatAndBrand.AdminGoodsCatAndBrandVo;
 import com.cskaoyan.bean.vo.adminGoodsDetailVo.AdminGoodsDetailVo;
 import com.cskaoyan.handler.LogAnnotation;
@@ -15,6 +17,8 @@ import com.cskaoyan.service.AdminGoodsService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @description: 商品模块
