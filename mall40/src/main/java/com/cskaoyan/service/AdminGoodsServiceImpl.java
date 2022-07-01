@@ -72,6 +72,7 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
         MarketGoodsExample.Criteria exampleCriteria = example.createCriteria();
         exampleCriteria.andDeletedEqualTo(false);
 
+
         // 商品名称模糊查询
         if (name != null) {
             String sqlName = "%" + name + "%";
@@ -93,11 +94,19 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
         if (baseParam.getSort() != null && baseParam.getOrder() != null) {
             example.setOrderByClause(orderByClause);
         }
+
         // 配置分页工具, 注意写前面
         if (baseParam.getPage() != null) {
             PageHelper.startPage(baseParam.getPage(), baseParam.getLimit());
         }
-        List<MarketGoods> marketGoods = marketGoodsMapper.selectByExample(example);
+        List<MarketGoods> marketGoods = marketGoodsMapper.selectByExampleWithBLOBs(example);
+
+        for (MarketGoods marketGood : marketGoods) {
+            MarketGoodsProductExample marketGoodsProductExample = new MarketGoodsProductExample();
+            marketGoodsProductExample.createCriteria().andDeletedEqualTo(false).andGoodsIdEqualTo(marketGood.getId());
+            List<MarketGoodsProduct> marketGoodsProducts = marketGoodsProductMapper.selectByExample(marketGoodsProductExample);
+            marketGood.setRetailPrice(marketGoodsProducts.get(0).getPrice());
+        }
         // 分页工具
         PageInfo<MarketGoods> marketGoodsPageInfo = new PageInfo<>(marketGoods);
         return CommonData.data(marketGoodsPageInfo);
@@ -133,13 +142,13 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
             valid.setPrice(product.getPrice());
             valid.setNumber(product.getNumber());
         }
-        valid.setUnit(bo.getGoods().getUnit());
         List<MarketGoods> marketGoods = marketGoodsMapper.selectByExample(null);
         for (MarketGoods marketGood : marketGoods) {
             if (marketGood.getGoodsSn().equals(bo.getGoods().getGoodsSn())) {
                 return 0;
             }
         }
+//        MarketGoods goods = bo.getGoods();
 
         // 新建一个时间用于赋 date 值
         Date date = new Date();
@@ -148,7 +157,10 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
         MarketGoods goods = bo.getGoods();
         goods.setUpdateTime(date);
         goods.setAddTime(date);
+//        goods.setRetailPrice(bo.getGoods().getRetailPrice());
+//        goods.setDetail(bo.getGoods().getDetail());
         // goods 插入 获取主键值
+        goods.setRetailPrice(bo.getProducts().get(0).getPrice());
         marketGoodsMapper.insertSelective(goods);
 
         List<MarketGoodsProduct> products = bo.getProducts();
@@ -192,8 +204,10 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
         MarketGoods marketGoods1 = marketGoodsMapper.selectByPrimaryKey(id);
         integers.add(marketGoods1.getCategoryId());
         MarketCategory marketCategory = marketCategoryMapper.selectByPrimaryKey(marketGoods1.getCategoryId());
-        if (marketCategory.getPid() != 0) {
-            integers.add(0, marketCategory.getPid());
+        if (marketCategory != null) {
+            if (marketCategory.getPid() != 0) {
+                integers.add(0, marketCategory.getPid());
+            }
         }
 
         // 搜索 goods
@@ -239,15 +253,16 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
             valid.setPrice(product.getPrice());
             valid.setNumber(product.getNumber());
         }
-        valid.setUnit(bo.getGoods().getUnit());
 
-        List<MarketGoods> marketGoods = marketGoodsMapper.selectByExample(null);
-        for (MarketGoods marketGood : marketGoods) {
-            if (marketGood.getGoodsSn().equals(bo.getGoods().getGoodsSn())) {
-                return 0;
+        String oldGoodsSn = marketGoodsMapper.selectByPrimaryKey(bo.getGoods().getId()).getGoodsSn();
+        if (!bo.getGoods().getGoodsSn().equals(oldGoodsSn)) {
+            List<MarketGoods> marketGoods = marketGoodsMapper.selectByExample(null);
+            for (MarketGoods marketGood : marketGoods) {
+                if (marketGood.getGoodsSn().equals(bo.getGoods().getGoodsSn())) {
+                    return 2;
+                }
             }
         }
-
         // 用于更新 updateTime 属性
         Date date = new Date();
 
@@ -259,6 +274,7 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
 
         // 更新 goods 信息
         goods.setUpdateTime(date);
+        goods.setRetailPrice(products.get(0).getPrice());
         marketGoodsMapper.updateByPrimaryKeySelective(goods);
 
         // 更新 attribute 信息

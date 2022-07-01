@@ -98,7 +98,7 @@ public class AdminGoodsController {
     @RequiresPermissions(value = {"admin:goods:update", "*"}, logical = Logical.OR)
     public BaseRespVo adminGoodsUpdate(@RequestBody AdminGoodsUpdateBo bo) {
         int i = adminGoodsService.modifyGoods(bo);
-        if (i == 0) {
+        if (i == 2) {
             return BaseRespVo.invalidUsername("商品编号重复");
         }
 

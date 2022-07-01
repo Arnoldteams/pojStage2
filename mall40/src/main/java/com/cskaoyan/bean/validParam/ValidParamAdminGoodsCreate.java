@@ -31,7 +31,4 @@ public class ValidParamAdminGoodsCreate {
     @DecimalMin("0")
     private Integer number;
 
-    @Length(min = 1, max = 1)
-    private String unit;
-
 }
