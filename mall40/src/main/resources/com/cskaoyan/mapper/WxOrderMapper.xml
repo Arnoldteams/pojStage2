@@ -735,7 +735,7 @@
 
   <insert id="insertOrderComment" useGeneratedKeys="true" keyProperty="wxOrderListCommentBO.id">
     insert into market_comment values
-    (null,0,0,#{wxOrderListCommentBO.content},null,
+    (null,#{goodsId},0,#{wxOrderListCommentBO.content},null,
     #{userId},#{wxOrderListCommentBO.hasPicture},#{picUrls},#{wxOrderListCommentBO.star},curtime(),null,0)
   </insert>
 
@@ -812,4 +812,8 @@
     set comment=#{commentId},update_time=curtime()
     where id=#{orderGoodsId}
   </update>
+
+  <select id="selectRealGoodsId" resultType="java.lang.Integer">
+    select goods_id from market_order_goods where id=#{orderGoodsId}
+  </select>
 </mapper>

@@ -169,9 +169,11 @@ public class WxOrderServiceImpl implements WxOrderService {
         //拿到订单商品表里的主键id
         Integer orderGoodsId = wxOrderListCommentBO.getOrderGoodsId();
         String picUrls = Arrays.toString(wxOrderListCommentBO.getPicUrls());
+       //获得实际的商品id
+        Integer goodsId=wxOrderMapper.selectRealGoodsId(orderGoodsId);
 
         //插入商品评论表，并获得主键id，更改订单商品表的comment
-        wxOrderMapper.insertOrderComment(wxOrderListCommentBO, userId, picUrls);
+        wxOrderMapper.insertOrderComment(wxOrderListCommentBO, userId, picUrls,goodsId);
         Integer commentId = wxOrderListCommentBO.getId();
 
         //更改订单商品表里，的商品评论状态
