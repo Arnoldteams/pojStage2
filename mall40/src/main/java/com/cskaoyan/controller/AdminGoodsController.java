@@ -42,6 +42,7 @@ public class AdminGoodsController {
      * @author: 无敌帅的 Sssd
      */
     @RequestMapping("list")
+    
     public BaseRespVo adminGoodsList(BaseParam baseParam, Integer goodsSn, String name, Integer goodsId) {
         CommonData<MarketGoods> data = adminGoodsService.qurryAllGoods(baseParam, goodsSn, name, goodsId);
         return BaseRespVo.ok(data);

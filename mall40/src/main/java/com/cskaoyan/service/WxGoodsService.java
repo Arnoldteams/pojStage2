@@ -10,7 +10,7 @@ import com.cskaoyan.bean.vo.wxGoodsList.WxGoodsListVo;
 public interface WxGoodsService {
     /**
      * @author: Sssd
-     * @description: 获取商品数量
+     * @description: 获取购物车数量
      */
     Integer countGoods();
 
