@@ -84,7 +84,7 @@ public class PostExceptionHandler {
         // } catch (ClassCastException ce) {
         //
         // }
-
+        e.printStackTrace();
         return BaseRespVo.invalidJson(e.getMessage());
     }
     
@@ -96,6 +96,7 @@ public class PostExceptionHandler {
     @ExceptionHandler(NumberFormatException.class)
     @ResponseBody
     public BaseRespVo paramExceptionHandle(NumberFormatException e){
+        e.printStackTrace();
         return BaseRespVo.invalidJson("输入格式错误哟");
     }
 
