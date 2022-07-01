@@ -84,7 +84,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     @Override
     public void changeOrderStatus(AdminOrderShipBO adminOrderShipBO) {
         marketOrderMapper.updateOrderStatus(adminOrderShipBO);
-        session.setAttribute("log",String.valueOf(adminOrderShipBO.getShipSn()));
+        session.setAttribute("log", String.valueOf(adminOrderShipBO.getShipSn()));
     }
 
 
@@ -104,6 +104,12 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         return adminOrderDetailVO;
     }
 
+    //判断id是否存在
+    @Override
+    public List<Integer> queryAllOrderId() {
+        List<Integer> orderIdList=marketOrderMapper.selectAllOrderId();
+        return orderIdList;
+    }
 
     /**
      * @author: ZY
@@ -115,7 +121,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     @Override
     public void refundOrderMoney(AdminOrderRefundBO adminOrderRefundBO) {
         marketOrderMapper.updateOrderRefund(adminOrderRefundBO);
-        session.setAttribute("log",String.valueOf(adminOrderRefundBO.getOrderId()));
+        session.setAttribute("log", String.valueOf(adminOrderRefundBO.getOrderId()));
     }
 
 
@@ -135,7 +141,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     @Override
     public void replyOrderComment(AdminOrderReplyBO adminOrderReplyBO) {
         marketOrderMapper.updateOrderComment(adminOrderReplyBO);
-        session.setAttribute("log",String.valueOf(adminOrderReplyBO.getCommentId()));
+        session.setAttribute("log", String.valueOf(adminOrderReplyBO.getCommentId()));
     }
+
 
 }
