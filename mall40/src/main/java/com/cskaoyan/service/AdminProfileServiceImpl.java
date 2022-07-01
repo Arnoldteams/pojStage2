@@ -26,13 +26,17 @@ public class AdminProfileServiceImpl implements AdminProfileService{
     public String updatePassword(AdminProfilePasswordBO admin) {
         MarketAdmin primaryPrincipal = (MarketAdmin) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal();
 
-        if(!primaryPrincipal.getPassword().equals(admin.getOldPassword())){
+        Integer id = primaryPrincipal.getId();
+        MarketAdmin marketAdmin1 = marketAdminMapper.selectByPrimaryKey(id);
+        String password = marketAdmin1.getPassword();
+        if(!password.equals(admin.getOldPassword())){
             return null;
         }
 
         Date date = new Date();
 
         MarketAdmin marketAdmin = new MarketAdmin();
+
         marketAdmin.setPassword(admin.getNewPassword());
         marketAdmin.setId(primaryPrincipal.getId());
         marketAdmin.setUpdateTime(date);

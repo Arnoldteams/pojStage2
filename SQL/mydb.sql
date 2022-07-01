@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 01/07/2022 09:08:04
+ Date: 01/07/2022 09:38:58
 */
 
 SET NAMES utf8mb4;
@@ -66,11 +66,22 @@ CREATE TABLE `market_address`  (
   `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '逻辑删除',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_id`(`user_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '收货地址表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '收货地址表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of market_address
 -- ----------------------------
+INSERT INTO `market_address` VALUES (1, 'user2', 2, '4', '54', '654', '', NULL, NULL, '13811111111', 0, NULL, NULL, 1);
+INSERT INTO `market_address` VALUES (2, 'user3', 3, '4', '54', '654', '', NULL, NULL, '13911111111', 0, NULL, NULL, 1);
+INSERT INTO `market_address` VALUES (3, 'user3', 3, '4', '54', '654', '你猜', NULL, NULL, '13911111112', 0, NULL, NULL, 1);
+INSERT INTO `market_address` VALUES (4, 'user3', 3, '4', '54', '654', '你猜', NULL, NULL, '13911111112', 0, NULL, NULL, 0);
+INSERT INTO `market_address` VALUES (5, 'user3', 3, '4', '54', '654', '你猜', NULL, NULL, '13911111112', 0, NULL, NULL, 0);
+INSERT INTO `market_address` VALUES (6, 'user3', 3, '4', '54', '654', '你猜', NULL, NULL, '13911111112', 0, NULL, NULL, 0);
+INSERT INTO `market_address` VALUES (7, 'user3', 3, '4', '54', '654', '你猜', NULL, NULL, '13911111112', 0, NULL, NULL, 1);
+INSERT INTO `market_address` VALUES (8, 'qq', 0, '3', '35', '430', '111', '130203', NULL, '12311111111', 0, NULL, NULL, 0);
+INSERT INTO `market_address` VALUES (9, 'qqq', 3, '3', '35', '431', '111111', '130204', NULL, '1', 1, NULL, NULL, 0);
+INSERT INTO `market_address` VALUES (10, '1111', 3, '2', '33', '392', '11111', '120101', NULL, '12345678911', 0, NULL, NULL, 0);
+INSERT INTO `market_address` VALUES (11, '1111', 3, '1', '32', '376', '123', '110101', NULL, '222222222222', 0, NULL, NULL, 1);
 
 -- ----------------------------
 -- Table structure for market_admin
@@ -93,9 +104,9 @@ CREATE TABLE `market_admin`  (
 -- ----------------------------
 -- Records of market_admin
 -- ----------------------------
-INSERT INTO `market_admin` VALUES (1, 'admin123', 'admin123', '0:0:0:0:0:0:0:1', '2022-07-01 08:45:31', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '2018-02-01 00:00:00', '2018-02-01 00:00:00', 0, '[1]');
-INSERT INTO `market_admin` VALUES (4, 'promotion123', 'admin', '', NULL, 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '2019-01-07 15:16:59', '2019-01-07 15:17:34', 0, '[3]');
-INSERT INTO `market_admin` VALUES (5, 'mall123', '123456', '0:0:0:0:0:0:0:1', '2022-07-01 08:50:32', 'http://localhost:8083/pic/959270fe1ac440fc96e5a5d873d073ef.png', '2019-01-07 15:17:25', '2022-07-01 08:47:52', 0, '[2]');
+INSERT INTO `market_admin` VALUES (1, 'admin123', 'admin123', '0:0:0:0:0:0:0:1', '2022-07-01 09:28:30', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '2018-02-01 00:00:00', '2022-07-01 09:24:20', 0, '[1]');
+INSERT INTO `market_admin` VALUES (4, 'promotion123', '123456', '0:0:0:0:0:0:0:1', '2022-07-01 09:21:05', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '2019-01-07 15:16:59', '2019-01-07 15:17:34', 0, '[3]');
+INSERT INTO `market_admin` VALUES (5, 'mall123', '123456', '0:0:0:0:0:0:0:1', '2022-07-01 09:21:53', 'http://localhost:8083/pic/959270fe1ac440fc96e5a5d873d073ef.png', '2019-01-07 15:17:25', '2022-07-01 08:47:52', 0, '[2]');
 INSERT INTO `market_admin` VALUES (6, '1', '1', '', NULL, '\'', NULL, NULL, 1, '[]');
 
 -- ----------------------------
@@ -354,11 +365,15 @@ CREATE TABLE `market_collect`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_id`(`user_id`) USING BTREE,
   INDEX `goods_id`(`value_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '收藏表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '收藏表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of market_collect
 -- ----------------------------
+INSERT INTO `market_collect` VALUES (1, 1, 1006010, 0, '2022-06-28 16:01:35', NULL, 0);
+INSERT INTO `market_collect` VALUES (2, 2, 1009013, 0, '2022-06-14 16:01:40', NULL, 0);
+INSERT INTO `market_collect` VALUES (3, 2, 1015007, 0, '2022-06-07 16:01:43', NULL, 0);
+INSERT INTO `market_collect` VALUES (4, 2, 1019000, 0, NULL, NULL, 1);
 
 -- ----------------------------
 -- Table structure for market_comment
@@ -3332,7 +3347,7 @@ CREATE TABLE `market_log`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '逻辑删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 99 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '操作日志表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 115 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '操作日志表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of market_log
@@ -3394,6 +3409,22 @@ INSERT INTO `market_log` VALUES (95, 'admin123', '0:0:0:0:0:0:0:1', 1, '删除�
 INSERT INTO `market_log` VALUES (96, 'admin123', '0:0:0:0:0:0:0:1', 1, '修改管理员信息', 1, 'mall123管理员修改成功', '', '2022-07-01 08:47:52', '2022-07-01 08:47:52', 0);
 INSERT INTO `market_log` VALUES (97, 'mall123', '0:0:0:0:0:0:0:1', 1, '登录', 1, '', '', '2022-07-01 08:49:37', '2022-07-01 08:49:37', 0);
 INSERT INTO `market_log` VALUES (98, 'mall123', '0:0:0:0:0:0:0:1', 1, '登录', 1, '', '', '2022-07-01 08:50:32', '2022-07-01 08:50:32', 0);
+INSERT INTO `market_log` VALUES (99, 'admin123', '0:0:0:0:0:0:0:1', 1, '登录', 1, '', '', '2022-07-01 09:14:34', '2022-07-01 09:14:34', 0);
+INSERT INTO `market_log` VALUES (100, 'promotion123', '0:0:0:0:0:0:0:1', 1, '登录', 1, '', '', '2022-07-01 09:21:05', '2022-07-01 09:21:05', 0);
+INSERT INTO `market_log` VALUES (101, 'mall123', '0:0:0:0:0:0:0:1', 1, '登录', 1, '', '', '2022-07-01 09:21:53', '2022-07-01 09:21:53', 0);
+INSERT INTO `market_log` VALUES (102, 'admin123', '0:0:0:0:0:0:0:1', 1, '登录', 1, '', '', '2022-07-01 09:22:18', '2022-07-01 09:22:18', 0);
+INSERT INTO `market_log` VALUES (103, 'admin123', '0:0:0:0:0:0:0:1', 1, '修改密码', 0, '账户密码不对', '', '2022-07-01 09:22:48', '2022-07-01 09:22:48', 0);
+INSERT INTO `market_log` VALUES (104, 'admin123', '0:0:0:0:0:0:0:1', 1, '修改密码', 1, '', '', '2022-07-01 09:23:36', '2022-07-01 09:23:36', 0);
+INSERT INTO `market_log` VALUES (105, '匿名用户', '0:0:0:0:0:0:0:1', 1, '登录', 0, '用户名或密码不正确', '', '2022-07-01 09:23:44', '2022-07-01 09:23:44', 0);
+INSERT INTO `market_log` VALUES (106, '匿名用户', '0:0:0:0:0:0:0:1', 1, '登录', 0, '用户名或密码不正确', '', '2022-07-01 09:23:49', '2022-07-01 09:23:49', 0);
+INSERT INTO `market_log` VALUES (107, '匿名用户', '0:0:0:0:0:0:0:1', 1, '登录', 0, '用户名或密码不正确', '', '2022-07-01 09:23:53', '2022-07-01 09:23:53', 0);
+INSERT INTO `market_log` VALUES (108, 'admin123', '0:0:0:0:0:0:0:1', 1, '登录', 1, '', '', '2022-07-01 09:24:10', '2022-07-01 09:24:10', 0);
+INSERT INTO `market_log` VALUES (109, 'admin123', '0:0:0:0:0:0:0:1', 1, '修改密码', 1, '', '', '2022-07-01 09:24:20', '2022-07-01 09:24:20', 0);
+INSERT INTO `market_log` VALUES (110, 'admin123', '0:0:0:0:0:0:0:1', 1, '登录', 1, '', '', '2022-07-01 09:24:30', '2022-07-01 09:24:30', 0);
+INSERT INTO `market_log` VALUES (111, 'admin123', '0:0:0:0:0:0:0:1', 1, '编辑专题信息', 0, '参数值错误', '', '2022-07-01 09:25:50', '2022-07-01 09:25:50', 0);
+INSERT INTO `market_log` VALUES (112, 'admin123', '0:0:0:0:0:0:0:1', 1, '编辑专题信息', 0, '参数值错误', '', '2022-07-01 09:26:07', '2022-07-01 09:26:07', 0);
+INSERT INTO `market_log` VALUES (113, '匿名用户', '0:0:0:0:0:0:0:1', 1, '登录', 0, '用户名或密码不正确', '', '2022-07-01 09:28:14', '2022-07-01 09:28:14', 0);
+INSERT INTO `market_log` VALUES (114, 'admin123', '0:0:0:0:0:0:0:1', 1, '登录', 1, '', '', '2022-07-01 09:28:30', '2022-07-01 09:28:30', 0);
 
 -- ----------------------------
 -- Table structure for market_notice
@@ -7005,11 +7036,29 @@ CREATE TABLE `market_search_history`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '逻辑删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '搜索历史表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '搜索历史表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of market_search_history
 -- ----------------------------
+INSERT INTO `market_search_history` VALUES (1, 2, 'wt', 'app', '2022-06-15 19:48:49', '2022-06-30 19:49:03', 0);
+INSERT INTO `market_search_history` VALUES (2, 3, 'sj', 'app', '2022-05-31 19:48:53', '2022-06-30 19:49:07', 1);
+INSERT INTO `market_search_history` VALUES (3, 3, '电视', 'app', '2022-06-01 19:48:58', '2022-06-29 19:49:31', 1);
+INSERT INTO `market_search_history` VALUES (4, 3, '111', 'app', '2022-06-30 20:37:59', '2022-06-30 20:37:59', 1);
+INSERT INTO `market_search_history` VALUES (5, 3, '1111111', 'app', '2022-06-30 20:47:05', '2022-06-30 20:47:05', 1);
+INSERT INTO `market_search_history` VALUES (6, 3, '11', 'app', '2022-06-30 20:47:44', '2022-06-30 20:47:44', 1);
+INSERT INTO `market_search_history` VALUES (7, 3, '11', 'app', '2022-06-30 20:47:53', '2022-06-30 20:47:53', 1);
+INSERT INTO `market_search_history` VALUES (8, 3, 'aaa', 'app', '2022-06-30 20:53:52', '2022-06-30 20:53:52', 1);
+INSERT INTO `market_search_history` VALUES (9, 3, '111', 'app', '2022-06-30 20:54:19', '2022-06-30 20:54:19', 1);
+INSERT INTO `market_search_history` VALUES (10, 3, 'aaa', 'app', '2022-06-30 20:54:47', '2022-06-30 20:54:47', 1);
+INSERT INTO `market_search_history` VALUES (11, 3, '1', 'app', '2022-06-30 20:55:30', '2022-06-30 20:55:30', 1);
+INSERT INTO `market_search_history` VALUES (12, 3, '111', 'app', '2022-06-30 20:55:52', '2022-06-30 20:55:52', 1);
+INSERT INTO `market_search_history` VALUES (13, 3, '111', 'app', '2022-06-30 20:56:16', '2022-06-30 20:56:16', 1);
+INSERT INTO `market_search_history` VALUES (14, 3, '111', 'app', '2022-06-30 20:57:24', '2022-06-30 20:57:24', 1);
+INSERT INTO `market_search_history` VALUES (15, 3, '123', 'app', '2022-06-30 21:04:47', '2022-06-30 21:11:03', 1);
+INSERT INTO `market_search_history` VALUES (16, 3, '母亲节', 'app', '2022-06-30 21:11:06', '2022-06-30 21:11:06', 1);
+INSERT INTO `market_search_history` VALUES (17, 3, '11', 'app', '2022-06-30 22:56:25', '2022-06-30 22:56:25', 1);
+INSERT INTO `market_search_history` VALUES (18, 3, '3', 'app', '2022-06-30 22:56:51', '2022-06-30 22:57:07', 0);
 
 -- ----------------------------
 -- Table structure for market_storage

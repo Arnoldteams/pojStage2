@@ -81,7 +81,8 @@ public interface WxOrderMapper {
     AdminOrderDetailGoodsVO selectOrdersGoods(@Param("orderId") Integer orderId, @Param("goodsId") Integer goodsId);
 
     void insertOrderComment(@Param("wxOrderListCommentBO") WxOrderListCommentBO wxOrderListCommentBO,
-                            @Param("userId") Integer userId, @Param("picUrls") String picUrls);
+                            @Param("userId") Integer userId, @Param("picUrls") String picUrls,
+                            @Param("goodsId")Integer goodsId);
 
     List<AdminOrderDetailGoodsVO> selectAllOrderGoodsByOrderId(Integer orderId);
 
@@ -108,5 +109,7 @@ public interface WxOrderMapper {
     void updateOrder(Integer orderId);
 
     void updateMarketOrderCommentStatus(@Param("commentId") Integer commentId, @Param("orderGoodsId") Integer orderGoodsId);
+
+    Integer selectRealGoodsId(Integer orderGoodsId);
 
 }
