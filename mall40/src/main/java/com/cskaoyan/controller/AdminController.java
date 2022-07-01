@@ -22,6 +22,7 @@ import com.cskaoyan.bean.vo.userManager.AdminUserListVO;
 import com.cskaoyan.bean.vo.userManager.UserEntity;
 import com.cskaoyan.service.UserService;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,8 +76,9 @@ public class AdminController {
     @RequiresPermissions(value = {"admin:user:list","*"},logical = Logical.OR)
     public BaseRespVo list(String username,String mobile,Integer id, BasePageInfo pageInfo) {
 
-//        try {
+        if (!StringUtils.isEmpty(mobile)){
             int i = Integer.parseInt(mobile);
+        }
 //        } catch (NumberFormatException e) {
 //            return BaseRespVo.invalidJson("输入格式错误");
 //        }
