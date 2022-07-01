@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 30/06/2022 22:37:05
+ Date: 01/07/2022 11:41:30
 */
 
 SET NAMES utf8mb4;
@@ -49,10 +49,10 @@ CREATE TABLE `market_coupon`  (
 -- ----------------------------
 -- Records of market_coupon
 -- ----------------------------
-INSERT INTO `market_coupon` VALUES (1, '限时满减券', '全场通用', '无限制', 0, 5.00, 99.00, 1, 0, 0, 0, '[]', 'DC6FF8SF', 0, 10, NULL, NULL, '2018-02-01 00:00:00', '2022-06-26 19:38:13', 0);
-INSERT INTO `market_coupon` VALUES (2, '限时满减券', '全场通用', '无限制', 0, 10.00, 99.00, 1, 0, 0, 0, '[]', 'DC6FF8SR', 0, 10, NULL, NULL, '2018-02-01 00:00:00', '2018-02-01 00:00:00', 0);
-INSERT INTO `market_coupon` VALUES (3, '新用户优惠券', '全场通用', '无限制', 0, 10.00, 99.00, 1, 1, 0, 0, '[]', 'DC6FF8SA', 0, 10, NULL, NULL, '2018-02-01 00:00:00', '2018-02-01 00:00:00', 0);
-INSERT INTO `market_coupon` VALUES (8, '可兑换优惠券', '全场通用', '仅兑换领券', 14, 16.00, 99.00, 1, 2, 0, 0, '[]', 'DC6FF8SE', 0, 7, NULL, NULL, '2018-12-23 09:29:57', '2022-06-30 10:09:55', 0);
+INSERT INTO `market_coupon` VALUES (1, '限时满减券', '全场通用', '无限制', 1, 5.00, 99.00, 2, 0, 0, 0, '[]', 'DC6FF8SF', 0, 10, NULL, NULL, '2018-02-01 00:00:00', '2022-06-26 19:38:13', 0);
+INSERT INTO `market_coupon` VALUES (2, '限时满减券', '全场通用', '无限制', 2, 10.00, 99.00, 1, 0, 0, 0, '[]', 'DC6FF8SR', 0, 10, NULL, NULL, '2018-02-01 00:00:00', '2018-02-01 00:00:00', 0);
+INSERT INTO `market_coupon` VALUES (3, '新用户优惠券', '全场通用', '无限制', 2, 10.00, 99.00, 1, 1, 0, 0, '[]', 'DC6FF8SA', 0, 10, NULL, NULL, '2018-02-01 00:00:00', '2018-02-01 00:00:00', 0);
+INSERT INTO `market_coupon` VALUES (8, '可兑换优惠券', '全场通用', '仅兑换领券', 13, 16.00, 99.00, 1, 2, 0, 0, '[]', 'DC6FF8SE', 0, 7, NULL, NULL, '2018-12-23 09:29:57', '2022-07-01 11:38:52', 0);
 INSERT INTO `market_coupon` VALUES (9, '老用户返场优惠', '全场通用', '无限制', 43, 200.00, 998.00, 1, 0, 0, 0, '[]', 'DC6FF8SA', 0, 15, NULL, NULL, NULL, '2022-06-29 20:48:29', 0);
 INSERT INTO `market_coupon` VALUES (10, '老用户返场优惠', '全场通用', '无限制', 48, 200.00, 998.00, 2, 0, 0, 0, '[]', NULL, 0, 15, NULL, NULL, NULL, '2022-06-30 17:49:55', 0);
 INSERT INTO `market_coupon` VALUES (12, '新老用户共享优惠', '全场可用', '无限制', 15, 300.00, 668.00, 1, 0, 0, 0, '[]', NULL, 0, 15, NULL, NULL, NULL, NULL, 0);

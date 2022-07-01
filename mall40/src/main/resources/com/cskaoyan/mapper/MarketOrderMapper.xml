@@ -648,7 +648,18 @@
 
 
   <select id="countOrderByAddTime" resultType="com.cskaoyan.bean.vo.statForm.OrderRowsEntity">
-    select convert(add_time,date) as day,count(*) as orders,sum(order_price) as amount,count(user_id) as customers, avg(order_price) as pcr from market_order group by convert(add_time,date )
+      SELECT CONVERT
+        ( add_time, date ) AS DAY,
+        count(*) AS orders,
+        sum( order_price ) AS amount,
+        avg( order_price ) AS pcr,
+        count( DISTINCT user_id ) AS customers
+      FROM
+        market_order
+      GROUP BY
+        CONVERT (
+        add_time,
+        date)
     </select>
 
 
