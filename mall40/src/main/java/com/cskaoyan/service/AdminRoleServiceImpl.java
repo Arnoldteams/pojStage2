@@ -122,9 +122,12 @@ public class AdminRoleServiceImpl implements AdminRoleService {
      * @createTime: 2022/6/25 22:16
      */
     @Override
-    @Async
-    public void updateRole(MarketRole role) {
-        roleMapper.updateByPrimaryKey(role);
+    public int updateRole(MarketRole role) {
+        List<String> names = roleMapper.selectAllRoleName();
+        if(names.contains(role.getName())){
+            return 0;
+        }
+        return roleMapper.updateByPrimaryKey(role);
     }
 
     /**
