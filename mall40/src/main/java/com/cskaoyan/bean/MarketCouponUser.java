@@ -12,11 +12,11 @@ public class MarketCouponUser {
     private Integer couponId;
 
     private Short status;
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date usedTime;
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
 
     private Integer orderId;
