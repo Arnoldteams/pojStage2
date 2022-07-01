@@ -44,14 +44,6 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/wx/auth/login", "anon");
         filterChainDefinitionMap.put("/wx/auth/logout", "anon");
 
-//        filterChainDefinitionMap.put("/wx/home/**", "anon");
-//        filterChainDefinitionMap.put("/wx/brand/**", "anon");
-//        filterChainDefinitionMap.put("/wx/goods/**", "anon");
-//        filterChainDefinitionMap.put("/wx/search/**", "anon");
-//
-//        filterChainDefinitionMap.put("/wx/user/index", "authc");
-//        filterChainDefinitionMap.put("/wx/cart/**", "authc");
-
         filterChainDefinitionMap.put("/wx/**", "anon");
         filterChainDefinitionMap.put("/admin/auth/noAuthc", "anon");
 //        filterChainDefinitionMap.put("/wx/cart/goodscount", "anon");
@@ -61,21 +53,6 @@ public class ShiroConfiguration {
 
 //        filterChainDefinitionMap.put("/admin/profile/nnotice", "anon");
         filterChainDefinitionMap.put("/admin/**", "authc");
-
-
-
-        // 含义就是访问/admin/user/list这个请求需要的权限是aaa
-        // 但是通常我们不这样写，因为增加权限通常指的url → 对handler方法做访问控制
-        // 耦合 handler方法和权限做耦合
-        // filterChainDefinitionMap.put("/admin/user/list", "perms[aaa]");
-
-        // /admin/auth/login → anon
-        // /admin/user/list → authc
-
-        //如果访问某个请求的时候，该请求对应的filter是authc，如果没有通过这个filter则说明没有权限
-        // shiro会给你做重定向 → 默认的重定向的地址 /login.jsp
-        // 如果想要修改重定向的地址，可以使用方法来修改
-        shiroFilterFactoryBean.setLoginUrl("/admin/auth/noAuthc");
 //        shiroFilterFactoryBean.setLoginUrl("/admin/profile/nnotice");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

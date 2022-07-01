@@ -12,6 +12,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -27,6 +28,9 @@ public class AdminAddressServiceImpl implements AdminAddressService {
     MarketAddressMapper addressMapper;
     @Autowired
     MarketRegionMapper regionMapper;
+
+    @Autowired
+    HttpSession httpSession;
 
     @Override
     public CommonData<MarketAddress> queryAddress(String name, Integer userId, BasePageInfo pageInfo) {

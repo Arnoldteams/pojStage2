@@ -34,7 +34,6 @@ public class WxCommentController {
      * @author: sprinkle
      * @description: 评论页面展示
      */
-    @RequiresPermissions(value = {"wx:comment:list","*"},logical = Logical.OR)
     @RequestMapping("list")
     public BaseRespVo adminCommentList(BaseParam baseParam, byte type, Integer valueId,Integer showType) {
         CommonData<WxCommentVO> data = wxCommentService.quarryAllComment(baseParam,type,valueId,showType);
