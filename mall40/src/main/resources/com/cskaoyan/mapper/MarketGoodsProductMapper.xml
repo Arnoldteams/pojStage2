@@ -280,4 +280,9 @@
     left join market_goods as g on p.goods_id = g.id
     where p.id = #{productId}
   </select>
+
+  <update id="updateGoodsNumberByPrimaryKey">
+    update market_goods_product set number = (number  - ${number})
+    where id = #{productId} and deleted = 0
+    </update>
 </mapper>
