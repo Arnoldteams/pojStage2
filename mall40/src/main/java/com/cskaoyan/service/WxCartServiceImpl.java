@@ -240,7 +240,13 @@ public class WxCartServiceImpl implements WxCartService {
     public WxCartCheckedVo queryCartCheckInfo(WxCartCheckBo cartCheckBo) {
         // 获得用户信息
         Integer userId = getUserId();
-        MarketAddress address = addressMapper.selectAddressInfoByUserId(userId);
+        Integer addressId = cartCheckBo.getAddressId();
+        MarketAddress address;
+        if(addressId >= 0){
+            address = addressMapper.selectByPrimaryKey(addressId);
+        }else{
+            address = addressMapper.selectAddressInfoByUserId(userId);
+        }
         MarketCartExample example = new MarketCartExample();
         MarketCartExample.Criteria criteria = example.createCriteria();
 
@@ -289,9 +295,7 @@ public class WxCartServiceImpl implements WxCartService {
             int count = couponUserMapper.selectValuableCoupon(userId, orderPrice);
             wxCartCheckedVo.setAvailableCouponLength(count);
         }
-
         // 获取优惠券信息
-
 
         actualPrice = orderPrice - couponPrice;
         wxCartCheckedVo.setActualPrice(actualPrice);
