@@ -32,7 +32,7 @@ public interface AdminGoodsService {
      * @description: 商品模块 - 商品添加
      * @param bo 传入的 bo 类参数
      */
-    void addGoods(AdminGoodsCreateBo bo);
+    int addGoods(AdminGoodsCreateBo bo);
 
     /**
      * @author: Sssd
@@ -44,7 +44,7 @@ public interface AdminGoodsService {
      * @author: Sssd
      * @description: 编辑商品
      */
-    void modifyGoods(AdminGoodsUpdateBo bo);
+    int modifyGoods(AdminGoodsUpdateBo bo);
 
     /**
      * @author: Sssd

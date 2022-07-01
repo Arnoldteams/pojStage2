@@ -68,18 +68,18 @@ public class WxGoodsServiceImpl implements WxGoodsService {
 
     @Override
     public Integer countGoods() {
-        PrincipalCollection principals = SecurityUtils.getSubject().getPrincipals();
-        if (principals == null) {
-            return null;
-        }
-        MarketUser principals1 = (MarketUser) principals;
-        Integer userId = principals1.getId();
-        MarketCollectExample collectExample = new MarketCollectExample();
-        MarketCollectExample.Criteria collectExampleCriteria = collectExample.createCriteria();
-        collectExampleCriteria.andDeletedEqualTo(false);
-        collectExampleCriteria.andTypeEqualTo((byte) 0);
-        collectExampleCriteria.andValueIdEqualTo(userId);
-        int count = (int) marketCollectMapper.countByExample(collectExample);
+//        PrincipalCollection principals = SecurityUtils.getSubject().getPrincipals();
+//        if (principals == null) {
+//            return 0;
+//        }
+//        MarketUser principals1 = (MarketUser) principals;
+//        Integer userId = principals1.getId();
+//        MarketCollectExample collectExample = new MarketCollectExample();
+//        MarketCollectExample.Criteria collectExampleCriteria = collectExample.createCriteria();
+//        collectExampleCriteria.andDeletedEqualTo(false);
+//        collectExampleCriteria.andTypeEqualTo((byte) 0);
+//        collectExampleCriteria.andValueIdEqualTo(userId);
+        int count = (int) marketGoodsMapper.countByExample(null);
         return count;
     }
 

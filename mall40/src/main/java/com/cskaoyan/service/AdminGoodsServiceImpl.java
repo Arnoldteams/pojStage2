@@ -123,8 +123,9 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
     }
 
     @Override
-    public void addGoods(AdminGoodsCreateBo bo) {
+    public int addGoods(AdminGoodsCreateBo bo) {
         ValidParamAdminGoodsCreate valid = new ValidParamAdminGoodsCreate();
+        valid.setRetailPrice(bo.getGoods().getRetailPrice());
         valid.setGoodsSn(bo.getGoods().getGoodsSn());
         valid.setName(bo.getGoods().getName());
         List<MarketGoodsProduct> products1 = bo.getProducts();
@@ -136,7 +137,7 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
         List<MarketGoods> marketGoods = marketGoodsMapper.selectByExample(null);
         for (MarketGoods marketGood : marketGoods) {
             if (marketGood.getGoodsSn().equals(bo.getGoods().getGoodsSn())) {
-                throw new NumberFormatException();
+                return 0;
             }
         }
 
@@ -177,6 +178,7 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
         }
 
         session.setAttribute("log", String.valueOf(goods.getId()));
+        return 1;
     }
 
     @Override
@@ -226,9 +228,25 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
     }
 
     @Override
-    public void modifyGoods(AdminGoodsUpdateBo bo) {
+    public int modifyGoods(AdminGoodsUpdateBo bo) {
 
+        ValidParamAdminGoodsCreate valid = new ValidParamAdminGoodsCreate();
+        valid.setRetailPrice(bo.getGoods().getRetailPrice());
+        valid.setGoodsSn(bo.getGoods().getGoodsSn());
+        valid.setName(bo.getGoods().getName());
+        List<MarketGoodsProduct> products1 = bo.getProducts();
+        for (MarketGoodsProduct product : products1) {
+            valid.setPrice(product.getPrice());
+            valid.setNumber(product.getNumber());
+        }
+        valid.setUnit(bo.getGoods().getUnit());
 
+        List<MarketGoods> marketGoods = marketGoodsMapper.selectByExample(null);
+        for (MarketGoods marketGood : marketGoods) {
+            if (marketGood.getGoodsSn().equals(bo.getGoods().getGoodsSn())) {
+                return 0;
+            }
+        }
 
         // 用于更新 updateTime 属性
         Date date = new Date();
@@ -262,6 +280,7 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
         }
 
         session.setAttribute("log", String.valueOf(goods.getId()));
+        return 1;
     }
 
     @Override
