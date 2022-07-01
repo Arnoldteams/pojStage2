@@ -1,5 +1,6 @@
 package com.cskaoyan.handler;
 
+
 import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.MarketUser;
 import org.apache.shiro.SecurityUtils;
@@ -97,5 +98,8 @@ public class PostExceptionHandler {
     public BaseRespVo paramExceptionHandle(NumberFormatException e){
         return BaseRespVo.invalidJson("输入格式错误哟");
     }
+
+
+
 
 }

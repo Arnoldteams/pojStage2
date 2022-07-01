@@ -4,9 +4,13 @@ import com.cskaoyan.bean.BaseRespVo;
 import com.cskaoyan.bean.MarketAddress;
 import com.cskaoyan.bean.bo.wxAdressBo.WxAddressSaveBO;
 import com.cskaoyan.bean.param.CommonData;
+import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.WxAddressService;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,7 +56,10 @@ public class WxAddressController {
     }
 
     @RequestMapping("save")
-    public BaseRespVo save(@RequestBody WxAddressSaveBO address) {
+    @LogAnnotation("修改地址")
+    public BaseRespVo save(@RequestBody@Validated WxAddressSaveBO address, BindingResult bindingResult){
+
+
         if (SecurityUtils.getSubject().getPrincipals()==null){
             return  BaseRespVo.codeAndMsg(501,"请登入");
         }

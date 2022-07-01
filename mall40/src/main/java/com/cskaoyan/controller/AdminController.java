@@ -74,6 +74,13 @@ public class AdminController {
     @RequestMapping("user/list")
     @RequiresPermissions(value = {"admin:user:list","*"},logical = Logical.OR)
     public BaseRespVo list(String username,String mobile,Integer id, BasePageInfo pageInfo) {
+
+//        try {
+            int i = Integer.parseInt(mobile);
+//        } catch (NumberFormatException e) {
+//            return BaseRespVo.invalidJson("输入格式错误");
+//        }
+
         CommonData<AdminUserListVO> data = userService.queryUserList(username,mobile,id, pageInfo);
         return BaseRespVo.ok(data);
     }

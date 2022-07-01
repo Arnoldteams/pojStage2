@@ -174,7 +174,14 @@ public class WxOrderServiceImpl implements WxOrderService {
 
         //拿到订单商品表里的主键id
         Integer orderGoodsId = wxOrderListCommentBO.getOrderGoodsId();
-        String picUrls = Arrays.toString(wxOrderListCommentBO.getPicUrls());
+        StringBuffer sb = new StringBuffer();
+        String[] picUrlsArr = wxOrderListCommentBO.getPicUrls();
+        sb.append("[");
+        for (String picUrl : picUrlsArr) {
+            sb.append("\"").append(picUrl).append("\"").append(",");
+        }
+        String res = sb.toString();
+        String picUrls = res.substring(0,res.length()-1)+ "]";;
        //获得实际的商品id
         Integer goodsId=wxOrderMapper.selectRealGoodsId(orderGoodsId);
 
