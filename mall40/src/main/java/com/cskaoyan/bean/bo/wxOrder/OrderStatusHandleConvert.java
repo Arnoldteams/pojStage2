@@ -12,9 +12,9 @@ public enum OrderStatusHandleConvert {
     REFUND_APPLIED(202, new WxOrderListHandleOption()),
     REFUNDED(203, new WxOrderListHandleOption().setDelete(true)),
     SHIPED(301, new WxOrderListHandleOption().setConfirm(true)),
-    USER_RECEIVED(401, new WxOrderListHandleOption().setAftersale(true).setComment(true).
+    USER_RECEIVED(401, new WxOrderListHandleOption().setComment(true).
             setDelete(true).setRebuy(true)),
-    SYSTEM_RECEIVED(402, new WxOrderListHandleOption().setAftersale(true).setComment(true).
+    SYSTEM_RECEIVED(402, new WxOrderListHandleOption().setComment(true).
             setDelete(true).setRebuy(true));
 
 

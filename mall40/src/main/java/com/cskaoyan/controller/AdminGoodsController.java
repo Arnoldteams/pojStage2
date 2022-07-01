@@ -15,6 +15,8 @@ import com.cskaoyan.bean.vo.adminGoodsDetailVo.AdminGoodsDetailVo;
 import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminGoodsService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +44,7 @@ public class AdminGoodsController {
      * @author: 无敌帅的 Sssd
      */
     @RequestMapping("list")
-    
+    @RequiresPermissions(value = {"admin:goods:list", "*"}, logical = Logical.OR)
     public BaseRespVo adminGoodsList(BaseParam baseParam, Integer goodsSn, String name, Integer goodsId) {
         CommonData<MarketGoods> data = adminGoodsService.qurryAllGoods(baseParam, goodsSn, name, goodsId);
         return BaseRespVo.ok(data);
@@ -53,6 +55,7 @@ public class AdminGoodsController {
      * @description: 显示商品种类和产品商列表
      */
     @RequestMapping("catAndBrand")
+    @RequiresPermissions(value = {"admin:goods:catAndBrand", "*"}, logical = Logical.OR)
     public BaseRespVo adminGoodsCatAndBrand() {
         AdminGoodsCatAndBrandVo vo = adminGoodsService.qurryAllCatAndBrand();
         return BaseRespVo.ok(vo);
@@ -64,8 +67,12 @@ public class AdminGoodsController {
      */
     @LogAnnotation(value = "增加商品", comment = "帅气的 Sssd 增加商品")
     @PostMapping("create")
+    @RequiresPermissions(value = {"admin:goods:create", "*"}, logical = Logical.OR)
     public BaseRespVo adminGoodsCreate(@RequestBody AdminGoodsCreateBo bo) {
-        adminGoodsService.addGoods(bo);
+        int i = adminGoodsService.addGoods(bo);
+        if (i == 0) {
+            return BaseRespVo.invalidUsername("商品编号重复");
+        }
         return BaseRespVo.ok(null);
     }
 
@@ -75,6 +82,7 @@ public class AdminGoodsController {
      * @description: 显示商品详情
      */
     @RequestMapping("detail")
+    @RequiresPermissions(value = {"admin:goods:detail", "*"}, logical = Logical.OR)
     public BaseRespVo adminGoodsDetail(Integer id) {
         AdminGoodsDetailVo vo = adminGoodsService.qurryGoodById(id);
         return BaseRespVo.ok(vo);
@@ -87,8 +95,13 @@ public class AdminGoodsController {
      */
     @LogAnnotation(value = "修改商品信息", comment = "帅气的 Sssd 修改商品信息")
     @PostMapping("update")
+    @RequiresPermissions(value = {"admin:goods:update", "*"}, logical = Logical.OR)
     public BaseRespVo adminGoodsUpdate(@RequestBody AdminGoodsUpdateBo bo) {
-        adminGoodsService.modifyGoods(bo);
+        int i = adminGoodsService.modifyGoods(bo);
+        if (i == 0) {
+            return BaseRespVo.invalidUsername("商品编号重复");
+        }
+
         return BaseRespVo.ok(null);
     }
 
@@ -98,6 +111,7 @@ public class AdminGoodsController {
      */
     @LogAnnotation(value = "删除商品", comment = "帅气的 Sssd 删除商品")
     @PostMapping("delete")
+    @RequiresPermissions(value = {"admin:goods:delete", "*"}, logical = Logical.OR)
     public BaseRespVo adminGoodsDelete(@RequestBody AdminGoodsDeleteBo bo) {
         adminGoodsService.deleteGoods(bo);
         return BaseRespVo.ok(null);
