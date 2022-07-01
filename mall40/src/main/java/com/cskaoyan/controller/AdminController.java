@@ -72,9 +72,10 @@ public class AdminController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("user/list")
-    public BaseRespVo list(AdminUserListBO userListBO, BasePageInfo pageInfo) {
-        AdminUserListVO userListVO = userService.queryUserList(userListBO, pageInfo);
-        return BaseRespVo.ok(userListVO);
+    @RequiresPermissions(value = {"admin:user:list","*"},logical = Logical.OR)
+    public BaseRespVo list(String username,String mobile,Integer id, BasePageInfo pageInfo) {
+        CommonData<AdminUserListVO> data = userService.queryUserList(username,mobile,id, pageInfo);
+        return BaseRespVo.ok(data);
     }
 
     /**
@@ -85,6 +86,7 @@ public class AdminController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("user/detail")
+    @RequiresPermissions(value = {"admin:user:detail","*"},logical = Logical.OR)
     public BaseRespVo detail(Integer id) {
         UserEntity user = userService.queryById(id);
         return BaseRespVo.ok(user);
@@ -98,7 +100,8 @@ public class AdminController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("user/update")
-    @LogAnnotation(value = "修改用户",successResult = "成功",unSuccessResult = "修改失败",comment = "。。。")
+    @RequiresPermissions(value = {"admin:user:update","*"},logical = Logical.OR)
+    @LogAnnotation(value = "修改用户",successResult = "成功",unSuccessResult = "修改失败")
     public BaseRespVo update(@RequestBody UserEntity user) {
         userService.updateUser(user);
         return BaseRespVo.ok(1);
@@ -112,6 +115,7 @@ public class AdminController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("address/list")
+    @RequiresPermissions(value = {"admin:address:list","*"},logical = Logical.OR)
     public BaseRespVo addressList(String name, Integer userId, BasePageInfo pageInfo) {
         CommonData<MarketAddress> data = addressService.queryAddress(name, userId, pageInfo);
 
@@ -125,6 +129,7 @@ public class AdminController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("collect/list")
+    @RequiresPermissions(value = {"admin:collect:list","*"},logical = Logical.OR)
     public BaseRespVo collectList(Integer userId, Integer valueId, BasePageInfo pageInfo) {
         CommonData<MarketCollect> data = collectService.queryCollect(userId, valueId, pageInfo);
         return BaseRespVo.ok(data);
@@ -137,21 +142,25 @@ public class AdminController {
      * @return: com.cskaoyan.bean.BaseRespVo
      */
     @RequestMapping("footprint/list")
+    @RequiresPermissions(value = {"admin:footprint:list","*"},logical = Logical.OR)
     public BaseRespVo footprintList(Integer userId, Integer goodsId, BasePageInfo pageInfo) {
         CommonData<MarketFootprint> data = footprintService.queryFootprint(userId, goodsId, pageInfo);
         return BaseRespVo.ok(data);
     }
 
     @RequestMapping("history/list")
+    @RequiresPermissions(value = {"admin:history:list","*"},logical = Logical.OR)
     public BaseRespVo historyList(Integer userId, String keyword, BasePageInfo pageInfo) {
         CommonData<MarketSearchHistory> data = historyService.queryHistroy(userId,keyword,pageInfo);
         return BaseRespVo.ok(data);
     }
 
     @RequestMapping("feedback/list")
+    @RequiresPermissions(value = {"admin:feedback:list","*"},logical = Logical.OR)
     public BaseRespVo feedbackList(String username,Integer id,BasePageInfo pageInfo){
         CommonData<MarketFeedback> data = feedbackService.queryFeedback(username,id,pageInfo);
-        return BaseRespVo.ok(data);    }
+        return BaseRespVo.ok(data);
+    }
 
 
     @Autowired

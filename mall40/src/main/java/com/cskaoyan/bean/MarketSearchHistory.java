@@ -1,8 +1,11 @@
 package com.cskaoyan.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class MarketSearchHistory {
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Integer id;
 
     private Integer userId;
