@@ -60,6 +60,7 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
     @Override
     public CommonData<MarketGoods> qurryAllGoods(BaseParam baseParam, Integer goodsSn, String name, Integer goodsId) {
         ValidParam validParam = new ValidParam();
+
         validParam.setGoodsId(goodsId);
         validParam.setGoodsSn(goodsSn);
         validParam.setName(name);
@@ -226,6 +227,9 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
 
     @Override
     public void modifyGoods(AdminGoodsUpdateBo bo) {
+
+
+
         // 用于更新 updateTime 属性
         Date date = new Date();
 

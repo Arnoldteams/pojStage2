@@ -44,7 +44,6 @@ mybatis:
   type-handlers-package: com.cskaoyan.typehandler
 
 
-
 # 配置自动分页
 pagehelper:
   helper-dialect: mysql

@@ -12,6 +12,7 @@ import com.cskaoyan.mapper.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.MutablePrincipalCollection;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,8 +68,19 @@ public class WxGoodsServiceImpl implements WxGoodsService {
 
     @Override
     public Integer countGoods() {
-        long l = marketGoodsMapper.countByExample(null);
-        return (int) l;
+        PrincipalCollection principals = SecurityUtils.getSubject().getPrincipals();
+        if (principals == null) {
+            return null;
+        }
+        MarketUser principals1 = (MarketUser) principals;
+        Integer userId = principals1.getId();
+        MarketCollectExample collectExample = new MarketCollectExample();
+        MarketCollectExample.Criteria collectExampleCriteria = collectExample.createCriteria();
+        collectExampleCriteria.andDeletedEqualTo(false);
+        collectExampleCriteria.andTypeEqualTo((byte) 0);
+        collectExampleCriteria.andValueIdEqualTo(userId);
+        int count = (int) marketCollectMapper.countByExample(collectExample);
+        return count;
     }
 
     @Override
