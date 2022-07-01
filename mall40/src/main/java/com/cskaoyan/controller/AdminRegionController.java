@@ -34,7 +34,7 @@ public class AdminRegionController {
      */
 
     @RequestMapping("list")
-    @RequiresPermissions(value = {"admin:region:list","*"},logical = Logical.OR)
+//    @RequiresPermissions(value = {"admin:region:list","*"},logical = Logical.OR)
     public BaseRespVo getRegionList(){
         CommonData data = adminRegionService.getRegionList();
         return BaseRespVo.ok(data);

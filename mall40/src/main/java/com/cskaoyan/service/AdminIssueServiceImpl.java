@@ -39,11 +39,11 @@ public class AdminIssueServiceImpl implements AdminIssueService {
     public CommonData<MarketIssue> queryMarketIssue(BasePageInfo basePageInfo, String question) {
         PageHelper.startPage(basePageInfo.getPage(), basePageInfo.getLimit());
         List<MarketIssue> marketIssueList;
-        if (question == null || "".equals(question)) {
+        if (question == null || "".equals(question.trim())) {
             marketIssueList = marketIssueMapper.selectAllMarketIssue(basePageInfo.getSort(), basePageInfo.getOrder());
         } else {
-            question = "%" + question + "%";
-            marketIssueList = marketIssueMapper.selectByPrimaryWords(basePageInfo.getSort(), basePageInfo.getOrder(), question.trim());
+            question = "%" + question.trim() + "%";
+            marketIssueList = marketIssueMapper.selectByPrimaryWords(basePageInfo.getSort(), basePageInfo.getOrder(), question);
         }
         PageInfo<MarketIssue> marketIssuePageInfo = new PageInfo<>(marketIssueList);
         return CommonData.data(marketIssuePageInfo);

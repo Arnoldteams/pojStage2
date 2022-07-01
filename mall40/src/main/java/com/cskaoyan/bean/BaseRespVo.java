@@ -130,5 +130,12 @@ public class BaseRespVo<T> {
         return baseRespVo;
     }
 
+    public static <T> BaseRespVo wrongOrderId() {
+        BaseRespVo baseRespVo = new BaseRespVo();
+        baseRespVo.setErrno(402);
+        baseRespVo.setErrmsg("请输入正确的订单id");
+        return baseRespVo;
+    }
+
 
 }

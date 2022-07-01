@@ -54,5 +54,5 @@ public interface MarketOrderMapper {
     void updateOrderComment(AdminOrderReplyBO adminOrderReplyBO);
 
 
-
+    List<Integer> selectAllOrderId();
 }
