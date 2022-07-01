@@ -112,7 +112,7 @@ public class WxCouponServiceImpl implements WxCouponService {
         //查询该用户拥有的优惠券
         MarketCouponUserExample marketCouponUserExample = new MarketCouponUserExample();
         MarketCouponUserExample.Criteria criteria = marketCouponUserExample.createCriteria();
-        criteria.andUserIdEqualTo(id).andStatusEqualTo(Short.valueOf(String.valueOf(status)));
+        criteria.andUserIdEqualTo(id).andStatusEqualTo(Short.valueOf(String.valueOf(status))).andDeletedEqualTo(false);
 
         //进入购物车下单优惠券展示逻辑
         //判断用户是否需要展示优惠券，不存在值为1
