@@ -82,7 +82,10 @@ public class AdminRoleController {
     @RequestMapping("/update")
     @RequiresPermissions(value = {"admin:role:update","*"},logical = Logical.OR)
     public BaseRespVo adminRoleUpdate(@RequestBody MarketRole role) {
-        adminRoleService.updateRole(role);
+        if(adminRoleService.updateRole(role) == 0){
+            session.setAttribute("log",role.getName());
+            return BaseRespVo.invalidUsername("角色名重复！");
+        }
         session.setAttribute("log",role.getName());
         return BaseRespVo.ok(null);
     }
