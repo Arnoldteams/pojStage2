@@ -9,6 +9,8 @@ import com.cskaoyan.bean.bo.AdminOrderShipBO;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.vo.AdminOrderDetailVO;
 
+import java.util.List;
+
 
 public interface AdminOrderService {
 
@@ -26,5 +28,6 @@ public interface AdminOrderService {
     void replyOrderComment(AdminOrderReplyBO adminOrderReplyBO);
 
 
+    List<Integer> queryAllOrderId();
 
 }

@@ -18,6 +18,7 @@ public enum OrderStatusHandleConvert {
             setDelete(true).setRebuy(true));
 
 
+
     private static Map OrderStatusMap;
     private Integer orderStatus;
     private WxOrderListHandleOption handler;
@@ -38,6 +39,16 @@ public enum OrderStatusHandleConvert {
 
     public WxOrderListHandleOption getHandler() {
         return handler;
+    }
+
+    public static WxOrderListHandleOption getOption(Integer orderStatus){
+        OrderStatusHandleConvert[] values = OrderStatusHandleConvert.values();
+        for (OrderStatusHandleConvert value : values) {
+            if(value.getOrderStatus().equals(orderStatus)){
+                return value.getHandler();
+            }
+        }
+        return null;
     }
 
     public static Map getInstance(){

@@ -1,5 +1,7 @@
 package com.cskaoyan.bean.bo.wxOrder;
 
+import org.omg.CORBA.PUBLIC_MEMBER;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +35,16 @@ public enum OrderStatusContentConvert {
 
     public String getOrderStatusContent() {
         return orderStatusContent;
+    }
+
+    public static String getStatusContent(Integer orderStatus){
+        OrderStatusContentConvert[] values = OrderStatusContentConvert.values();
+        for (OrderStatusContentConvert value : values) {
+            if(value.getOrderStatus().equals(orderStatus)){
+                return value.getOrderStatusContent();
+            }
+        }
+        return null;
     }
 
     public static Map getInstance(){

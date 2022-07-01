@@ -75,15 +75,15 @@ public class PostExceptionHandler {
     @ResponseBody
     public BaseRespVo JsonExceptionHandle(AdminRequestBodyException e){
 
-        Subject subject = SecurityUtils.getSubject();
-        Object principal = subject.getPrincipals().getPrimaryPrincipal();
-
-        try {
-            MarketUser user = (MarketUser) principal;
-            return BaseRespVo.codeAndMsg(705, "数据格式不对");
-        } catch (ClassCastException ce) {
-
-        }
+        // Subject subject = SecurityUtils.getSubject();
+        // Object principal = subject.getPrincipals().getPrimaryPrincipal();
+        //
+        // try {
+        //     MarketUser user = (MarketUser) principal;
+        //     return BaseRespVo.codeAndMsg(705, "数据格式不对");
+        // } catch (ClassCastException ce) {
+        //
+        // }
 
         return BaseRespVo.invalidJson(e.getMessage());
     }

@@ -7,6 +7,7 @@ import com.cskaoyan.bean.bo.adminGoodsUpdateBo.AdminGoodsUpdateBo;
 import com.cskaoyan.bean.param.BaseParam;
 import com.cskaoyan.bean.param.CommonData;
 import com.cskaoyan.bean.validParam.ValidParam;
+import com.cskaoyan.bean.validParam.ValidParamAdminGoodsCreate;
 import com.cskaoyan.bean.vo.adminGoodsCatAndBrand.AdminGoodsCatAndBrandVo;
 import com.cskaoyan.bean.vo.adminGoodsCatAndBrand.BrandListEntity;
 import com.cskaoyan.bean.vo.adminGoodsCatAndBrand.CategoryListEntity;
@@ -59,6 +60,7 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
     @Override
     public CommonData<MarketGoods> qurryAllGoods(BaseParam baseParam, Integer goodsSn, String name, Integer goodsId) {
         ValidParam validParam = new ValidParam();
+
         validParam.setGoodsId(goodsId);
         validParam.setGoodsSn(goodsSn);
         validParam.setName(name);
@@ -122,6 +124,22 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
 
     @Override
     public void addGoods(AdminGoodsCreateBo bo) {
+        ValidParamAdminGoodsCreate valid = new ValidParamAdminGoodsCreate();
+        valid.setGoodsSn(bo.getGoods().getGoodsSn());
+        valid.setName(bo.getGoods().getName());
+        List<MarketGoodsProduct> products1 = bo.getProducts();
+        for (MarketGoodsProduct product : products1) {
+            valid.setPrice(product.getPrice());
+            valid.setNumber(product.getNumber());
+        }
+        valid.setUnit(bo.getGoods().getUnit());
+        List<MarketGoods> marketGoods = marketGoodsMapper.selectByExample(null);
+        for (MarketGoods marketGood : marketGoods) {
+            if (marketGood.getGoodsSn().equals(bo.getGoods().getGoodsSn())) {
+                throw new NumberFormatException();
+            }
+        }
+
         // 新建一个时间用于赋 date 值
         Date date = new Date();
 
@@ -209,6 +227,9 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
 
     @Override
     public void modifyGoods(AdminGoodsUpdateBo bo) {
+
+
+
         // 用于更新 updateTime 属性
         Date date = new Date();
 
