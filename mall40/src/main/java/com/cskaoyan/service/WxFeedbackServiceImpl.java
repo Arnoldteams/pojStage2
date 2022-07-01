@@ -49,12 +49,12 @@ public class WxFeedbackServiceImpl implements WxFeedbackService {
         marketFeedback.setMobile(wxFeedBackBo.getMobile());
         marketFeedback.setFeedType(wxFeedBackBo.getFeedType());
         marketFeedback.setContent(wxFeedBackBo.getContent());
+        marketFeedback.setPicUrls(wxFeedBackBo.getPicUrls());
+        marketFeedback.setHasPicture(wxFeedBackBo.getHasPicture());
 
-        // 如果反馈信息没有图片处理
-        if (wxFeedBackBo.getHasPicture() != null && wxFeedBackBo.getHasPicture()) {
-            marketFeedback.setHasPicture(wxFeedBackBo.getHasPicture());
-            marketFeedback.setPicUrls(wxFeedBackBo.getPicUrls().get(0));
-        }
+        // // 如果反馈信息没有图片处理
+        // if (wxFeedBackBo.getHasPicture() != null && wxFeedBackBo.getHasPicture()) {
+        // }
 
         mapper.insertSelective(marketFeedback);
     }
