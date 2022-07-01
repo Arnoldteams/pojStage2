@@ -15,6 +15,7 @@ import com.github.pagehelper.PageInfo;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +47,8 @@ public class WxOrderServiceImpl implements WxOrderService {
     MarketCouponUserMapper couponUserMapper;
     @Autowired
     MarketOrderGoodsMapper orderGoodsMapper;
+    @Autowired
+    MarketGoodsProductMapper goodsProductMapper;
 
     /**
      * @author: ZY
@@ -68,9 +71,10 @@ public class WxOrderServiceImpl implements WxOrderService {
         if (showType == 0) {
             wxOrderListChildVOList = wxOrderMapper.selectAllorderListByUserId(userId);
         } else {
-            Map instance = OrderStatusConvert.getInstance();
-            OrderStatusConvert o = (OrderStatusConvert) instance.get(showType);
-            Integer orderStatus = o.getOrderStatus();
+            // Map instance = OrderStatusConvert.getInstance();
+            // OrderStatusConvert o = (OrderStatusConvert) instance.get(showType);
+            // Integer orderStatus = o.getOrderStatus();
+            Integer orderStatus = OrderStatusConvert.getStatus(showType);
             wxOrderListChildVOList = wxOrderMapper.selectOrderListByStatusByUserId(orderStatus, userId);
         }
 
@@ -79,14 +83,16 @@ public class WxOrderServiceImpl implements WxOrderService {
             Integer orderId = wxOrderListChildVO.getId();
             Integer orderStatus = wxOrderMapper.selectOrderStatusById(orderId);
             //根据订单状态，查状态码信息
-            Map instance1 = OrderStatusContentConvert.getInstance();
-            OrderStatusContentConvert o1 = (OrderStatusContentConvert) instance1.get(orderStatus);
-            String orderStatusContent = o1.getOrderStatusContent();
+            // Map instance1 = OrderStatusContentConvert.getInstance();
+            // OrderStatusContentConvert o1 = (OrderStatusContentConvert) instance1.get(orderStatus);
+            // String orderStatusContent = o1.getOrderStatusContent();
+            String orderStatusContent = OrderStatusContentConvert.getStatusContent(orderStatus);
             wxOrderListChildVO.setOrderStatusText(orderStatusContent);
             //根据订单状态，查可操作信息
-            Map instance2 = OrderStatusHandleConvert.getInstance();
-            OrderStatusHandleConvert o2 = (OrderStatusHandleConvert) instance2.get(orderStatus);
-            WxOrderListHandleOption handler = o2.getHandler();
+            // Map instance2 = OrderStatusHandleConvert.getInstance();
+            // OrderStatusHandleConvert o2 = (OrderStatusHandleConvert) instance2.get(orderStatus);
+            // WxOrderListHandleOption handler = o2.getHandler();
+            WxOrderListHandleOption handler = OrderStatusHandleConvert.getOption(orderStatus);
             wxOrderListChildVO.setHandleOption(handler);
 
             //根据orderId查找该订单里的商品信息
@@ -160,6 +166,7 @@ public class WxOrderServiceImpl implements WxOrderService {
      * @param: wxOrderListCommentBO
      * @return: void
      */
+    @Async
     @Override
     public void addOrderComment(WxOrderListCommentBO wxOrderListCommentBO) {
         //拿到userId
@@ -205,13 +212,16 @@ public class WxOrderServiceImpl implements WxOrderService {
     public WxOrderDetailVo selectOrderDetailByOrderId(Integer orderId) {
         // 查询订单
         WxOrderDetailChildVo child = wxOrderMapper.selectOrderInfoByOrderId(orderId);
-        Map instance = OrderStatusHandleConvert.getInstance();
-        OrderStatusHandleConvert convert = (OrderStatusHandleConvert) instance.get(child.getOrderStatus());
-        WxOrderListHandleOption handler = convert.getHandler();
+        // Map instance = OrderStatusHandleConvert.getInstance();
+        // OrderStatusHandleConvert convert = (OrderStatusHandleConvert) instance.get(child.getOrderStatus());
+        // WxOrderListHandleOption handler = convert.getHandler();
+        WxOrderListHandleOption handler = OrderStatusHandleConvert.getOption(child.getOrderStatus());
+
 
         // 根据状态码获取handler和statusText
-        OrderStatusContentConvert statusConvert = (OrderStatusContentConvert) OrderStatusContentConvert.getInstance().get(child.getOrderStatus());
-        String statusText = statusConvert.getOrderStatusContent();
+        // OrderStatusContentConvert statusConvert = (OrderStatusContentConvert) OrderStatusContentConvert.getInstance().get(child.getOrderStatus());
+        // String statusText = statusConvert.getOrderStatusContent();
+        String statusText = OrderStatusContentConvert.getStatusContent(child.getOrderStatus());
         child.setHandleOption(handler);
         child.setOrderStatusText(statusText);
 
@@ -295,6 +305,7 @@ public class WxOrderServiceImpl implements WxOrderService {
         Integer userId = getUserId();
         Integer cartId = wxOrderSubmitBO.getCartId();
         MarketCartExample example = new MarketCartExample();
+        // 判断商品是从立即购买->购买的,还是从购物车购买的
         if(cartId > 0){
             MarketCart marketCart = cartMapper.selectByPrimaryKey(cartId);
             MarketOrderGoods goods = getMarketOrderGoods(orderId, marketCart);
@@ -302,6 +313,11 @@ public class WxOrderServiceImpl implements WxOrderService {
 
             // 更新购物车信息
             cartMapper.updateCartGoodsDeletedByCartId(cartId);
+
+            // 更新商品数量
+            Short number = marketCart.getNumber();
+            Integer productId = marketCart.getProductId();
+            goodsProductMapper.updateGoodsNumberByPrimaryKey(productId,number);
         }else{
             // 查出该用户所有被选中的商品列表
             example.createCriteria().andUserIdEqualTo(userId)
@@ -312,6 +328,10 @@ public class WxOrderServiceImpl implements WxOrderService {
             for (MarketCart marketCart : marketCarts) {
                 MarketOrderGoods goods = getMarketOrderGoods(orderId, marketCart);
                 orderGoodsMapper.insertSelective(goods);
+                // 修改商品数量
+                Short number = marketCart.getNumber();
+                Integer productId = marketCart.getProductId();
+                goodsProductMapper.updateGoodsNumberByPrimaryKey(productId,number);
             }
             // 更新购物车信息
             cartMapper.deleteCartInfoByUserId(userId);
@@ -322,6 +342,8 @@ public class WxOrderServiceImpl implements WxOrderService {
         if(userCouponId > 0){
             couponUserMapper.updateUserCouponNumberByCouponId(userCouponId);
         }
+
+
 
     }
 

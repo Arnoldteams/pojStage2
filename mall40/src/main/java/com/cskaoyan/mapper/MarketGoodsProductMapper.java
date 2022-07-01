@@ -31,4 +31,6 @@ public interface MarketGoodsProductMapper {
     int updateByPrimaryKey(MarketGoodsProduct record);
 
     MarketCart selectPartDataByPrimaryKey(@Param("productId") Integer productId);
+
+    void updateGoodsNumberByPrimaryKey(@Param("productId") Integer productId, @Param("number") Short number);
 }

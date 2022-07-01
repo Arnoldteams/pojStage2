@@ -29,6 +29,16 @@ public enum OrderStatusConvert {
         return orderStatus;
     }
 
+    public static Integer getStatus(Integer showType){
+        OrderStatusConvert[] values = OrderStatusConvert.values();
+        for (OrderStatusConvert value : values) {
+            if(value.getShowType().equals(showType)){
+                return value.getOrderStatus();
+            }
+        }
+        return null;
+    }
+
     public static Map getInstance(){
         if(OrderStatusMap == null){
             HashMap<Integer, Object> map = new HashMap<>();

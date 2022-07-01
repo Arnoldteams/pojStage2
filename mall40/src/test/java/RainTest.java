@@ -3,8 +3,10 @@ import com.cskaoyan.bean.MarketCategory;
 import com.cskaoyan.bean.MarketGoods;
 import com.cskaoyan.bean.MarketKeyword;
 
+import com.cskaoyan.bean.bo.wxOrder.OrderStatusContentConvert;
 import com.cskaoyan.bean.bo.wxOrder.OrderStatusConvert;
 
+import com.cskaoyan.bean.bo.wxOrder.OrderStatusHandleConvert;
 import com.cskaoyan.bean.vo.WxFootprintVO;
 import com.cskaoyan.mapper.MarketCategoryMapper;
 import com.cskaoyan.mapper.MarketFootprintMapper;
@@ -53,7 +55,6 @@ public class RainTest {
             String s = RandomStringUtils.randomNumeric(6);
             System.out.println(s);
         }
-
     }
 
     @Test
