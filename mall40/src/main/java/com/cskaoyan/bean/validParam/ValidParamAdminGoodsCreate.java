@@ -20,6 +20,9 @@ public class ValidParamAdminGoodsCreate {
     private String goodsSn;
 
     @DecimalMin("0")
+    private BigDecimal retailPrice;
+
+    @DecimalMin("0")
     private String name;
 
     @DecimalMin("0")
