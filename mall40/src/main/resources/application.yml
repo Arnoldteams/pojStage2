@@ -59,7 +59,7 @@ com:
     logPath: D://log.txt
 
 
-# sms
+# sms 配置阿里云，使用验证码服务需要提供密钥
 aliyun:
   accessKeyId: LTAI5t8gpxPTCR6W58RnZq4u
   accessKeySecret: mVPbpbxia0JQotb7HyJAREV8QUuq8h
