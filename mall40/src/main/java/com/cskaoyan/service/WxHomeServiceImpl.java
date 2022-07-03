@@ -40,9 +40,41 @@ public class WxHomeServiceImpl implements WxHomeService {
     @Autowired
     MarketSystemMapper marketSystemMapper;
 
-
     @Override
     public WxHomeIndexVo homeIndex() {
+
+        List<MarketSystem> system = marketSystemMapper.selectByExample(null);
+
+        Integer topicNum = Integer.valueOf(marketSystemMapper.selectByPrimaryKey(18).getKeyValue());
+        Integer newNum = Integer.valueOf(marketSystemMapper.selectByPrimaryKey(2).getKeyValue());
+        Integer hotNum = Integer.valueOf(marketSystemMapper.selectByPrimaryKey(10).getKeyValue());
+        Integer brandNum = Integer.valueOf(marketSystemMapper.selectByPrimaryKey(17).getKeyValue());
+        Integer catNum = Integer.valueOf(marketSystemMapper.selectByPrimaryKey(15).getKeyValue());
+        Integer catGoodsNum = Integer.valueOf(marketSystemMapper.selectByPrimaryKey(18).getKeyValue());
+
+        // 获取配置值
+        for (MarketSystem s : system) {
+            if (s.getKeyName().equals("market_wx_index_topic")) {
+                topicNum = Integer.parseInt(s.getKeyValue());
+            }
+            if (s.getKeyName().equals("market_wx_index_new")) {
+                newNum = Integer.parseInt(s.getKeyValue());
+            }
+            if (s.getKeyName().equals("market_wx_index_hot")) {
+                hotNum = Integer.parseInt(s.getKeyValue());
+            }
+            if (s.getKeyName().equals("market_wx_index_brand")) {
+                brandNum = Integer.parseInt(s.getKeyValue());
+            }
+            if (s.getKeyName().equals("market_wx_index_topic")) {
+                catNum = Integer.parseInt(s.getKeyValue());
+            }
+            if (s.getKeyName().equals("market_wx_catlog_goods")) {
+                catGoodsNum = Integer.parseInt(s.getKeyValue());
+            }
+
+        }
+
         WxHomeIndexVo wxHomeIndexVo = new WxHomeIndexVo();
 
         // 搜索 banner
@@ -50,20 +82,15 @@ public class WxHomeServiceImpl implements WxHomeService {
         MarketAdExample.Criteria criteria = marketAdExample.createCriteria();
         criteria.andDeletedEqualTo(false);
         List<MarketAd> marketAds = marketAdMapper.selectByExample(marketAdExample);
-        if (marketAds.size() > 12) {
-            wxHomeIndexVo.setBanner(marketAds.subList(0, 12));
-        } else {
-            wxHomeIndexVo.setBanner(marketAds);
-        }
-
+        wxHomeIndexVo.setBanner(marketAds);
 
         // 搜索 brandList
         MarketBrandExample marketBrandExample = new MarketBrandExample();
         MarketBrandExample.Criteria criteria1 = marketBrandExample.createCriteria();
         criteria1.andDeletedEqualTo(false);
         List<MarketBrand> marketBrands = marketBrandMapper.selectByExample(marketBrandExample);
-        if (marketBrands.size() > 10) {
-            wxHomeIndexVo.setBrandList(marketBrands.subList(0, 10));
+        if (marketBrands.size() > brandNum) {
+            wxHomeIndexVo.setBrandList(marketBrands.subList(0, brandNum));
         } else {
             wxHomeIndexVo.setBrandList(marketBrands);
         }
@@ -107,8 +134,8 @@ public class WxHomeServiceImpl implements WxHomeService {
                 List<MarketGoods> marketGoods = marketGoodsMapper.selectByExample(goodsExample);
                 goodsArrayList.addAll(marketGoods);
             }
-            if (goodsArrayList.size() > 12) {
-                floorGoodsVo.setGoodsList(goodsArrayList.subList(0, 12));
+            if (goodsArrayList.size() > catGoodsNum) {
+                floorGoodsVo.setGoodsList(goodsArrayList.subList(0, catGoodsNum));
             } else {
                 floorGoodsVo.setGoodsList(goodsArrayList);
             }
@@ -122,7 +149,11 @@ public class WxHomeServiceImpl implements WxHomeService {
 //        } else {
 //
 //        }
-        wxHomeIndexVo.setFloorGoodsList(floorGoodsVos);
+        if (floorGoodsVos.size() > catNum) {
+            wxHomeIndexVo.setFloorGoodsList(floorGoodsVos.subList(0, catNum));
+        } else {
+            wxHomeIndexVo.setFloorGoodsList(floorGoodsVos);
+        }
 
 
         // 搜索 hotGoods List
@@ -131,8 +162,8 @@ public class WxHomeServiceImpl implements WxHomeService {
         criteria4.andDeletedEqualTo(false);
         criteria4.andIsHotEqualTo(true);
         List<MarketGoods> marketGoods = marketGoodsMapper.selectByExample(goodsExample);
-        if (marketGoods.size() > 6) {
-            wxHomeIndexVo.setHotGoodsList(marketGoods.subList(0, 6));
+        if (marketGoods.size() > hotNum) {
+            wxHomeIndexVo.setHotGoodsList(marketGoods.subList(0, hotNum));
         } else {
             wxHomeIndexVo.setHotGoodsList(marketGoods);
         }
@@ -144,8 +175,8 @@ public class WxHomeServiceImpl implements WxHomeService {
         criteria5.andDeletedEqualTo(false);
         criteria5.andIsNewEqualTo(true);
         List<MarketGoods> marketGoods1 = marketGoodsMapper.selectByExample(goodsExample1);
-        if (marketGoods1.size() > 6) {
-            wxHomeIndexVo.setNewGoodsList(marketGoods1.subList(0, 6));
+        if (marketGoods1.size() > newNum) {
+            wxHomeIndexVo.setNewGoodsList(marketGoods1.subList(0, newNum));
         } else {
             wxHomeIndexVo.setNewGoodsList(marketGoods1);
         }
@@ -156,8 +187,8 @@ public class WxHomeServiceImpl implements WxHomeService {
         MarketTopicExample.Criteria criteria6 = marketTopicExample.createCriteria();
         criteria6.andDeletedEqualTo(false);
         List<MarketTopic> marketTopics = marketTopicMapper.selectByExample(marketTopicExample);
-        if (marketTopics.size() > 12) {
-            wxHomeIndexVo.setTopicList(marketTopics.subList(0, 12));
+        if (marketTopics.size() > topicNum) {
+            wxHomeIndexVo.setTopicList(marketTopics.subList(0, topicNum));
         } else {
             wxHomeIndexVo.setTopicList(marketTopics);
         }

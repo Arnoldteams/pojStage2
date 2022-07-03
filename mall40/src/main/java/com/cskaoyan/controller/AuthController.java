@@ -8,6 +8,7 @@ import com.cskaoyan.bean.InfoData;
 import com.cskaoyan.configuration.realm.MarketToken;
 import com.cskaoyan.handler.LogAnnotation;
 import com.cskaoyan.service.AdminAuthService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.session.Session;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 // import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -28,6 +30,9 @@ public class AuthController {
 
     @Autowired
     AdminAuthService adminAuthService;
+
+    @Autowired
+    HttpServletRequest request;
 
     /**
      * Shiro
@@ -51,6 +56,13 @@ public class AuthController {
             // realm.doGetAuthenticationInfo
             subject.login(authenticationToken);
         } catch (AuthenticationException e) {
+
+            String adminLoginName = (String) request.getServletContext().getAttribute("adminLoginName" + username);
+            if(!StringUtils.isEmpty(adminLoginName)){
+                return BaseRespVo.invalidAuth("该用户已登录");
+            }
+
+
             return BaseRespVo.invalidAuth("用户名或密码不正确");
 //            e.printStackTrace();
         }
@@ -111,7 +123,15 @@ public class AuthController {
     public BaseRespVo logout() {
 
         Subject subject = SecurityUtils.getSubject();
+        try {
+            MarketAdmin primaryPrincipal = (MarketAdmin) subject.getPrincipals().getPrimaryPrincipal();
+            String username = primaryPrincipal.getUsername();
+            request.getServletContext().removeAttribute("adminLoginName"+username);
+        } catch (Exception e) {
+            return BaseRespVo.ok();
+        }
         subject.logout();
+
         return BaseRespVo.ok();
     }
 
