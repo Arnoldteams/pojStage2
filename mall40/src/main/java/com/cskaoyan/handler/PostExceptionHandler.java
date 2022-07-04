@@ -34,8 +34,8 @@ public class PostExceptionHandler {
      * @author: 帅关
      * @createTime: 2022/6/27 13:47
      */
-    // @ExceptionHandler(Exception.class)
-    // @ResponseBody
+     @ExceptionHandler(Exception.class)
+     @ResponseBody
     public BaseRespVo allExceptionHandle(Exception e) throws Exception {
         File logFile = new File(logPath);
         try(FileOutputStream out = new FileOutputStream(logFile, true);
@@ -63,7 +63,7 @@ public class PostExceptionHandler {
      * @author xyg2597@163.com
      * @since 2022/06/27 14:16
      */
-    @ExceptionHandler({HttpMessageNotReadableException.class})
+//    @ExceptionHandler({HttpMessageNotReadableException.class})
     @ResponseBody
     @LogAnnotation(value = "编辑专题信息")
     public BaseRespVo jsonExceptionHandle(HttpMessageNotReadableException e){
