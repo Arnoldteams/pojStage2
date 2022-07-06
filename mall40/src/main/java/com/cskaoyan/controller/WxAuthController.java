@@ -211,6 +211,12 @@ public class WxAuthController {
             // realm.doGetAuthenticationInfo
             subject.login(authenticationToken);
         } catch (AuthenticationException e) {
+
+            String adminLoginName = (String) request.getServletContext().getAttribute("wxLoginName" + username);
+            if(!StringUtils.isEmpty(adminLoginName)){
+                return BaseRespVo.invalidAuth("该用户已登录");
+            }
+
             return BaseRespVo.invalidAuth("用户名或密码不正确");
 //            e.printStackTrace();
         }
@@ -250,7 +256,19 @@ public class WxAuthController {
     public BaseRespVo logout() {
 
         Subject subject = SecurityUtils.getSubject();
+//        在Context域中去除该用户名
+        try {
+            MarketUser primaryPrincipal = (MarketUser) subject.getPrincipals().getPrimaryPrincipal();
+            String username = primaryPrincipal.getUsername();
+            request.getServletContext().removeAttribute("wxLoginName"+username);
+        } catch (Exception e) {
+            return BaseRespVo.ok();
+        }
         subject.logout();
+
+
+
+
         return BaseRespVo.ok();
     }
 

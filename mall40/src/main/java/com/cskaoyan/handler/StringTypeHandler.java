@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 
 //字符串和字符数组的转化
-@MappedTypes(String[].class)
+// @MappedTypes(String[].class)
 @MappedJdbcTypes(JdbcType.VARCHAR)
 public class StringTypeHandler implements TypeHandler<String[]> {
 

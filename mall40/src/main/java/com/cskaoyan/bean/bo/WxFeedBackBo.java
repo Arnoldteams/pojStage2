@@ -16,5 +16,5 @@ public class WxFeedBackBo {
     String feedType;
     String content;
     Boolean hasPicture;
-    List<String> picUrls;
+    String[] picUrls;
 }

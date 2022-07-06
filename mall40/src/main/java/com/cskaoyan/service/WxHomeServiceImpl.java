@@ -45,12 +45,13 @@ public class WxHomeServiceImpl implements WxHomeService {
 
         List<MarketSystem> system = marketSystemMapper.selectByExample(null);
 
-        Integer topicNum = 0;
-        Integer newNum = 0;
-        Integer hotNum = 0;
-        Integer brandNum = 0;
-        Integer catNum = 0;
-        Integer catGoodsNum = 0;
+        Integer topicNum = Integer.valueOf(marketSystemMapper.selectByPrimaryKey(18).getKeyValue());
+        Integer newNum = Integer.valueOf(marketSystemMapper.selectByPrimaryKey(2).getKeyValue());
+        Integer hotNum = Integer.valueOf(marketSystemMapper.selectByPrimaryKey(10).getKeyValue());
+        Integer brandNum = Integer.valueOf(marketSystemMapper.selectByPrimaryKey(17).getKeyValue());
+        Integer catNum = Integer.valueOf(marketSystemMapper.selectByPrimaryKey(15).getKeyValue());
+        Integer catGoodsNum = Integer.valueOf(marketSystemMapper.selectByPrimaryKey(18).getKeyValue());
+
 
         // 获取配置值
         for (MarketSystem s : system) {
@@ -145,6 +146,17 @@ public class WxHomeServiceImpl implements WxHomeService {
 
         if (floorGoodsVos.size() > catGoodsNum) {
             wxHomeIndexVo.setFloorGoodsList(floorGoodsVos.subList(0, catGoodsNum));
+        } else {
+            wxHomeIndexVo.setFloorGoodsList(floorGoodsVos);
+        }
+
+//        if (floorGoodsVos.size() > 12) {
+//            wxHomeIndexVo.setFloorGoodsList(floorGoodsVos.subList(0, 12));
+//        } else {
+//
+//        }
+        if (floorGoodsVos.size() > catNum) {
+            wxHomeIndexVo.setFloorGoodsList(floorGoodsVos.subList(0, catNum));
         } else {
             wxHomeIndexVo.setFloorGoodsList(floorGoodsVos);
         }

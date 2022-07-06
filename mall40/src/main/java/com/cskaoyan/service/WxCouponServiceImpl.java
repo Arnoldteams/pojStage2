@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -44,6 +45,13 @@ public class WxCouponServiceImpl implements WxCouponService {
     @Override
     public int getCouponForUser(String username, Integer couponId) {
 
+        //获得User的id
+        MarketUserExample marketUserExample = new MarketUserExample();
+        MarketUserExample.Criteria criteria2 = marketUserExample.createCriteria();
+        criteria2.andUsernameEqualTo(username);
+        List<MarketUser> marketUsers = marketUserMapper.selectByExample(marketUserExample);
+        Integer id = marketUsers.get(0).getId();
+
         //得到对应的优惠券信息
         MarketCoupon marketCoupon = marketCouponMapper.selectByPrimaryKey(couponId);
 
@@ -62,7 +70,7 @@ public class WxCouponServiceImpl implements WxCouponService {
         //用户领取的优惠券数量已到最大值，返回状态码1
         MarketCouponUserExample marketCouponUserExample = new MarketCouponUserExample();
         MarketCouponUserExample.Criteria criteria1 = marketCouponUserExample.createCriteria();
-        criteria1.andCouponIdEqualTo(couponId);
+        criteria1.andCouponIdEqualTo(couponId).andUserIdEqualTo(id);
         long l = marketCouponUserMapper.countByExample(marketCouponUserExample);
         if(Long.valueOf(String.valueOf(marketCoupon.getLimit())) == l ){
             return 1;
@@ -80,11 +88,7 @@ public class WxCouponServiceImpl implements WxCouponService {
         System.out.println(i);
 
         //在优惠券用户信息表里增加一条优惠券信息
-        MarketUserExample marketUserExample = new MarketUserExample();
-        MarketUserExample.Criteria criteria2 = marketUserExample.createCriteria();
-        criteria2.andUsernameEqualTo(username);
-        List<MarketUser> marketUsers = marketUserMapper.selectByExample(marketUserExample);
-        Integer id = marketUsers.get(0).getId();
+
         MarketCouponUser marketCouponUser = new MarketCouponUser();
         marketCouponUser.setUserId(id);
         marketCouponUser.setCouponId(couponId);
@@ -196,9 +200,9 @@ public class WxCouponServiceImpl implements WxCouponService {
                 } else {
                     Short days = marketCoupon.getDays();
                     Date date = marketCouponUser.getAddTime();
-                    int currentDays = Integer.parseInt(String.valueOf(days));
-                    date.setTime(date.getTime() + currentDays * 24 * 60 * 60 * 1000);
-                    wxUserCouponVO.setEndTime(date);
+                    Long currentDays = Long.parseLong(String.valueOf(days));
+                    Date endTime = new Date(date.getTime() + currentDays * 24 * 60 * 60 * 1000);
+                    wxUserCouponVO.setEndTime(endTime);
                 }
 
                 userCoupons.add(wxUserCouponVO);

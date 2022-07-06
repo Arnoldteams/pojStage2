@@ -6,6 +6,7 @@ import com.cskaoyan.mapper.MarketAdminMapper;
 import com.cskaoyan.mapper.MarketPermissionMapper;
 import com.cskaoyan.mapper.MarketRoleMapper;
 import com.cskaoyan.mapper.MarketUserMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -17,7 +18,9 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -49,14 +52,38 @@ public class CustomRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
 
+
 // 通常根据AuthenticationToken中传入的用户名信息查询出该用户在数据库中的信息
         String type = ((MarketToken) authenticationToken).getType();
         String username = (String) authenticationToken.getPrincipal();
+
+
+
+        ServletContext servletContext = request.getServletContext();
+
+        String wxLoginName = (String) servletContext.getAttribute("wxLoginName"+username);
+
+
+//        如果servletContext域中存在对应的值，且该值等于登录名，无法进行登录
+//        if(!StringUtils.isEmpty(adminLoginName)){
+//            if(loginName.equals(username)){
+//                return null;
+//            }
+//        }
 
 //        获得认证时间和认证ip
         Date date = new Date();
         String remoteHost = request.getRemoteHost();
         if ("admin".equals(type)) {
+//        从servletContext域中取出登录名称
+            String adminLoginName = (String) servletContext.getAttribute("adminLoginName"+username);
+
+            if (!StringUtils.isEmpty(adminLoginName)) {
+                if (adminLoginName.equals("admin"+username)) {
+                    return null;
+                }
+            }
+
             MarketAdminExample example = new MarketAdminExample();
             example.createCriteria().andUsernameEqualTo(username);
             List<MarketAdmin> marketAdmins = marketAdminMapper.selectByExample(example);
@@ -67,6 +94,7 @@ public class CustomRealm extends AuthorizingRealm {
                 marketAdmin.setLastLoginIp(remoteHost);
 
                 marketAdminMapper.updateByPrimaryKeySelective(marketAdmin);
+                servletContext.setAttribute("adminLoginName"+username,"admin"+username);
 
                 // 构造认证信息时，可以放入你需要的用户信息，而你放入的用户信息，可以作为Principals
                 // 放入这个信息，是为了取出这个信息
@@ -74,6 +102,15 @@ public class CustomRealm extends AuthorizingRealm {
                 return new SimpleAuthenticationInfo(marketAdmin,marketAdmin.getPassword(),getName());
             }
         } else if ("wx".equals(type)) {
+
+            String adminLoginName = (String) servletContext.getAttribute("wxLoginName"+username);
+
+            if (!StringUtils.isEmpty(adminLoginName)) {
+                if (adminLoginName.equals("wx"+username)) {
+                    return null;
+                }
+            }
+
             //查询user表中的信息
             MarketUserExample marketUserExample = new MarketUserExample();
             marketUserExample.createCriteria().andUsernameEqualTo(username);
@@ -87,6 +124,7 @@ public class CustomRealm extends AuthorizingRealm {
                 marketUser.setLastLoginIp(remoteHost);
 
                 marketUserMapper.updateByPrimaryKeySelective(marketUser);
+                servletContext.setAttribute("wxLoginName"+username,"wx"+username);
 
                 // 构造认证信息时，可以放入你需要的用户信息，而你放入的用户信息，可以作为Principals
                 // 放入这个信息，是为了取出这个信息

@@ -778,7 +778,7 @@
   <select id="selectOrderInfoByOrderId" resultType="com.cskaoyan.bean.vo.wxOrder.WxOrderDetailChildVo">
       select consignee,address,add_time as addTime,order_sn as orderSn,
       actual_price as actualPrice,mobile,message,aftersale_status as aftersaleStatus,
-      goods_price as goodsPrice,coupon_price as couponPrice,id,freight_price,
+      goods_price as goodsPrice,coupon_price as couponPrice,id,freight_price as freightPrice,
       order_status as orderStatus
       from market_order
       where id =#{orderId}

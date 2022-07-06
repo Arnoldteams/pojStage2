@@ -121,7 +121,7 @@ public class AdminCategoryController {
     @LogAnnotation(value = "更新商品类目", comment = "来自sprinkle")
     @RequiresPermissions(value = {"admin:category:update","*"},logical = Logical.OR)
     public BaseRespVo update(@RequestBody MarketCategory marketCategory) {
-        
+
         adminCategoryService.updateOneCategory(marketCategory);
         return BaseRespVo.ok();
     }
