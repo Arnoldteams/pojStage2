@@ -23,7 +23,7 @@ spring:
     password: 123456
     type: com.alibaba.druid.pool.DruidDataSource
   redis:
-    host: 43.138.55.158
+    host: 101.42.163.155
     port: 6379
     lettuce:
       shutdown-timeout: 0
