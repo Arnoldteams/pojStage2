@@ -52,6 +52,7 @@ public class WxHomeServiceImpl implements WxHomeService {
         Integer catNum = Integer.valueOf(marketSystemMapper.selectByPrimaryKey(15).getKeyValue());
         Integer catGoodsNum = Integer.valueOf(marketSystemMapper.selectByPrimaryKey(18).getKeyValue());
 
+
         // 获取配置值
         for (MarketSystem s : system) {
             if (s.getKeyName().equals("market_wx_index_topic")) {
@@ -115,7 +116,6 @@ public class WxHomeServiceImpl implements WxHomeService {
             wxHomeIndexVo.setCouponList(couponList);
         }
 
-
         // 搜索 floorGoods List
         List<FloorGoodsVo> floorGoodsVos = new ArrayList<>();
         for (MarketCategory marketCategory : marketCategories) {
@@ -144,6 +144,12 @@ public class WxHomeServiceImpl implements WxHomeService {
             floorGoodsVos.add(floorGoodsVo);
         }
 
+        if (floorGoodsVos.size() > catGoodsNum) {
+            wxHomeIndexVo.setFloorGoodsList(floorGoodsVos.subList(0, catGoodsNum));
+        } else {
+            wxHomeIndexVo.setFloorGoodsList(floorGoodsVos);
+        }
+
 //        if (floorGoodsVos.size() > 12) {
 //            wxHomeIndexVo.setFloorGoodsList(floorGoodsVos.subList(0, 12));
 //        } else {
@@ -154,7 +160,6 @@ public class WxHomeServiceImpl implements WxHomeService {
         } else {
             wxHomeIndexVo.setFloorGoodsList(floorGoodsVos);
         }
-
 
         // 搜索 hotGoods List
         MarketGoodsExample goodsExample = new MarketGoodsExample();

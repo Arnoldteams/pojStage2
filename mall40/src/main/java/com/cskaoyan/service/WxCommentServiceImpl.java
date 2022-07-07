@@ -36,7 +36,8 @@ public class WxCommentServiceImpl implements WxCommentService{
 
         MarketCommentExample example = new MarketCommentExample();
         MarketCommentExample.Criteria criteria = example.createCriteria();
-        MarketCommentExample.Criteria criteria1 = criteria.andTypeEqualTo(type).andValueIdEqualTo(valueId);
+        MarketCommentExample.Criteria criteria1 = criteria.andTypeEqualTo((byte) 0).andValueIdEqualTo(valueId).andDeletedEqualTo(false);
+
         if(showType == 1){
             criteria1.andHasPictureEqualTo(true);
         }
@@ -72,7 +73,7 @@ public class WxCommentServiceImpl implements WxCommentService{
 
         MarketCommentExample marketCommentExample = new MarketCommentExample();
         MarketCommentExample.Criteria criteria = marketCommentExample.createCriteria();
-        criteria.andValueIdEqualTo(valueId).andTypeEqualTo(Byte.valueOf(String.valueOf(type)));
+        criteria.andValueIdEqualTo(valueId).andTypeEqualTo(Byte.valueOf(String.valueOf(type))).andDeletedEqualTo(false);
         List<MarketComment> marketComments = marketCommentMapper.selectByExample(marketCommentExample);
         for (MarketComment marketComment : marketComments) {
             if(marketComment.getHasPicture()){
