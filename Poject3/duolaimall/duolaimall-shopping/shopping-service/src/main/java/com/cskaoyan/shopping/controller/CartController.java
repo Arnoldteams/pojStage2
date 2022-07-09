@@ -16,11 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
  * @Description:
  */
 @RestController
+@RequestMapping("shopping")
 public class CartController {
     @Autowired
     ICartService cartService;
 
-    @RequestMapping("shopping/items")
+    @RequestMapping("items")
     public CheckAllItemResponse checkAllCartItem(@RequestBody CheckAllItemRequest request){
         return cartService.checkAllCartItem(request);
     }
