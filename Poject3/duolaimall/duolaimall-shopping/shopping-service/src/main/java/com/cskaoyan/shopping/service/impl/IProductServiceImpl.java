@@ -52,6 +52,13 @@ public class IProductServiceImpl implements IProductService {
         return null;
     }
 
+    /**
+     * @author: 于艳帆
+     * @createTime: 2022-07-09 15:39:37
+     * @description: 获取推荐商品信息
+     * @param:
+     * @return: com.cskaoyan.shopping.dto.RecommendResponse
+     */
     @Override
     public RecommendResponse getRecommendGoods() {
 

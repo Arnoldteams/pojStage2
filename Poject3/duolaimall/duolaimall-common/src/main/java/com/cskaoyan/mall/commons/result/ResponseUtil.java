@@ -1,6 +1,8 @@
 package com.cskaoyan.mall.commons.result;
 
+import lombok.Data;
 
+@Data // 提供get方法
 public class ResponseUtil<T> {
 
     private ResponseData<T> responseData;
