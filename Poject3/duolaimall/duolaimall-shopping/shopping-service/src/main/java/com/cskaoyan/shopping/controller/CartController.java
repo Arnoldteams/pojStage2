@@ -1,12 +1,12 @@
 package com.cskaoyan.shopping.controller;
 
+import com.cskaoyan.mall.commons.result.ResponseData;
+import com.cskaoyan.mall.commons.result.ResponseUtil;
 import com.cskaoyan.shopping.dto.CheckAllItemRequest;
-import com.cskaoyan.shopping.dto.CheckAllItemResponse;
 import com.cskaoyan.shopping.service.ICartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -16,12 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
  * @Description:
  */
 @RestController
+@RequestMapping("/shopping")
 public class CartController {
     @Autowired
     ICartService cartService;
 
-    @RequestMapping("shopping/items")
-    public CheckAllItemResponse checkAllCartItem(@RequestBody CheckAllItemRequest request){
-        return cartService.checkAllCartItem(request);
+    @RequestMapping("/items")
+    public ResponseData checkAllCartItem(@RequestBody CheckAllItemRequest request){
+        return new ResponseUtil().setData(null);
     }
 }

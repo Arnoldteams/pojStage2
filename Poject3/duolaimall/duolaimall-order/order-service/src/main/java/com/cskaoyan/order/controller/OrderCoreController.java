@@ -9,6 +9,9 @@ import com.cskaoyan.order.service.OrderCoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  *
  * @since 2022/07/08 22:42
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
  */
 
 @RestController
+@RequestMapping("/shopping")
 public class OrderCoreController {
 
     @Autowired
@@ -28,8 +32,9 @@ public class OrderCoreController {
      * @hor: 帅关
      * @createTime: 2022/7/8 22:44
      */
-    @PostMapping("shopping/order")
+    @PostMapping("/order")
     public ResponseData createOrder(@RequestBody CreateOrderRequest request){
+
         CreateOrderResponse order = orderCoreService.createOrder(request);
         return new ResponseUtil().setData(order.getOrderId());
     }

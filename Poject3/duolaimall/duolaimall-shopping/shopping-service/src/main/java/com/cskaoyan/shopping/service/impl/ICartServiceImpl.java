@@ -2,11 +2,17 @@ package com.cskaoyan.shopping.service.impl;
 
 import com.cskaoyan.mall.dto.ClearCartItemRequest;
 import com.cskaoyan.mall.dto.ClearCartItemResponse;
+import com.cskaoyan.shopping.constants.GlobalConstants;
 import com.cskaoyan.shopping.dal.persistence.ItemCatMapper;
 import com.cskaoyan.shopping.dto.*;
 import com.cskaoyan.shopping.service.ICartService;
+import org.redisson.api.RMap;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -18,7 +24,8 @@ import org.springframework.stereotype.Service;
 public class ICartServiceImpl implements ICartService {
     @Autowired
     ItemCatMapper catMapper;
-
+    @Autowired
+    RedissonClient redissonClient;
 
 
     @Override
@@ -38,7 +45,12 @@ public class ICartServiceImpl implements ICartService {
 
     @Override
     public CheckAllItemResponse checkAllCartItem(CheckAllItemRequest request) {
-        return null;
+        request.requestCheck();
+        String checked = request.getChecked();
+        RMap<Long, List<CartProductDto>> map = redissonClient.getMap("carts");
+        map.get(request.getUserId())
+        .forEach(a -> a.setChecked(checked));
+        return new CheckAllItemResponse();
     }
 
     @Override

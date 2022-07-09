@@ -10,6 +10,7 @@ import com.cskaoyan.order.service.OrderQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,12 +22,13 @@ import javax.servlet.http.HttpServletRequest;
  */
 
 @RestController
+@RequestMapping("/shopping")
 public class OrderQueryController {
 
     @Autowired
     OrderQueryService queryService;
 
-    @GetMapping("shopping/order")
+    @GetMapping("/order")
     public ResponseData queryAllOrder(@RequestBody OrderListRequest request, HttpServletRequest httpServletRequest){
         // 拿到用户Id
         String userInfo = httpServletRequest.getHeader("user_info");
