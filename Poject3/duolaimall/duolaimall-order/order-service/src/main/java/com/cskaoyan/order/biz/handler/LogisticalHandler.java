@@ -30,6 +30,20 @@ public class LogisticalHandler extends AbstractTransHandler {
 
     @Override
     public boolean handle(TransHandlerContext context) {
+        CreateOrderContext orderContext = (CreateOrderContext) context;
+        if(orderContext.getOrderId() == null){
+            throw new BizException("orderId不能为空！");
+        }
+        // 封装对象
+        Date date = new Date();
+        OrderShipping orderShipping = new OrderShipping();
+        orderShipping.setOrderId(orderContext.getOrderId());
+        orderShipping.setReceiverName(orderContext.getUserName());
+        orderShipping.setReceiverAddress(orderContext.getStreetName());
+        orderShipping.setReceiverPhone(orderContext.getTel());
+        orderShipping.setCreated(date);
+        orderShipping.setUpdated(date);
+        orderShippingMapper.insert(orderShipping);
         return true;
     }
 }
