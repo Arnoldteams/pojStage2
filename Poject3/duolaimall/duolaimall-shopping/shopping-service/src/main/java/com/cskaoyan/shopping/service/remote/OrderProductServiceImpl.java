@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class OrderProductServiceImpl{
 
 //    @Autowired
-//    ICartService iCartSevice;
+//    ICartServiceImpl iCartSevice;
 
     @RequestMapping(value = "/rpc/items",method = RequestMethod.DELETE)
     public ClearCartItemResponse clearCartItemByUserID(@RequestBody ClearCartItemRequest request) {
