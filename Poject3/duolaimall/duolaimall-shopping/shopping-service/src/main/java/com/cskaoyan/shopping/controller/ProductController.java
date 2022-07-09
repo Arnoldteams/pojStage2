@@ -4,8 +4,6 @@ import com.cskaoyan.mall.commons.result.ResponseData;
 import com.cskaoyan.mall.commons.result.ResponseUtil;
 import com.cskaoyan.mall.constant.ShoppingRetCode;
 import com.cskaoyan.shopping.dto.RecommendResponse;
-import com.cskaoyan.shopping.dto.TestProductDetailRequest;
-import com.cskaoyan.shopping.dto.TestProductDetailResponse;
 import com.cskaoyan.shopping.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +28,7 @@ public class ProductController {
     /**
      * @author: 于艳帆
      * @createTime: 2022-07-09 13:56:45
-     * @description:
+     * @description: 获取热门推荐列表
      * @param:
      * @return: com.cskaoyan.mall.commons.result.ResponseData
      */

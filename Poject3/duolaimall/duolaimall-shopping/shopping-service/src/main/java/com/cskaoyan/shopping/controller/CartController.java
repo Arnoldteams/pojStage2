@@ -22,7 +22,7 @@ public class CartController {
     ICartService cartService;
 
     @RequestMapping("/items")
-    public ResponseData checkAllCartItem(@RequestBody CheckAllItemRequest request){
+    public ResponseData checkAllCartItem(@RequestBody CheckAllItemRequest request) {
         return new ResponseUtil().setData(null);
     }
 }
