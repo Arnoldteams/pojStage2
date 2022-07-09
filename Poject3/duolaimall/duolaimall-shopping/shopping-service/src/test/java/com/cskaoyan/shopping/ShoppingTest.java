@@ -2,6 +2,10 @@ package com.cskaoyan.shopping;
 
 import com.cskaoyan.shopping.dal.entitys.Item;
 import com.cskaoyan.shopping.dal.persistence.ItemMapper;
+import com.cskaoyan.shopping.dto.CartListByIdRequest;
+import com.cskaoyan.shopping.dto.CartListByIdResponse;
+import com.cskaoyan.shopping.dto.CartProductDto;
+import com.cskaoyan.shopping.service.ICartService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +21,22 @@ public class ShoppingTest {
 
     @Autowired
     ItemMapper itemMapper;
+
+
+    @Autowired
+    ICartService iCartService;
+
+    @Test
+    public void testGetCartListById(){
+        CartListByIdRequest idRequest = new CartListByIdRequest();
+        idRequest.setUserId(Long.parseLong("73"));
+        CartListByIdResponse cartListById = iCartService.getCartListById(idRequest);
+        for (CartProductDto cartProductDto : cartListById.getCartProductDtos()) {
+            System.out.println(cartProductDto);
+        }
+
+
+    }
 
     // 测试数据库
     @Test
