@@ -9,7 +9,7 @@ public interface ICartService {
 
     /**
      * 获得购物车商品列表
-     * @param request
+     * @param request 封装了userId的对象
      * @return
      */
     CartListByIdResponse getCartListById(CartListByIdRequest request);

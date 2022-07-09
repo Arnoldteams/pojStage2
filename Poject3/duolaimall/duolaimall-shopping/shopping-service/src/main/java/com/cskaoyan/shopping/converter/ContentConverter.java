@@ -11,6 +11,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mappings;
 
 import java.util.List;
+import java.util.Set;
 
 
 @Mapper(componentModel = "spring")
@@ -24,6 +25,8 @@ public interface ContentConverter {
 
     @Mappings({})
     PanelDto panel2Dto(Panel panel);
+
+    Set<PanelDto> panels2Dto(List<Panel> panels);
 
     List<PanelContentDto> panelContents2Dto(List<PanelContent> panelContents);
 

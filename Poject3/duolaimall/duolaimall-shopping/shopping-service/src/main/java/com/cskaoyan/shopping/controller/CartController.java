@@ -1,14 +1,20 @@
 package com.cskaoyan.shopping.controller;
 
-import com.cskaoyan.mall.commons.constant.SysRetCodeConstants;
+
 import com.cskaoyan.mall.commons.result.ResponseData;
 import com.cskaoyan.mall.commons.result.ResponseUtil;
 import com.cskaoyan.mall.constant.ShoppingRetCode;
 import com.cskaoyan.shopping.dto.*;
+
 import com.cskaoyan.shopping.form.CartForm;
 import com.cskaoyan.shopping.service.ICartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import com.cskaoyan.shopping.dto.CheckAllItemRequest;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 
 /**
  * @Author: 于艳帆
@@ -17,13 +23,27 @@ import org.springframework.web.bind.annotation.*;
  * @Description:
  */
 @RestController
+@RequestMapping("/shopping")
 public class CartController {
     @Autowired
     ICartService cartService;
 
-    @RequestMapping("shopping/items")
-    public CheckAllItemResponse checkAllCartItem(@RequestBody CheckAllItemRequest request) {
-        return cartService.checkAllCartItem(request);
+    @RequestMapping("/items")
+    public ResponseData checkAllCartItem(@RequestBody CheckAllItemRequest request) {
+        return new ResponseUtil().setData(null);
+    }
+
+    @PostMapping("carts")
+    public ResponseData addProductToCart(@RequestBody AddCartRequest request) {
+
+        AddCartResponse response = cartService.addToCart(request);
+        if (ShoppingRetCode.SUCCESS.getCode().equals(response.getCode())) {
+            // 执行成功
+            return new ResponseUtil().getResponseData();
+        }
+
+        // 执行失败
+        return new ResponseUtil().setErrorMsg(response.getMsg());
     }
 
     /**
@@ -34,7 +54,7 @@ public class CartController {
      * @author xyg2597@163.com
      * @since 2022/07/09 17:11
      */
-    @PutMapping("shopping/carts")
+    @PutMapping("carts")
     public ResponseData updateCartNum(@RequestBody CartForm cartForm) {
         UpdateCartNumRequest request = new UpdateCartNumRequest();
         request.setChecked(cartForm.getChecked());
@@ -59,7 +79,7 @@ public class CartController {
      * @author xyg2597@163.com
      * @since 2022/07/09 17:21
      */
-    @DeleteMapping("shopping/carts/{uid}/{pid}")
+    @DeleteMapping("carts/{uid}/{pid}")
     public ResponseData deleteCartItem(@PathVariable("uid") Long uid,
                                    @PathVariable("pid") Long pid) {
 
@@ -77,7 +97,7 @@ public class CartController {
     }
 
 
-    @DeleteMapping("shopping/items/{uid}")
+    @DeleteMapping("items/{uid}")
     public ResponseData deleteCheckCartItems(@PathVariable("uid") Long uid){
         DeleteCheckedItemRequest request = new DeleteCheckedItemRequest();
         request.setUserId(uid);
