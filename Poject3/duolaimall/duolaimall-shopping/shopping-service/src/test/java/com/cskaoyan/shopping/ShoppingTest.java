@@ -22,6 +22,7 @@ public class ShoppingTest {
     @Test
     public void testItem() {
         Item item = itemMapper.selectByPrimaryKey(100046401);
+        System.out.println(item);
     }
 
 //    // 测试服务业务
