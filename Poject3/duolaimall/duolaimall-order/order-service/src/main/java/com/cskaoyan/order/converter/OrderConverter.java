@@ -5,6 +5,7 @@ import com.cskaoyan.order.dal.entitys.OrderItem;
 import com.cskaoyan.order.dal.entitys.OrderShipping;
 import com.cskaoyan.order.dto.*;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public interface OrderConverter {
     @Mappings({})
     OrderShippingDto shipping2dto(OrderShipping shipping);
 
+    List<OrderDetailInfo> order2detail(List<Order> orders);
 
     List<OrderItemDto> item2dto(List<OrderItem> items);
 
