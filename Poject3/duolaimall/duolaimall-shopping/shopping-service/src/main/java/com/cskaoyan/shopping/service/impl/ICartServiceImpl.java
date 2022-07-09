@@ -6,6 +6,7 @@ import com.cskaoyan.shopping.dal.persistence.ItemCatMapper;
 import com.cskaoyan.shopping.dto.*;
 import com.cskaoyan.shopping.service.ICartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
@@ -13,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Gzy
  */
 
-
+@Service
 public class ICartServiceImpl implements ICartService {
     @Autowired
     ItemCatMapper catMapper;
