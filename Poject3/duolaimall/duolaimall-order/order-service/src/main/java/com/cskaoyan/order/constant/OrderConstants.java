@@ -12,5 +12,9 @@ public class OrderConstants {
     public static String ORDER_ID = "order_id";
     public static String ORDER_ITEM_ID = "order_item_id";
 
+    public static int STOCK_LOCKED = 1;  // 库存已锁定
+    public static int STOCK_RELEASE = 2; // 库存已释放
+    public static int STOCK_MINUS_SUCCESS = 3;  // 库存减扣成功
+
 }
 

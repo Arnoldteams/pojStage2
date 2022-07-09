@@ -9,6 +9,7 @@ import tk.mybatis.mapper.annotation.ColumnType;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -75,7 +76,7 @@ public class OrderItem {
 
      */
 
-    private Double price;
+    private BigDecimal price;
 
 
 
@@ -87,7 +88,7 @@ public class OrderItem {
 
     @Column(name = "total_fee")
 
-    private Double totalFee;
+    private BigDecimal totalFee;
 
 
 
