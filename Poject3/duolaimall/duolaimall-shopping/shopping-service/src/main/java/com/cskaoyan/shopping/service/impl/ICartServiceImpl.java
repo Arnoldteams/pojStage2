@@ -15,7 +15,7 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * @author Gzy
@@ -103,7 +103,12 @@ public class ICartServiceImpl implements ICartService {
 
     @Override
     public CheckAllItemResponse checkAllCartItem(CheckAllItemRequest request) {
-        return null;
+        request.requestCheck();
+        String checked = request.getChecked();
+        RMap<Long, List<CartProductDto>> map = redissonClient.getMap("carts");
+        map.get(request.getUserId())
+        .forEach(a -> a.setChecked(checked));
+        return new CheckAllItemResponse();
     }
 
     @Override

@@ -7,8 +7,10 @@ import com.cskaoyan.shopping.dto.*;
 import com.cskaoyan.shopping.service.ICartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
+import com.cskaoyan.shopping.dto.CheckAllItemRequest;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @Author: 于艳帆
@@ -17,14 +19,14 @@ import java.util.ArrayList;
  * @Description:
  */
 @RestController
-@RequestMapping("shopping")
+@RequestMapping("/shopping")
 public class CartController {
     @Autowired
     ICartService cartService;
 
-    @RequestMapping("items")
-    public CheckAllItemResponse checkAllCartItem(@RequestBody CheckAllItemRequest request){
-        return cartService.checkAllCartItem(request);
+    @RequestMapping("/items")
+    public ResponseData checkAllCartItem(@RequestBody CheckAllItemRequest request) {
+        return new ResponseUtil().setData(null);
     }
 
     @PostMapping("carts")

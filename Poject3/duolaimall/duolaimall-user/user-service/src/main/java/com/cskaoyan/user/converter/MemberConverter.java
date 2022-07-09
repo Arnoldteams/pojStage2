@@ -3,6 +3,7 @@ package com.cskaoyan.user.converter;
 import com.cskaoyan.user.dal.entitys.Member;
 import com.cskaoyan.user.dto.QueryMemberResponse;
 import com.cskaoyan.user.dto.UpdateMemberRequest;
+import com.cskaoyan.user.dto.UserLoginResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mappings;
 
@@ -14,4 +15,7 @@ public interface MemberConverter {
 
     @Mappings({})
     Member updateReq2Member(UpdateMemberRequest request);
+
+    @Mappings({})
+    UserLoginResponse QueryRes2LoginRes(QueryMemberResponse queryMemberResponse);
 }

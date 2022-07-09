@@ -44,6 +44,9 @@ public class OrderQueryServiceImpl implements OrderQueryService {
      */
     @Override
     public OrderListResponse orderList(OrderListRequest request) {
+        // 参数校验
+        request.requestCheck();
+
         PageHelper.startPage(request.getPage(),request.getSize(),request.getSort());
         // 获取该用户的所有订单
         Example example = new Example(Order.class);
