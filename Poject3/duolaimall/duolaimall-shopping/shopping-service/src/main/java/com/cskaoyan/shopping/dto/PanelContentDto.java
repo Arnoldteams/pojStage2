@@ -6,7 +6,8 @@ import java.io.Serializable;
 
 
 @Data
-public class PanelContentDto implements Serializable {
+public class
+PanelContentDto implements Serializable {
 
     private static final long serialVersionUID = -1584205373584476401L;
     private Integer id;
