@@ -32,6 +32,7 @@ import java.util.*;
 @Service
 public class ICartServiceImpl implements ICartService {
 
+    @Autowired
     ItemMapper itemMapper;
 
     @Autowired
