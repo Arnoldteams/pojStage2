@@ -36,7 +36,7 @@ public class RegisterController {
     IRegisterService registerService;
 
     @PostMapping("user/register")
-    public ResponseData userRegister(@RequestBody Map map , HttpServletRequest request) throws ValidationException {
+    public ResponseData userRegister(@RequestBody Map map , HttpServletRequest request) {
         String userName = (String) map.get("userName");
         String userPwd = (String) map.get("userPwd");
         String captCha = (String) map.get("captcha");
@@ -69,4 +69,7 @@ public class RegisterController {
         }
         return new ResponseUtil().setErrorMsg(userRegisterResponse.getMsg());
     }
+
+
+
 }

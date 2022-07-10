@@ -10,11 +10,15 @@ import com.cskaoyan.user.dto.UserRegisterRequest;
 import com.cskaoyan.user.dto.UserRegisterResponse;
 import com.cskaoyan.user.service.IRegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import tk.mybatis.mapper.entity.Example;
+import com.cskaoyan.mall.commons.exception.ValidateException;
 
-import javax.xml.bind.ValidationException;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -34,8 +38,11 @@ public class RegisterServiceImpl implements IRegisterService {
     @Autowired
     UserVerifyMapper userVerifyMapper;
 
+    @Autowired
+    JavaMailSender mailSender;
+
     @Override
-    public UserRegisterResponse userRegister(UserRegisterRequest userRegisterRequest) throws ValidationException {
+    public UserRegisterResponse userRegister(UserRegisterRequest userRegisterRequest) {
         UserRegisterResponse response = new UserRegisterResponse();
         //判空
         userRegisterRequest.requestCheck();
@@ -79,16 +86,28 @@ public class RegisterServiceImpl implements IRegisterService {
         }
 
         //发送用户激活邮件
+        sendMail(userRegisterRequest, member, uuid);
 
-        return null;
+        return response;
     }
 
-    private void validateRepeat(UserRegisterRequest userRegisterRequest) throws ValidationException {
+    @Async
+    void sendMail(UserRegisterRequest userRegisterRequest, Member member, String uuid) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setSubject("CSMALL用户激活");
+        String text = "http://localhost:8080/user/verify?uid=" + uuid + "&" + "username=" + userRegisterRequest.getUserName();
+        mailMessage.setText(text);
+        mailMessage.setFrom("yn1609853@163.com");
+        mailMessage.setTo(member.getEmail());
+        mailSender.send(mailMessage);
+    }
+
+    private void validateRepeat(UserRegisterRequest userRegisterRequest) {
         Example example = new Example(Member.class);
         example.createCriteria().andEqualTo("username",userRegisterRequest.getUserName());
         Member member = memberMapper.selectOneByExample(example);
         if(member != null){
-            throw new ValidationException(UserRetCode.USERNAME_ALREADY_EXISTS.getCode(),UserRetCode.USERNAME_ALREADY_EXISTS.getMessage());
+            throw new ValidateException(UserRetCode.USERNAME_ALREADY_EXISTS.getCode(),UserRetCode.USERNAME_ALREADY_EXISTS.getMessage());
         }
     }
 }

@@ -14,5 +14,5 @@ import javax.xml.bind.ValidationException;
  */
 public interface IRegisterService {
 
-    UserRegisterResponse userRegister(UserRegisterRequest userRegisterRequest) throws ValidationException;
+    UserRegisterResponse userRegister(UserRegisterRequest userRegisterRequest);
 }
