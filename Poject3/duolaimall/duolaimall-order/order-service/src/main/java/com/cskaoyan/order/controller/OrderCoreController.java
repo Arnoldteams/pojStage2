@@ -1,16 +1,16 @@
 package com.cskaoyan.order.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.cskaoyan.mall.commons.constant.SysRetCodeConstants;
 import com.cskaoyan.mall.commons.result.ResponseData;
 import com.cskaoyan.mall.commons.result.ResponseUtil;
 import com.cskaoyan.order.dto.CreateOrderRequest;
 import com.cskaoyan.order.dto.CreateOrderResponse;
-import com.cskaoyan.order.dto.OrderListRequest;
 import com.cskaoyan.order.service.OrderCoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -33,10 +33,17 @@ public class OrderCoreController {
      * @createTime: 2022/7/8 22:44
      */
     @PostMapping("/order")
-    public ResponseData createOrder(@RequestBody CreateOrderRequest request){
-
-        CreateOrderResponse order = orderCoreService.createOrder(request);
-        return new ResponseUtil().setData(order.getOrderId());
+    public ResponseData createOrder(@RequestBody CreateOrderRequest request, HttpServletRequest httpServletRequest){
+        // String userInfo = httpServletRequest.getHeader("user_info");
+        // JSONObject jsonObject = JSON.parseObject(userInfo);
+        // long uid = Long.parseLong(jsonObject.get("uid").toString());
+        // request.setUserId(uid);
+        request.setUserId((long) 71);
+        CreateOrderResponse response = orderCoreService.createOrder(request);
+        if(response.getCode().equals(SysRetCodeConstants.SUCCESS.getCode())){
+            return new ResponseUtil().setData(response.getOrderId());
+        }
+        return new ResponseUtil<>().setErrorMsg(response.getMsg());
     }
 
 }

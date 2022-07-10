@@ -12,9 +12,11 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.PathMatcher;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -31,6 +33,7 @@ public class JwtTokenFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+
         // 获取实际请求的path路径
         String currentUrl = exchange.getRequest().getURI().getPath();
         // 判断是否应该拦截该请求，验证其Token
@@ -83,6 +86,7 @@ public class JwtTokenFilter implements GlobalFilter, Ordered {
         // 验证登录，需要拦截
         if ("/user/login".equals(currentUrl.trim())
                 && HttpMethod.GET.equals(method)) {
+
             return false;
         }
         //路径匹配器(简介SpringMvc拦截器的匹配器)
