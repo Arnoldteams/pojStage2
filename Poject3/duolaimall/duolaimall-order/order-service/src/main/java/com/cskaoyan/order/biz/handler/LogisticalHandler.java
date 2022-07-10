@@ -43,7 +43,11 @@ public class LogisticalHandler extends AbstractTransHandler {
         orderShipping.setReceiverPhone(orderContext.getTel());
         orderShipping.setCreated(date);
         orderShipping.setUpdated(date);
-        orderShippingMapper.insert(orderShipping);
+        int affectedRows = orderShippingMapper.insert(orderShipping);
+        if(affectedRows < 1){
+            throw new BizException(OrderRetCode.SHIPPING_DB_SAVED_FAILED.getCode(),
+                    OrderRetCode.SHIPPING_DB_SAVED_FAILED.getMessage());
+        }
         return true;
     }
 }

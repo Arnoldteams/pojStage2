@@ -31,10 +31,11 @@ public class OrderQueryController {
     @GetMapping("/order")
     public ResponseData queryAllOrder(@RequestBody OrderListRequest request, HttpServletRequest httpServletRequest){
         // 拿到用户Id
-        String userInfo = httpServletRequest.getHeader("user_info");
-        JSONObject jsonObject = JSON.parseObject(userInfo);
-        long uid = Long.parseLong(jsonObject.get("uid").toString());
-        request.setUserId(uid);
+        // String userInfo = httpServletRequest.getHeader("user_info");
+        // JSONObject jsonObject = JSON.parseObject(userInfo);
+        // long uid = Long.parseLong(jsonObject.get("uid").toString());
+        // request.setUserId(uid);
+        request.setUserId((long) 71);
 
         OrderListResponse orderListResponse = queryService.orderList(request);
         return new ResponseUtil().setData(orderListResponse);

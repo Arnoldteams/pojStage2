@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.cskaoyan.mall.commons.constant.SysRetCodeConstants;
 import com.cskaoyan.mall.commons.exception.BaseBusinessException;
 import com.cskaoyan.mall.commons.exception.BizException;
+import com.cskaoyan.mall.order.constant.OrderRetCode;
 import com.cskaoyan.order.biz.context.CreateOrderContext;
 import com.cskaoyan.order.biz.context.TransHandlerContext;
 import com.cskaoyan.order.dal.entitys.Stock;
@@ -80,7 +81,14 @@ public class SubStockHandler extends AbstractTransHandler {
             stock.setItemId(productId);
             stock.setStockCount(-productNum);
             stock.setLockCount(productNum.intValue());
-            stockMapper.updateStock(stock);
+            try{
+                stockMapper.updateStock(stock);
+            }catch (Exception e){
+                e.printStackTrace();
+                throw new BizException(OrderRetCode.DB_EXCEPTION.getCode(),
+                        OrderRetCode.DB_EXCEPTION.getMessage());
+            }
+
         }
 
         return true;
@@ -103,11 +111,11 @@ public class SubStockHandler extends AbstractTransHandler {
 
                 if(item.getItemId().equals(cartProductDto.getProductId())){
 
-                    if(purchaseNum < restrictCountNum){
+                    if(purchaseNum > restrictCountNum){
                         throw new BizException(cartProductDto.getProductName() + "超出限购数量！");
                     }
-                    if(purchaseNum < stockCount){
-                        throw new BizException(cartProductDto.getProductName() + "超出库存数量");
+                    if(purchaseNum > stockCount){
+                        throw new BizException(cartProductDto.getProductName() + "超出库存数量!");
                     }
                 }
             }
