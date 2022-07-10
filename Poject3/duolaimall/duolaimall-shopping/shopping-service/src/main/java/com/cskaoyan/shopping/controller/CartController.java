@@ -66,7 +66,7 @@ public class CartController {
      * @author xyg2597@163.com
      * @since 2022/07/09 17:11
      */
-    @PutMapping("carts")
+    @RequestMapping(value = "carts",method = RequestMethod.PUT)
     public ResponseData updateCartNum(@RequestBody CartForm cartForm) {
         UpdateCartNumRequest request = new UpdateCartNumRequest();
         request.setChecked(cartForm.getChecked());
@@ -91,7 +91,7 @@ public class CartController {
      * @author xyg2597@163.com
      * @since 2022/07/09 17:21
      */
-    @DeleteMapping("carts/{uid}/{pid}")
+    @RequestMapping(value = "carts/{uid}/{pid}",method = RequestMethod.DELETE)
     public ResponseData deleteCartItem(@PathVariable("uid") Long uid,
                                    @PathVariable("pid") Long pid) {
 
@@ -109,7 +109,7 @@ public class CartController {
     }
 
 
-    @DeleteMapping("items/{uid}")
+    @RequestMapping(value = "items/{uid}",method = RequestMethod.DELETE)
     public ResponseData deleteCheckCartItems(@PathVariable("uid") Long uid){
         DeleteCheckedItemRequest request = new DeleteCheckedItemRequest();
         request.setUserId(uid);
