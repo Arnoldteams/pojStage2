@@ -73,7 +73,7 @@ public class CartController {
         CartListByIdResponse response = cartService.getCartListById(idRequest);
         if (ShoppingRetCode.SUCCESS.getCode().equals(response.getCode())) {
             // 执行成功
-            return new ResponseUtil().setData(response);
+            return new ResponseUtil().setData(response.getCartProductDtos());
         }
 
         // 执行失败
