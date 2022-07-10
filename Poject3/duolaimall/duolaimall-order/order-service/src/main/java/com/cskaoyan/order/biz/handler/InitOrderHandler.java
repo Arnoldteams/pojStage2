@@ -3,6 +3,7 @@ package com.cskaoyan.order.biz.handler;
 import com.cskaoyan.mall.commons.constant.SysRetCodeConstants;
 import com.cskaoyan.mall.commons.exception.BizException;
 import com.cskaoyan.mall.commons.util.NumberUtils;
+import com.cskaoyan.mall.commons.util.UtilDate;
 import com.cskaoyan.mall.dto.ProductDetailDto;
 import com.cskaoyan.mall.dto.ProductDetailRequest;
 import com.cskaoyan.mall.dto.ProductDetailResponse;
@@ -85,10 +86,10 @@ public class InitOrderHandler extends AbstractTransHandler {
     @Override
     public boolean handle(TransHandlerContext context) {
         CreateOrderContext orderContext = (CreateOrderContext) context;
-        // 生成订单ID，15位用户ID+当前时间戳末六位
+        // 生成订单ID，当前时间戳末六位+15位用户ID
         Long userId = orderContext.getUserId();
-        String timeMillis = String.valueOf(System.currentTimeMillis());
-        String orderId = String.format("%0"+15+"d",userId) + timeMillis.substring(timeMillis.length()-6);
+        String timeMillis = UtilDate.getOrderNum();
+        String orderId = timeMillis + String.format("%0"+15+"d",userId);
 
         // orderId存入context中，方便后续步骤处理
         ((CreateOrderContext) context).setOrderId(orderId);
@@ -115,14 +116,32 @@ public class InitOrderHandler extends AbstractTransHandler {
         List<CartProductDto> cartProductDtoList = orderContext.getCartProductDtoList();
         for (CartProductDto cartProductDto : cartProductDtoList) {
             OrderItem orderItem = getOrderItemInfo(orderId,cartProductDto);
-            orderItemMapper.insert(orderItem);
+            int affectedRows;
+            try{
+                affectedRows = orderItemMapper.insert(orderItem);
+            }catch (Exception e){
+                e.printStackTrace();
+                throw new BizException(OrderRetCode.DB_EXCEPTION.getCode(),
+                        OrderRetCode.DB_EXCEPTION.getMessage());
+            }
+            if(affectedRows == 0){
+                throw new BizException(OrderRetCode.DB_SAVE_EXCEPTION.getCode(),
+                        OrderRetCode.DB_SAVE_EXCEPTION.getMessage());
+            }
         }
 
     }
 
     private OrderItem getOrderItemInfo(String orderId,CartProductDto cartProductDto) {
         // 获取订单商品唯一ID
-        String nextSeq = globalIdGeneratorUtil.getNextSeq(ORDER_ITEM_GLOBAL_ID_CACHE_KEY,1);
+        String nextSeq;
+        try{
+            nextSeq = globalIdGeneratorUtil.getNextSeq(ORDER_ITEM_GLOBAL_ID_CACHE_KEY,1);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BizException(OrderRetCode.SYSTEM_ERROR.getCode(),
+                    OrderRetCode.SYSTEM_ERROR.getMessage());
+        }
         // 获取商品信息
         Long productId = cartProductDto.getProductId();
         ProductDetailDto productDetailDto = getProductDetail(productId).getProductDetailDto();
@@ -155,7 +174,18 @@ public class InitOrderHandler extends AbstractTransHandler {
     private ProductDetailResponse getProductDetail(Long productId) {
         ProductDetailRequest productDetailRequest = new ProductDetailRequest();
         productDetailRequest.setId(productId);
-        return productApi.getProductDetail(productDetailRequest);
+        ProductDetailResponse productDetail;
+        try{
+            productDetail = productApi.getProductDetail(productDetailRequest);
+        }catch (Exception e){
+            throw new BizException(OrderRetCode.SYSTEM_ERROR.getCode(),
+                    OrderRetCode.SYSTEM_ERROR.getMessage());
+        }
+        if(productDetail == null){
+            throw new BizException(OrderRetCode.SYSTEM_ERROR.getCode(),
+                    OrderRetCode.SYSTEM_ERROR.getMessage());
+        }
+        return productDetail;
     }
 
     /**
@@ -181,7 +211,17 @@ public class InitOrderHandler extends AbstractTransHandler {
         order.setUserId(context.getUserId());
         order.setBuyerNick(context.getBuyerNickName());
 
-        orderMapper.insert(order);
+        int affectedRows;
+        try{
+            affectedRows = orderMapper.insert(order);
+        }catch (Exception e){
+            throw new BizException(OrderRetCode.DB_EXCEPTION.getCode(),
+                    OrderRetCode.DB_EXCEPTION.getMessage());
+        }
+        if(affectedRows == 0){
+            throw new BizException(OrderRetCode.INIT_ORDER_EXCEPTION.getCode(),
+                    OrderRetCode.INIT_ORDER_EXCEPTION.getMessage());
+        }
     }
 
 }

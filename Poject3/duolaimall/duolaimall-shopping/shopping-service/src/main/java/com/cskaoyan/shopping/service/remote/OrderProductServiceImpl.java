@@ -5,6 +5,8 @@ import com.cskaoyan.mall.dto.ClearCartItemResponse;
 import com.cskaoyan.mall.dto.ProductDetailRequest;
 import com.cskaoyan.mall.dto.ProductDetailResponse;
 import com.cskaoyan.shopping.service.ICartService;
+import com.cskaoyan.shopping.service.IProductService;
+import com.cskaoyan.shopping.service.impl.ICartServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +21,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class OrderProductServiceImpl{
 
-//    @Autowired
-//    ICartServiceImpl iCartSevice;
+   @Autowired
+   ICartServiceImpl iCartService;
+   @Autowired
+    IProductService iProductService;
 
     @RequestMapping(value = "/rpc/items",method = RequestMethod.DELETE)
     public ClearCartItemResponse clearCartItemByUserID(@RequestBody ClearCartItemRequest request) {
@@ -30,6 +34,6 @@ public class OrderProductServiceImpl{
 
     @PostMapping(value = "/order/rpc/detail")
     public ProductDetailResponse getProductDetail(@RequestBody ProductDetailRequest request) {
-        return null;
+        return iProductService.getProductDetail(request);
     }
 }
