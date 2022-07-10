@@ -45,11 +45,19 @@ public class OrderCoreController {
         return new ResponseUtil<>().setErrorMsg(response.getMsg());
     }
 
+    /**
+     * @author Sssd
+     * @param request
+     * @param httpServletRequest
+     * @return
+     */
     @PostMapping("/cancelOrder")
     public ResponseData cancelOrder(@RequestBody CancelOrderRequest request, HttpServletRequest httpServletRequest) {
 //        String orderId = httpServletRequest.getHeader("id");
 //        request.setOrderId(orderId);
         request.setOrderId("20041912580013939");
+
+        // 调用业务层代码
         CancelOrderResponse response = orderCoreService.cancelOrder(request);
 
         if (response.getCode().equals(SysRetCodeConstants.SUCCESS.getCode())) {

@@ -2,6 +2,7 @@ package com.cskaoyan.order.service.impl;
 
 import com.cskaoyan.mall.commons.constant.SysRetCodeConstants;
 import com.cskaoyan.mall.commons.exception.ExceptionProcessorUtils;
+import com.cskaoyan.mall.order.constant.OrderRetCode;
 import com.cskaoyan.order.converter.OrderConverter;
 import com.cskaoyan.order.dal.entitys.Order;
 import com.cskaoyan.order.dal.entitys.OrderItem;
@@ -91,12 +92,13 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     @Override
     public OrderDetailResponse orderDetail(OrderDetailRequest request) {
 
-        // 参数校验
-        request.requestCheck();
-
+        // 创建返回值对象
         OrderDetailResponse response = new OrderDetailResponse();
 
         try {
+            // 参数校验
+            request.requestCheck();
+
             // 搜索订单信息
             Order order = orderMapper.selectByPrimaryKey(request.getOrderId());
 
@@ -116,6 +118,8 @@ public class OrderQueryServiceImpl implements OrderQueryService {
             // 赋值给 response
             response.setOrderItemDto(orderItemDtos);
             response.setOrderShippingDto(orderShippingDto);
+            response.setMsg(OrderRetCode.SUCCESS.getMessage());
+            response.setCode(OrderRetCode.SUCCESS.getCode());
 
         } catch (Exception e) {
             e.printStackTrace();

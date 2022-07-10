@@ -67,7 +67,7 @@ public class OrderTest {
     }
 
     /**
-     * Sssd
+     * 贼帅的 Sssd
      */
     @Test
     public void testOrderCancel() {
@@ -77,7 +77,7 @@ public class OrderTest {
     }
 
     /**
-     * Sssd
+     * 无敌帅气的 Sssd
      */
     @Test
     public void testOrderDelete() {
