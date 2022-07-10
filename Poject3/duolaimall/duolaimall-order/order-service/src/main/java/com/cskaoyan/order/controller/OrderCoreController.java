@@ -2,6 +2,7 @@ package com.cskaoyan.order.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.cskaoyan.mall.commons.constant.SysRetCodeConstants;
 import com.cskaoyan.mall.commons.result.ResponseData;
 import com.cskaoyan.mall.commons.result.ResponseUtil;
 import com.cskaoyan.order.dto.CreateOrderRequest;
@@ -38,8 +39,11 @@ public class OrderCoreController {
         // long uid = Long.parseLong(jsonObject.get("uid").toString());
         // request.setUserId(uid);
         request.setUserId((long) 71);
-        CreateOrderResponse order = orderCoreService.createOrder(request);
-        return new ResponseUtil().setData(order.getOrderId());
+        CreateOrderResponse response = orderCoreService.createOrder(request);
+        if(response.getCode().equals(SysRetCodeConstants.SUCCESS.getCode())){
+            return new ResponseUtil().setData(response.getOrderId());
+        }
+        return new ResponseUtil<>().setErrorMsg(response.getMsg());
     }
 
 }

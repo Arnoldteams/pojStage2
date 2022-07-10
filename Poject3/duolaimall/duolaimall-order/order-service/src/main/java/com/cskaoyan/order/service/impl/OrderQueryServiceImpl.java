@@ -1,5 +1,7 @@
 package com.cskaoyan.order.service.impl;
 
+import com.cskaoyan.mall.commons.constant.SysRetCodeConstants;
+import com.cskaoyan.mall.commons.exception.ExceptionProcessorUtils;
 import com.cskaoyan.order.converter.OrderConverter;
 import com.cskaoyan.order.dal.entitys.Order;
 import com.cskaoyan.order.dal.entitys.OrderItem;
@@ -46,38 +48,44 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     public OrderListResponse orderList(OrderListRequest request) {
         // 参数校验
         request.requestCheck();
+        OrderListResponse response = new OrderListResponse();
 
-        PageHelper.startPage(request.getPage(),request.getSize(),request.getSort());
-        // 获取该用户的所有订单
-        Example example = new Example(Order.class);
-        example.createCriteria().andEqualTo("userId",request.getUserId());
-        List<Order> orders = orderMapper.selectByExample(example);
-        List<OrderDetailInfo> orderDetailInfos = converter.order2detail(orders);
+        try {
+            PageHelper.startPage(request.getPage(), request.getSize(), request.getSort());
+            // 获取该用户的所有订单
+            Example example = new Example(Order.class);
+            example.createCriteria().andEqualTo("userId", request.getUserId());
+            List<Order> orders = orderMapper.selectByExample(example);
+            List<OrderDetailInfo> orderDetailInfos = converter.order2detail(orders);
 
-        for (OrderDetailInfo orderDetailInfo : orderDetailInfos) {
-            // 获取每个订单下的所有商品信息
-            Example exam = new Example(OrderItem.class);
-            exam.createCriteria().andEqualTo("orderId",orderDetailInfo.getOrderId());
-            List<OrderItem> orderItems = itemMapper.selectByExample(exam);
-            List<OrderItemDto> orderItemDtos = converter.item2dto(orderItems);
-            orderDetailInfo.setOrderItemDto(orderItemDtos);
+            for (OrderDetailInfo orderDetailInfo : orderDetailInfos) {
+                // 获取每个订单下的所有商品信息
+                Example exam = new Example(OrderItem.class);
+                exam.createCriteria().andEqualTo("orderId", orderDetailInfo.getOrderId());
+                List<OrderItem> orderItems = itemMapper.selectByExample(exam);
+                List<OrderItemDto> orderItemDtos = converter.item2dto(orderItems);
+                orderDetailInfo.setOrderItemDto(orderItemDtos);
 
-            // 获取每个订单下的地址信息
-            Example shippingExam = new Example(OrderShipping.class);
-            shippingExam.createCriteria().andEqualTo("orderId",orderDetailInfo.getOrderId());
-            OrderShipping orderShippings = shippingMapper.selectOneByExample(shippingExam);
-            OrderShippingDto orderShippingDto = converter.shipping2dto(orderShippings);
-            orderDetailInfo.setOrderShippingDto(orderShippingDto);
+                // 获取每个订单下的地址信息
+                Example shippingExam = new Example(OrderShipping.class);
+                shippingExam.createCriteria().andEqualTo("orderId", orderDetailInfo.getOrderId());
+                OrderShipping orderShippings = shippingMapper.selectOneByExample(shippingExam);
+                OrderShippingDto orderShippingDto = converter.shipping2dto(orderShippings);
+                orderDetailInfo.setOrderShippingDto(orderShippingDto);
+            }
+
+            // 分页处理
+            PageInfo<OrderDetailInfo> pageInfo = new PageInfo<>(orderDetailInfos);
+            int size = pageInfo.getSize();
+            response.setDetailInfoList(pageInfo.getList());
+            response.setTotal((long) size);
+            response.setCode(SysRetCodeConstants.SUCCESS.getCode());
+            response.setMsg(SysRetCodeConstants.SUCCESS.getMessage());
+        }catch (Exception e){
+            e.printStackTrace();
+            ExceptionProcessorUtils.wrapperHandlerException(response,e);
         }
-
-        // 分页处理
-        PageInfo<OrderDetailInfo> pageInfo = new PageInfo<>(orderDetailInfos);
-        int size = pageInfo.getSize();
-        OrderListResponse orderListResponse = new OrderListResponse();
-        orderListResponse.setDetailInfoList(pageInfo.getList());
-        orderListResponse.setTotal((long) size);
-
-        return orderListResponse;
+        return response;
     }
 
     @Override
