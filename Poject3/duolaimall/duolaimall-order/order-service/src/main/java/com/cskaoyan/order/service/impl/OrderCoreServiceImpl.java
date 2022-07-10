@@ -1,5 +1,6 @@
 package com.cskaoyan.order.service.impl;
 
+import com.cskaoyan.mall.commons.constant.SysRetCodeConstants;
 import com.cskaoyan.mall.commons.exception.ExceptionProcessorUtils;
 import com.cskaoyan.order.biz.TransOutboundInvoker;
 import com.cskaoyan.order.biz.context.AbsTransHandlerContext;
@@ -46,6 +47,9 @@ public class OrderCoreServiceImpl implements OrderCoreService {
 	public CreateOrderResponse createOrder(CreateOrderRequest request) {
 		CreateOrderResponse response = new CreateOrderResponse();
 		try {
+			// 参数校验
+			request.requestCheck();
+
 			//创建pipeline对象
 			TransOutboundInvoker invoker = orderProcessPipelineFactory.build(request);
 
@@ -57,6 +61,9 @@ public class OrderCoreServiceImpl implements OrderCoreService {
 
 			//把处理结果转换为response
 			response = (CreateOrderResponse) context.getConvert().convertCtx2Respond(context);
+
+			response.setMsg(SysRetCodeConstants.SUCCESS.getCode());
+			response.setMsg(SysRetCodeConstants.SUCCESS.getMessage());
 
 		} catch (Exception e) {
 			log.error("OrderCoreServiceImpl.createOrder Occur Exception :" + e);

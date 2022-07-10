@@ -32,11 +32,10 @@ public class OrderQueryController {
     @GetMapping("/order")
     public ResponseData queryAllOrder(@RequestBody OrderListRequest request, HttpServletRequest httpServletRequest){
         // 拿到用户Id
-        // String userInfo = httpServletRequest.getHeader("user_info");
-        // JSONObject jsonObject = JSON.parseObject(userInfo);
-        // long uid = Long.parseLong(jsonObject.get("uid").toString());
-        // request.setUserId(uid);
-        request.setUserId((long) 71);
+        String userInfo = httpServletRequest.getHeader("user_info");
+        JSONObject jsonObject = JSON.parseObject(userInfo);
+        long uid = Long.parseLong(jsonObject.get("uid").toString());
+        request.setUserId(uid);
 
         OrderListResponse response = queryService.orderList(request);
         if(response.getCode().equals(SysRetCodeConstants.SUCCESS.getCode())){
