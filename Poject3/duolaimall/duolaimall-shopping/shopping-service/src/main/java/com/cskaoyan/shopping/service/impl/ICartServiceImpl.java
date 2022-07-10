@@ -6,6 +6,8 @@ import com.cskaoyan.mall.dto.ClearCartItemRequest;
 import com.cskaoyan.mall.dto.ClearCartItemResponse;
 import com.cskaoyan.shopping.converter.CartItemConverter;
 import com.cskaoyan.shopping.dal.entitys.Item;
+import com.cskaoyan.shopping.dal.entitys.Panel;
+import com.cskaoyan.shopping.dal.entitys.PanelContentItem;
 import com.cskaoyan.shopping.dal.persistence.ItemCatMapper;
 import com.cskaoyan.shopping.dal.persistence.ItemMapper;
 import com.cskaoyan.shopping.dto.*;
@@ -15,7 +17,7 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Gzy
@@ -36,7 +38,34 @@ public class ICartServiceImpl implements ICartService {
 
     @Override
     public CartListByIdResponse getCartListById(CartListByIdRequest request) {
-        return null;
+
+        CartListByIdResponse response = new CartListByIdResponse();
+        List<CartProductDto> cartProductDtos = new ArrayList<>();
+
+        try {
+            // 读取redis购物车
+            String userCartName = "User" + request.getUserId();
+            RMap<Long, CartProductDto> carts = redissonClient.getMap(userCartName);
+
+            // 判断购物车是否存在商品，不存在返回空，存在就封装进一个list
+            if (carts.size() == 0) {
+                response.setCartProductDtos(null);
+            } else {
+                for (Map.Entry<Long, CartProductDto> longCartProductDtoEntry : carts.entrySet()) {
+                    cartProductDtos.add(longCartProductDtoEntry.getValue());
+                }
+                response.setCartProductDtos(cartProductDtos);
+            }
+
+            // 执行成功响应
+            response.setCode(ShoppingRetCode.SUCCESS.getCode());
+            response.setMsg(ShoppingRetCode.SUCCESS.getMessage());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            ExceptionProcessorUtils.wrapperHandlerException(response, e);
+        }
+        return response;
     }
 
     /**
@@ -63,19 +92,19 @@ public class ICartServiceImpl implements ICartService {
             cartProductDto.setProductNum(request.getProductNum());
 
             // 加入购物车，写入redis
-            String userCartName = "User"+request.getUserId();
+            String userCartName = "User" + request.getUserId();
             Long productId = request.getProductId();
             Long num = null;
             RMap<Long, CartProductDto> carts = redissonClient.getMap(userCartName);
 
             // 判断购物车是否存在商品，存在就 +num，不存在就添加商品
-            if (carts.get(productId)!=null){
+            if (carts.get(productId) != null) {
                 CartProductDto cartProductDto1 = carts.get(productId);
                 num = cartProductDto1.getProductNum() + request.getProductNum();
                 cartProductDto1.setProductNum(num);
-                carts.put(request.getProductId(),cartProductDto1);
-            }else {
-                carts.put(request.getProductId(),cartProductDto);
+                carts.put(request.getProductId(), cartProductDto1);
+            } else {
+                carts.put(request.getProductId(), cartProductDto);
             }
 
 
@@ -107,7 +136,7 @@ public class ICartServiceImpl implements ICartService {
         String checked = request.getChecked();
         RMap<Long, List<CartProductDto>> map = redissonClient.getMap("carts");
         map.get(request.getUserId())
-        .forEach(a -> a.setChecked(checked));
+                .forEach(a -> a.setChecked(checked));
         return new CheckAllItemResponse();
     }
 

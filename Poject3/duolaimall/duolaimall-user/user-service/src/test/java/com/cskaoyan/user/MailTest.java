@@ -30,14 +30,5 @@ public class MailTest {
         System.out.println(sender);
     }
 
-    @Autowired
-    UserController userController;
-    @Test
-    public void userLogin(){
-        Map map = new HashMap();
-        map.put("userName","cskaoyan01");
-        map.put("userPwd","4742af48858b0d267cffd80d3b4846f6");
-        ResponseData responseData = userController.userLogin(map);
-        System.out.println(responseData);
-    }
+
 }
