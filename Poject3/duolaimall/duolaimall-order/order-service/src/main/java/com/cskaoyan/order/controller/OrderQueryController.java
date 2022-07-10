@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.cskaoyan.mall.commons.constant.SysRetCodeConstants;
 import com.cskaoyan.mall.commons.result.ResponseData;
 import com.cskaoyan.mall.commons.result.ResponseUtil;
+import com.cskaoyan.order.dto.OrderDetailRequest;
+import com.cskaoyan.order.dto.OrderDetailResponse;
 import com.cskaoyan.order.dto.OrderListRequest;
 import com.cskaoyan.order.dto.OrderListResponse;
 import com.cskaoyan.order.service.OrderQueryService;
@@ -44,5 +46,22 @@ public class OrderQueryController {
         }
         return new ResponseUtil<>().setErrorMsg(response.getMsg());
 
+    }
+
+    /**
+     * @author: 极其帅气的 Sssd
+     */
+    @GetMapping("/order/{id}")
+    public ResponseData qurryOrderDetail(@RequestBody OrderDetailRequest request) {
+
+        // 调用业务层逻辑
+        OrderDetailResponse response = queryService.orderDetail(request);
+
+        // 判断返回值
+        if (response.getCode().equals(SysRetCodeConstants.SUCCESS.getCode())) {
+            return new ResponseUtil().setData(response);
+        }
+
+        return new ResponseUtil<>().setErrorMsg(response.getMsg());
     }
 }

@@ -5,8 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.cskaoyan.mall.commons.constant.SysRetCodeConstants;
 import com.cskaoyan.mall.commons.result.ResponseData;
 import com.cskaoyan.mall.commons.result.ResponseUtil;
-import com.cskaoyan.order.dto.CreateOrderRequest;
-import com.cskaoyan.order.dto.CreateOrderResponse;
+import com.cskaoyan.order.dto.*;
 import com.cskaoyan.order.service.OrderCoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +42,31 @@ public class OrderCoreController {
         if(response.getCode().equals(SysRetCodeConstants.SUCCESS.getCode())){
             return new ResponseUtil().setData(response.getOrderId());
         }
+        return new ResponseUtil<>().setErrorMsg(response.getMsg());
+    }
+
+    @PostMapping("/cancelOrder")
+    public ResponseData cancelOrder(@RequestBody CancelOrderRequest request, HttpServletRequest httpServletRequest) {
+//        String orderId = httpServletRequest.getHeader("id");
+//        request.setOrderId(orderId);
+        request.setOrderId("20041912580013939");
+        CancelOrderResponse response = orderCoreService.cancelOrder(request);
+
+        if (response.getCode().equals(SysRetCodeConstants.SUCCESS.getCode())) {
+            return new ResponseUtil().setData(request.getOrderId());
+        }
+
+        return new ResponseUtil<>().setErrorMsg(response.getMsg());
+    }
+
+    @DeleteMapping("/order/{id}")
+    public ResponseData deleteOrder(@RequestBody DeleteOrderRequest request) {
+        DeleteOrderResponse response = orderCoreService.deleteOrder(request);
+
+        if (response.getCode().equals(SysRetCodeConstants.SUCCESS.getCode())) {
+            return new ResponseUtil().setData(request.getOrderId());
+        }
+
         return new ResponseUtil<>().setErrorMsg(response.getMsg());
     }
 

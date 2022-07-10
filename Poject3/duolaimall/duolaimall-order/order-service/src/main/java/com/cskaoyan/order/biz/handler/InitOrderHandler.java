@@ -91,7 +91,7 @@ public class InitOrderHandler extends AbstractTransHandler {
         String timeMillis = UtilDate.getOrderNum();
         String orderId = timeMillis + String.format("%0"+15+"d",userId);
 
-        // orderId存入context中，方便后续步骤处理
+        // odrderI存入context中，方便后续步骤处理
         ((CreateOrderContext) context).setOrderId(orderId);
         // 生成订单信息
         try{
