@@ -106,7 +106,10 @@ public class UserController {
         for (int i = 0; i < cookies.length; i++) {
             if("access_token".equals(cookies[i].getName())){
                 cookies[i].setMaxAge(0);
-                response.addCookie(new Cookie("access_token",null));
+                Cookie logOutCookie = new Cookie("access_token", null);
+                logOutCookie.setPath("/");
+                logOutCookie.setMaxAge(0);
+                response.addCookie(logOutCookie);
             }
         }
 
