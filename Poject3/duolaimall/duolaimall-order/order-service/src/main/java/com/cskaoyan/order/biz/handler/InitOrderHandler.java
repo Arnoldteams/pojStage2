@@ -90,7 +90,7 @@ public class InitOrderHandler extends AbstractTransHandler {
         String timeMillis = String.valueOf(System.currentTimeMillis());
         String orderId = String.format("%0"+15+"d",userId) + timeMillis.substring(timeMillis.length()-6);
 
-        // orderId存入context中，方便后续步骤处理
+        // odrderI存入context中，方便后续步骤处理
         ((CreateOrderContext) context).setOrderId(orderId);
         // 生成订单信息
         try{
