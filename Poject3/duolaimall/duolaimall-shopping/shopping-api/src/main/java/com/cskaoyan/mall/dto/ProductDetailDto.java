@@ -25,4 +25,6 @@ public class ProductDetailDto implements Serializable {
     private String detail;
 
     private List<String> productImageSmall;
+
+
 }

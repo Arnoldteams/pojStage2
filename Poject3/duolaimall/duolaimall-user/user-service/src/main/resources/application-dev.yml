@@ -36,10 +36,10 @@ spring:
       max-wait: 3000
       min-idle: 4
   mail:
-    host: smtp.qq.com
+    host: smtp.163.com
     port: 25
-    username: 1132045742@qq.com
-    password: ydcexaypuieciijg
+    username: yn1609853@163.com
+    password: DABHPMRBNPXPRBDD
 
 email:
   text: http://localhost:${server.port}/user/verify?username=%s&uuid=%s

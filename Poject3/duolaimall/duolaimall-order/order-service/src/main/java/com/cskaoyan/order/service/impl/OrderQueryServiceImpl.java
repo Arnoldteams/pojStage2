@@ -2,6 +2,7 @@ package com.cskaoyan.order.service.impl;
 
 import com.cskaoyan.mall.commons.constant.SysRetCodeConstants;
 import com.cskaoyan.mall.commons.exception.ExceptionProcessorUtils;
+import com.cskaoyan.mall.order.constant.OrderRetCode;
 import com.cskaoyan.order.converter.OrderConverter;
 import com.cskaoyan.order.dal.entitys.Order;
 import com.cskaoyan.order.dal.entitys.OrderItem;
@@ -91,6 +92,42 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
     @Override
     public OrderDetailResponse orderDetail(OrderDetailRequest request) {
-        return null;
+
+        // 创建返回值对象
+        OrderDetailResponse response = new OrderDetailResponse();
+
+        try {
+            // 参数校验
+            request.requestCheck();
+
+            // 搜索订单信息
+            Order order = orderMapper.selectByPrimaryKey(request.getOrderId());
+
+            // 搜索收件人信息
+            OrderShipping orderShipping = shippingMapper.selectByPrimaryKey(request.getOrderId());
+
+            // 搜索订单的商品列表
+            Example example = new Example(OrderItem.class);
+            example.createCriteria().andEqualTo("orderId", request.getOrderId());
+            List<OrderItem> orderItems = itemMapper.selectByExample(example);
+
+            // 将结果转换为 dto
+            List<OrderItemDto> orderItemDtos = converter.item2dto(orderItems);
+            OrderShippingDto orderShippingDto = converter.shipping2dto(orderShipping);
+            response = converter.order2res(order);
+
+            // 赋值给 response
+            response.setOrderItemDto(orderItemDtos);
+            response.setOrderShippingDto(orderShippingDto);
+            response.setMsg(OrderRetCode.SUCCESS.getMessage());
+            response.setCode(OrderRetCode.SUCCESS.getCode());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            // 异常处理
+            ExceptionProcessorUtils.wrapperHandlerException(response, e);
+        }
+        return response;
     }
 }
