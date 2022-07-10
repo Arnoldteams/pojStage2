@@ -69,7 +69,7 @@ public class UserController {
         if (UserRetCode.SUCCESS.getCode().equals(response.getCode())){
             //在相应头中添加名为access_token的cookie用来存放jwt并发送给用户浏览器
             Cookie tokenCookie = new Cookie("access_token", response.getToken());
-
+            tokenCookie.setPath("/");
             httpServletResponse.addCookie(tokenCookie);
             return new ResponseUtil().setData(response);
         }
@@ -106,7 +106,10 @@ public class UserController {
         for (int i = 0; i < cookies.length; i++) {
             if("access_token".equals(cookies[i].getName())){
                 cookies[i].setMaxAge(0);
-                response.addCookie(new Cookie("access_token",null));
+                Cookie logOutCookie = new Cookie("access_token", null);
+                logOutCookie.setPath("/");
+                logOutCookie.setMaxAge(0);
+                response.addCookie(logOutCookie);
             }
         }
 
