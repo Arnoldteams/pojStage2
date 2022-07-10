@@ -52,7 +52,7 @@ public class ICartServiceImpl implements ICartService {
 
             // 判断购物车是否存在商品，不存在返回空，存在就封装进一个list
             if (carts.size() == 0) {
-                response.setCartProductDtos(null);
+                response.setCartProductDtos(new ArrayList<>());
             } else {
                 for (Map.Entry<Long, CartProductDto> longCartProductDtoEntry : carts.entrySet()) {
                     cartProductDtos.add(longCartProductDtoEntry.getValue());
