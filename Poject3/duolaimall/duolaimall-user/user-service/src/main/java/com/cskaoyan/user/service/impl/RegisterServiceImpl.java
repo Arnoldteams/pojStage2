@@ -94,7 +94,8 @@ public class RegisterServiceImpl implements IRegisterService {
             log.error("RegisterServiceImpl.userRegister occur Exception :"+e);
             ExceptionProcessorUtils.wrapperHandlerException(response,e);
         }
-
+        response.setCode(UserRetCode.SUCCESS.getCode());
+        response.setMsg(UserRetCode.SUCCESS.getMessage());
         return response;
     }
 
