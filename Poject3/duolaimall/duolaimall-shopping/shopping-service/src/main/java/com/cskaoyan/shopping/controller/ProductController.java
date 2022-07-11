@@ -88,6 +88,7 @@ public class ProductController {
         request.setSize(pageInfo.getSize());
         request.setPriceGt(pageInfo.getPriceGt());
         request.setPriceLte(pageInfo.getPriceLte());
+        request.setCid(pageInfo.getCid());
 
         AllProductResponse response = iProductService.getAllProduct(request);
 

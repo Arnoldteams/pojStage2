@@ -25,6 +25,13 @@ public class ProductCateController {
     IProductCateService productCateService;
 
 
+    /***
+     * @author: 文陶
+     * @createTime: 2022/07/11 10:28:55
+     * @description: shopping/categories
+     * @param:  null
+     * @return: com.cskaoyan.mall.commons.result.ResponseData
+     */
 
     @GetMapping("categories")
     public ResponseData getCateGories(){
