@@ -3,6 +3,7 @@ package com.cskaoyan.shopping.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.cskaoyan.mall.commons.constant.SysRetCodeConstants;
 import com.cskaoyan.mall.commons.result.ResponseData;
 import com.cskaoyan.mall.commons.result.ResponseUtil;
 import com.cskaoyan.mall.constant.ShoppingRetCode;
@@ -32,9 +33,20 @@ public class CartController {
     @Autowired
     ICartService cartService;
 
+    /**
+     * @description: 全选/全不选购物车商品
+     * @parameter: [request]
+     * @return: com.cskaoyan.mall.commons.result.ResponseData
+     * @author: 帅关
+     * @createTime: 2022/7/11 10:12
+     */
     @RequestMapping("/items")
     public ResponseData checkAllCartItem(@RequestBody CheckAllItemRequest request) {
-        return new ResponseUtil().setData(null);
+        CheckAllItemResponse response = cartService.checkAllCartItem(request);
+        if(SysRetCodeConstants.SUCCESS.getCode().equals(response.getCode())){
+            return new ResponseUtil<>().setData(null);
+        }
+        return new ResponseUtil<>().setErrorMsg(response.getMsg());
     }
 
     /**
@@ -58,7 +70,6 @@ public class CartController {
     }
 
     /**
-<<<<<<< HEAD
      * 更新购物车的数据
      *
      * @param cartForm
