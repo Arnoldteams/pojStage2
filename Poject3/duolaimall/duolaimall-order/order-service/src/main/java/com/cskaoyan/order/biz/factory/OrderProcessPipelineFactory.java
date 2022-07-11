@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ServiceLoader;
+
 @Slf4j
 @Service
 public class OrderProcessPipelineFactory extends AbstranctTransPipelineFactory<CreateOrderRequest> {
@@ -36,6 +38,10 @@ public class OrderProcessPipelineFactory extends AbstranctTransPipelineFactory<C
 
     @Override
     protected void doBuild(TransPipeline pipeline) {
+        // ServiceLoader<TransHandler> load = ServiceLoader.load(TransHandler.class);
+        // for (TransHandler transHandler : load) {
+        //     pipeline.addLast(transHandler);
+        // }
         pipeline.addLast(validateHandler);
         pipeline.addLast(subStockHandler);
         pipeline.addLast(initOrderHandler);

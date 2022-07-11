@@ -212,8 +212,8 @@ public class Order {
 
     private Integer buyerComment;
 
-
-
+    @Column(name = "unique_key")
+    private String uniqueKey;
 
 
 }

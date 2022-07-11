@@ -211,6 +211,7 @@ public class InitOrderHandler extends AbstractTransHandler {
         order.setCloseTime(new Date(date.getTime()+2*60*60*1000));
         order.setUserId(context.getUserId());
         order.setBuyerNick(context.getBuyerNickName());
+        order.setUniqueKey(orderUniqueID);
 
         int affectedRows;
         try{

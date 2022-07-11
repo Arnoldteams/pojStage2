@@ -1,0 +1,6 @@
+com.cskaoyan.order.biz.handler.ValidateHandler
+com.cskaoyan.order.biz.handler.SubStockHandler
+com.cskaoyan.order.biz.handler.InitOrderHandler
+com.cskaoyan.order.biz.handler.LogisticalHandler
+com.cskaoyan.order.biz.handler.ClearCartItemHandler
+com.cskaoyan.order.biz.handler.SendMessageHandler
