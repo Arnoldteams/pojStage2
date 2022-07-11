@@ -102,7 +102,7 @@ public class RegisterServiceImpl implements IRegisterService {
     void sendMail(UserRegisterRequest userRegisterRequest, Member member, String uuid) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setSubject("CSMALL用户激活");
-        String text = "http://localhost:8080/user/verify?uid=" + uuid + "&" + "username=" + userRegisterRequest.getUserName();
+        String text = "http://localhost:9999/user/verify?uid=" + uuid + "&" + "username=" + userRegisterRequest.getUserName();
         mailMessage.setText(text);
         mailMessage.setFrom("yn1609853@163.com");
         mailMessage.setTo(member.getEmail());
