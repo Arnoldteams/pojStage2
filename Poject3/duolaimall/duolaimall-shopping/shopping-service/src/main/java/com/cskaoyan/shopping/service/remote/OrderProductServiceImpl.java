@@ -4,6 +4,8 @@ import com.cskaoyan.mall.dto.ClearCartItemRequest;
 import com.cskaoyan.mall.dto.ClearCartItemResponse;
 import com.cskaoyan.mall.dto.ProductDetailRequest;
 import com.cskaoyan.mall.dto.ProductDetailResponse;
+import com.cskaoyan.shopping.dto.DeleteCheckedItemRequest;
+import com.cskaoyan.shopping.dto.DeleteCheckedItemResposne;
 import com.cskaoyan.shopping.service.ICartService;
 import com.cskaoyan.shopping.service.IProductService;
 import com.cskaoyan.shopping.service.impl.ICartServiceImpl;
@@ -28,8 +30,10 @@ public class OrderProductServiceImpl{
 
     @RequestMapping(value = "/rpc/items",method = RequestMethod.DELETE)
     public ClearCartItemResponse clearCartItemByUserID(@RequestBody ClearCartItemRequest request) {
-     // return iCartService.deleteCartItem();
-        return null;
+        DeleteCheckedItemRequest deleteCheckedItemRequest = new DeleteCheckedItemRequest();
+        deleteCheckedItemRequest.setUserId(request.getUserId());
+        iCartService.deleteCheckedItem(deleteCheckedItemRequest);
+        return new ClearCartItemResponse();
     }
 
     @PostMapping(value = "/order/rpc/detail")

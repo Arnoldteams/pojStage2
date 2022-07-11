@@ -5,7 +5,9 @@ import com.cskaoyan.mall.commons.exception.ExceptionProcessorUtils;
 import com.cskaoyan.mall.commons.util.jwt.JwtTokenUtils;
 import com.cskaoyan.user.converter.MemberConverter;
 import com.cskaoyan.user.dal.entitys.Member;
+import com.cskaoyan.user.dal.entitys.UserVerify;
 import com.cskaoyan.user.dal.persistence.MemberMapper;
+import com.cskaoyan.user.dal.persistence.UserVerifyMapper;
 import com.cskaoyan.user.dto.*;
 import com.cskaoyan.user.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     MemberConverter memberConverter;
+
+    @Autowired
+    UserVerifyMapper userVerifyMapper;
 
     @Override
     public UserLoginResponse userLogin(UserLoginRequest request) {
@@ -78,10 +83,38 @@ public class UserServiceImpl implements IUserService {
     public UserVerifyResponse userVerify(UserVerifyRequest userVerifyRequest) {
         UserVerifyResponse response = new UserVerifyResponse();
 
-        //在member表里修改用户的激活状态
-        Example example = new Example(Member.class);
-        example.createCriteria().andEqualTo("username",userVerifyRequest.getUserName());
-//        memberMapper.updateByExample()
+        try {
+            userVerifyRequest.requestCheck();
+
+            //在member表里修改用户的激活状态
+            Member member = new Member();
+            member.setIsVerified("Y");
+            Example example = new Example(Member.class);
+            example.createCriteria().andEqualTo("username",userVerifyRequest.getUserName());
+            int i = memberMapper.updateByExampleSelective(member, example);
+            if (i != 1) {
+                response.setMsg(UserRetCode.USERVERIFY_INFOR_INVALID.getMessage());
+                response.setCode(UserRetCode.USERVERIFY_INFOR_INVALID.getCode());
+                return response;
+            }
+
+            //在user_verify里修改用户的激活状态
+            UserVerify userVerify = new UserVerify();
+            userVerify.setIsVerify("Y");
+            Example example1 = new Example(UserVerify.class);
+            example1.createCriteria().andEqualTo("uuid",userVerifyRequest.getUuid()).andEqualTo("username",userVerifyRequest.getUserName());
+            int rows = userVerifyMapper.updateByExampleSelective(userVerify, example1);
+            if (rows != 1) {
+                response.setMsg(UserRetCode.USERVERIFY_INFOR_INVALID.getMessage());
+                response.setCode(UserRetCode.USERVERIFY_INFOR_INVALID.getCode());
+                return response;
+            }
+        } catch (Exception e) {
+            log.error("RegisterServiceImpl.userRegister occur Exception :"+e);
+            ExceptionProcessorUtils.wrapperHandlerException(response,e);
+        }
+        response.setCode(UserRetCode.SUCCESS.getCode());
+        response.setMsg(UserRetCode.SUCCESS.getMessage());
         return response;
     }
 
