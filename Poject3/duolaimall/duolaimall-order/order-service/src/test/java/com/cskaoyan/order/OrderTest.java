@@ -59,12 +59,12 @@ public class OrderTest {
     /**
      * Sssd
      */
-    @Test
-    public void testOrderDetail() {
-        OrderDetailRequest orderDetailRequest = new OrderDetailRequest();
-        orderDetailRequest.setOrderId("19081913521928018");
-        OrderDetailResponse response = orderQueryService.orderDetail(orderDetailRequest);
-    }
+//    @Test
+//    public void testOrderDetail() {
+//        OrderDetailRequest orderDetailRequest = new OrderDetailRequest();
+//        orderDetailRequest.setOrderId("19081913521928018");
+//        OrderDetailResponse response = orderQueryService.orderDetail(orderDetailRequest);
+//    }
 
     /**
      * 贼帅的 Sssd

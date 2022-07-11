@@ -18,6 +18,6 @@ public interface OrderQueryService {
      * @param request
      * @return
      */
-    OrderDetailResponse orderDetail(OrderDetailRequest request);
+    TrueOrderDetailResponse orderDetail(OrderDetailRequest request);
 
 }

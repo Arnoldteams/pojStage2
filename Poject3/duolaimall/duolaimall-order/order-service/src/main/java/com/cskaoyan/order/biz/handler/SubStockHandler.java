@@ -112,10 +112,10 @@ public class SubStockHandler extends AbstractTransHandler {
                 if(item.getItemId().equals(cartProductDto.getProductId())){
 
                     if(purchaseNum > restrictCountNum){
-                        throw new BizException(cartProductDto.getProductName() + "超出限购数量！");
+                        throw new BizException(OrderRetCode.INIT_ORDER_EXCEPTION.getCode(),cartProductDto.getProductName() + "超出限购数量！");
                     }
                     if(purchaseNum > stockCount){
-                        throw new BizException(cartProductDto.getProductName() + "超出库存数量!");
+                        throw new BizException(OrderRetCode.INIT_ORDER_EXCEPTION.getCode(),cartProductDto.getProductName() + "超出库存数量!");
                     }
                 }
             }

@@ -42,9 +42,9 @@ public class ProductController {
         RecommendResponse response = iProductService.getRecommendGoods();
         if (ShoppingRetCode.SUCCESS.getCode().equals(response.getCode())) {
             // 执行成功
-            ArrayList<RecommendResponse> resultList = new ArrayList<>();
-            resultList.add(response);
-            return new ResponseUtil().setData(resultList);
+            // ArrayList<RecommendResponse> resultList = new ArrayList<>();
+            // resultList.add(response);
+            return new ResponseUtil().setData(response.getPanelContentItemDtos());
         }
 
         // 执行失败
@@ -88,6 +88,7 @@ public class ProductController {
         request.setSize(pageInfo.getSize());
         request.setPriceGt(pageInfo.getPriceGt());
         request.setPriceLte(pageInfo.getPriceLte());
+        request.setCid(pageInfo.getCid());
 
         AllProductResponse response = iProductService.getAllProduct(request);
 

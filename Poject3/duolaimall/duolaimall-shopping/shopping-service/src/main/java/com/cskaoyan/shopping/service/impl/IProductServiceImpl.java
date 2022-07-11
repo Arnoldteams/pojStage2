@@ -124,6 +124,13 @@ public class IProductServiceImpl implements IProductService {
             if (request.getPriceGt()!=null && request.getPriceLte()!=null){
                 criteria.andBetween("price",request.getPriceGt(),request.getPriceLte());
             }
+            //按所属分类查询
+            if (request.getCid()!=null){
+                criteria.andEqualTo("cid",request.getCid());
+            }
+            //状态为未下架
+            criteria.andEqualTo("status",1);
+
             //分页
             PageHelper.startPage(request.getPage(), request.getSize());
             List<Item> items = itemMapper.selectByExample(example);

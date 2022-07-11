@@ -1,6 +1,7 @@
 package com.cskaoyan.shopping.service.impl;
 
 
+import com.cskaoyan.mall.commons.constant.SysRetCodeConstants;
 import com.cskaoyan.mall.commons.exception.ExceptionProcessorUtils;
 
 import com.cskaoyan.mall.constant.ShoppingRetCode;
@@ -161,14 +162,34 @@ public class ICartServiceImpl implements ICartService {
         return response;
     }
 
+    /**
+     * @description: 全选/全不选购物车商品
+     * @parameter: [request]
+     * @return: com.cskaoyan.shopping.dto.CheckAllItemResponse
+     * @author: 帅关
+     * @createTime: 2022/7/11 10:01
+     */
     @Override
     public CheckAllItemResponse checkAllCartItem(CheckAllItemRequest request) {
-        request.requestCheck();
-        String checked = request.getChecked();
-        RMap<Long, List<CartProductDto>> map = redissonClient.getMap("carts");
-        map.get(request.getUserId())
-                .forEach(a -> a.setChecked(checked));
-        return new CheckAllItemResponse();
+        CheckAllItemResponse response = new CheckAllItemResponse();
+        try{
+            request.requestCheck();
+            String checked = request.getChecked();
+            RMap<Long, CartProductDto> map = redissonClient.getMap("User"+request.getUserId());
+            Set<Long> productIds = map.keySet();
+            for (Long productId : productIds) {
+                CartProductDto productDto = map.get(productId);
+                productDto.setChecked(checked);
+                map.put(productId,productDto);
+            }
+           response.setCode(SysRetCodeConstants.SUCCESS.getCode());
+           response.setMsg(SysRetCodeConstants.SUCCESS.getMessage());
+        }catch (Exception e){
+            e.printStackTrace();
+            ExceptionProcessorUtils.wrapperHandlerException(response,e);
+        }
+
+        return response;
     }
 
     /**

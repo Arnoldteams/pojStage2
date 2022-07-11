@@ -51,23 +51,23 @@ public class OrderCoreController {
      * @return
      */
     @PostMapping("/cancelOrder")
-    public ResponseData cancelOrder(@RequestBody CancelOrderRequest request, HttpServletRequest httpServletRequest) {
-//        String orderId = httpServletRequest.getHeader("id");
-//        request.setOrderId(orderId);
-        request.setOrderId("20041912580013939");
+    public ResponseData cancelOrder(@RequestBody CancelOrderRequest request) {
 
         // 调用业务层代码
         CancelOrderResponse response = orderCoreService.cancelOrder(request);
 
         if (response.getCode().equals(SysRetCodeConstants.SUCCESS.getCode())) {
-            return new ResponseUtil().setData(request.getOrderId());
+            return new ResponseUtil().setData(response);
         }
 
         return new ResponseUtil<>().setErrorMsg(response.getMsg());
     }
 
     @DeleteMapping("/order/{id}")
-    public ResponseData deleteOrder(@RequestBody DeleteOrderRequest request) {
+    public ResponseData deleteOrder(@PathVariable("id") String id) {
+        DeleteOrderRequest request = new DeleteOrderRequest();
+        request.setOrderId(id);
+
         DeleteOrderResponse response = orderCoreService.deleteOrder(request);
 
         if (response.getCode().equals(SysRetCodeConstants.SUCCESS.getCode())) {
