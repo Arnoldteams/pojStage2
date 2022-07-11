@@ -11,6 +11,7 @@ import com.cskaoyan.user.dto.UserRegisterRequest;
 import com.cskaoyan.user.dto.UserRegisterResponse;
 import com.cskaoyan.user.service.IRegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
@@ -101,16 +102,21 @@ public class RegisterServiceImpl implements IRegisterService {
 
     @Async
     void sendMail(UserRegisterRequest userRegisterRequest, Member member, String uuid) {
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setSubject("CSMALL用户激活");
-        String text = "http://localhost:9999/user/verify?uid=" + uuid + "&" + "username=" + userRegisterRequest.getUserName();
-        mailMessage.setText(text);
-        mailMessage.setFrom("yn1609853@163.com");
-        mailMessage.setTo(member.getEmail());
-        mailSender.send(mailMessage);
+        try {
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setSubject("CSMALL用户激活");
+            String text = "http://localhost:9999/user/verify?uid=" + uuid + "&" + "username=" + userRegisterRequest.getUserName();
+            mailMessage.setText(text);
+            mailMessage.setFrom("yn1609853@163.com");
+            mailMessage.setTo(member.getEmail());
+            mailSender.send(mailMessage);
+        } catch (MailException e) {
+            e.printStackTrace();
+            throw new ValidateException(UserRetCode.USER_INFOR_UPDATE_FAIL.getCode(),UserRetCode.USER_INFOR_UPDATE_FAIL.getMessage());
+        }
     }
 
-    private void validateRepeat(UserRegisterRequest userRegisterRequest) throws ValidateException {
+    private void validateRepeat(UserRegisterRequest userRegisterRequest) {
         Example example = new Example(Member.class);
         example.createCriteria().andEqualTo("username",userRegisterRequest.getUserName());
         Member member = memberMapper.selectOneByExample(example);
