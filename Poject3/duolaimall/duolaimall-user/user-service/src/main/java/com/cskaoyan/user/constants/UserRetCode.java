@@ -13,7 +13,9 @@ public enum UserRetCode {
     USER_ISVERFIED_ERROR                ("003006","用户名尚未激活"),
     USER_REGISTER_VERIFY_FAILED         ("003007","用户注册失败插入验证数据失败"),
     USER_INFOR_INVALID                  ("003004","用户信息不合法"),
-    USER_INFOR_UPDATE_FAIL              ("003008","用户信息修改失败"),
+//    USER_INFOR_UPDATE_FAIL              ("003008","用户信息修改失败"),
+    //自定义邮箱异常，上面是老师的异常
+    USER_INFOR_UPDATE_FAIL              ("003008","注册邮箱地址有误"),
 
     REQUEST_FORMAT_ILLEGAL              ("003060", "请求数据格式非法"),
     REQUEST_IP_ILLEGAL                  ("003061", "请求IP非法"),

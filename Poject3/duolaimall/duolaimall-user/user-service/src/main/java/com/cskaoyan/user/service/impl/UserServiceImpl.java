@@ -38,7 +38,7 @@ public class UserServiceImpl implements IUserService {
     UserVerifyMapper userVerifyMapper;
 
     @Override
-    public UserLoginResponse userLogin(UserLoginRequest request) {
+    public UserLoginResponse userLogin (UserLoginRequest request) {
         UserLoginResponse response = new UserLoginResponse();
 
         try {
