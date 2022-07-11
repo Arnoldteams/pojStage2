@@ -3,12 +3,16 @@ package com.cskaoyan.shopping.controller;
 import com.cskaoyan.mall.commons.result.ResponseData;
 import com.cskaoyan.mall.commons.result.ResponseUtil;
 import com.cskaoyan.mall.constant.ShoppingRetCode;
+import com.cskaoyan.mall.dto.ProductDetailRequest;
+import com.cskaoyan.mall.dto.ProductDetailResponse;
+import com.cskaoyan.shopping.dto.AllProductRequest;
+import com.cskaoyan.shopping.dto.AllProductResponse;
 import com.cskaoyan.shopping.dto.RecommendResponse;
+import com.cskaoyan.shopping.form.PageInfo;
+import com.cskaoyan.shopping.form.PageResponse;
 import com.cskaoyan.shopping.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
@@ -46,4 +50,54 @@ public class ProductController {
         // 执行失败
         return new ResponseUtil().setErrorMsg(response.getMsg());
     }
+
+
+    /***
+     * @author: 文陶
+     * @createTime: 2022/07/10 20:09:21
+     * @description: 查寻商品详情
+     * @param: id
+     * @return: com.cskaoyan.mall.commons.result.ResponseData
+     */
+    @GetMapping("product/{id}")
+    public ResponseData getProductDetailById(@PathVariable("id") Long id) {
+        ProductDetailRequest request = new ProductDetailRequest();
+        request.setId(id);
+
+        ProductDetailResponse response = iProductService.getProductDetail(request);
+
+        if (ShoppingRetCode.SUCCESS.getCode().equals(response.getCode())) {
+            return new ResponseUtil().setData(response.getProductDetailDto());
+        }
+
+        return new ResponseUtil().setErrorMsg(response.getMsg());
+    }
+
+    /***
+     * @author: 文陶
+     * @createTime: 2022/07/10 20:09:46
+     * @description: 查询所有商品
+     * @param: null - [null]
+     * @return: null
+     */
+    @GetMapping("goods")
+    public ResponseData getGoods(PageInfo pageInfo) {
+        AllProductRequest request = new AllProductRequest();
+        request.setPage(pageInfo.getPage());
+        request.setSort(pageInfo.getSort());
+        request.setSize(pageInfo.getSize());
+        request.setPriceGt(pageInfo.getPriceGt());
+        request.setPriceLte(pageInfo.getPriceLte());
+
+        AllProductResponse response = iProductService.getAllProduct(request);
+
+        if (ShoppingRetCode.SUCCESS.getCode().equals(response.getCode())) {
+            PageResponse data = new PageResponse();
+            data.setData(response.getProductDtoList());
+            data.setTotal(response.getTotal());
+            return new ResponseUtil().setData(data);
+        }
+        return new ResponseUtil().setErrorMsg(response.getMsg());
+    }
+
 }

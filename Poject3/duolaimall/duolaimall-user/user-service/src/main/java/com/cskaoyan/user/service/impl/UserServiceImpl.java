@@ -13,8 +13,11 @@ import com.cskaoyan.user.dto.UserTokenDto;
 import com.cskaoyan.user.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 import tk.mybatis.mapper.entity.Example;
 import com.cskaoyan.user.constants.UserRetCode;
+import lombok.extern.slf4j.Slf4j;
+import com.cskaoyan.mall.commons.exception.ValidateException;
 
 /**
  * @Author: 夏一男
@@ -22,7 +25,7 @@ import com.cskaoyan.user.constants.UserRetCode;
  * @version:
  * @Description:
  */
-
+@Slf4j
 @Service
 public class UserServiceImpl implements IUserService {
 
@@ -42,12 +45,17 @@ public class UserServiceImpl implements IUserService {
             String passWord = request.getPassword();
             Example example = new Example(Member.class);
             Example.Criteria criteria = example.createCriteria();
-            criteria.andEqualTo("username",userName).andEqualTo("password",passWord);
+            String encodingPassword = DigestUtils.md5DigestAsHex(passWord.getBytes());
+            criteria.andEqualTo("username",userName).andEqualTo("password",encodingPassword);
             Member member = memberMapper.selectOneByExample(example);
             if(member==null){
-                response.setCode(UserRetCode.USERORPASSWORD_ERRROR.getCode());
-                response.setMsg(UserRetCode.USERORPASSWORD_ERRROR.getMessage());
-                throw new Exception("用户名或密码错误");
+
+                throw new ValidateException(UserRetCode.USERORPASSWORD_ERRROR.getCode(),UserRetCode.USERORPASSWORD_ERRROR.getMessage());
+            }
+
+            if("N".equals(member.getIsVerified())){
+
+                throw new ValidateException(UserRetCode.USER_ISVERFIED_ERROR.getCode(),UserRetCode.USER_ISVERFIED_ERROR.getMessage());
             }
             QueryMemberResponse queryMemberResponse = memberConverter.member2Res(member);
             response = memberConverter.QueryRes2LoginRes(queryMemberResponse);
@@ -62,9 +70,12 @@ public class UserServiceImpl implements IUserService {
             String token = JwtTokenUtils.builder().msg(userInfo).build().creatJwtToken();
             response.setToken(token);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("UserServiceImpl.userLogin occur Exception :"+e);
+            ExceptionProcessorUtils.wrapperHandlerException(response,e);
         }
 
         return response;
     }
+
+
 }

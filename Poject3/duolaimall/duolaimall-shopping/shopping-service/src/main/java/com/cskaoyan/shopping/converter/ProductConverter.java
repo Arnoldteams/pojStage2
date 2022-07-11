@@ -1,6 +1,7 @@
 package com.cskaoyan.shopping.converter;
 
 import com.cskaoyan.mall.dto.ItemDto;
+import com.cskaoyan.mall.dto.ProductDetailDto;
 import com.cskaoyan.shopping.dal.entitys.Item;
 import com.cskaoyan.mall.dto.ProductDto;
 import com.cskaoyan.shopping.dal.entitys.ItemCat;
@@ -27,4 +28,16 @@ public interface ProductConverter {
     ItemDto item2ItemDto(Item item);
 
     List<ItemDto> items2ItemDtos(List<Item> items);
+
+
+
+    @Mappings(
+            {
+                    @Mapping(source = "id", target = "productId"),
+                    @Mapping(source = "title",target = "productName"),
+                    @Mapping(source = "price",target = "salePrice"),
+                    @Mapping(source = "sellPoint",target = "subTitle"),
+            }
+    )
+    ProductDetailDto productDoToDto(Item item);
 }

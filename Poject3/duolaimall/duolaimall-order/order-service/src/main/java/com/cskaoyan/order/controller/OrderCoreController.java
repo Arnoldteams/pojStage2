@@ -5,8 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.cskaoyan.mall.commons.constant.SysRetCodeConstants;
 import com.cskaoyan.mall.commons.result.ResponseData;
 import com.cskaoyan.mall.commons.result.ResponseUtil;
-import com.cskaoyan.order.dto.CreateOrderRequest;
-import com.cskaoyan.order.dto.CreateOrderResponse;
+import com.cskaoyan.order.dto.*;
 import com.cskaoyan.order.service.OrderCoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,15 +33,47 @@ public class OrderCoreController {
      */
     @PostMapping("/order")
     public ResponseData createOrder(@RequestBody CreateOrderRequest request, HttpServletRequest httpServletRequest){
-        // String userInfo = httpServletRequest.getHeader("user_info");
-        // JSONObject jsonObject = JSON.parseObject(userInfo);
-        // long uid = Long.parseLong(jsonObject.get("uid").toString());
-        // request.setUserId(uid);
-        request.setUserId((long) 71);
+        String userInfo = httpServletRequest.getHeader("user_info");
+        JSONObject jsonObject = JSON.parseObject(userInfo);
+        long uid = Long.parseLong(jsonObject.get("uid").toString());
+        request.setUserId(uid);
         CreateOrderResponse response = orderCoreService.createOrder(request);
         if(response.getCode().equals(SysRetCodeConstants.SUCCESS.getCode())){
             return new ResponseUtil().setData(response.getOrderId());
         }
+        return new ResponseUtil<>().setErrorMsg(response.getMsg());
+    }
+
+    /**
+     * @author Sssd
+     * @param request
+     * @param httpServletRequest
+     * @return
+     */
+    @PostMapping("/cancelOrder")
+    public ResponseData cancelOrder(@RequestBody CancelOrderRequest request, HttpServletRequest httpServletRequest) {
+//        String orderId = httpServletRequest.getHeader("id");
+//        request.setOrderId(orderId);
+        request.setOrderId("20041912580013939");
+
+        // 调用业务层代码
+        CancelOrderResponse response = orderCoreService.cancelOrder(request);
+
+        if (response.getCode().equals(SysRetCodeConstants.SUCCESS.getCode())) {
+            return new ResponseUtil().setData(request.getOrderId());
+        }
+
+        return new ResponseUtil<>().setErrorMsg(response.getMsg());
+    }
+
+    @DeleteMapping("/order/{id}")
+    public ResponseData deleteOrder(@RequestBody DeleteOrderRequest request) {
+        DeleteOrderResponse response = orderCoreService.deleteOrder(request);
+
+        if (response.getCode().equals(SysRetCodeConstants.SUCCESS.getCode())) {
+            return new ResponseUtil().setData(request.getOrderId());
+        }
+
         return new ResponseUtil<>().setErrorMsg(response.getMsg());
     }
 
