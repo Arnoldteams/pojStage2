@@ -58,7 +58,6 @@ public class CartController {
     }
 
     /**
-<<<<<<< HEAD
      * 更新购物车的数据
      *
      * @param cartForm
