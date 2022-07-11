@@ -70,6 +70,7 @@ public class UserController {
             //在相应头中添加名为access_token的cookie用来存放jwt并发送给用户浏览器
             Cookie tokenCookie = new Cookie("access_token", response.getToken());
             tokenCookie.setPath("/");
+            tokenCookie.setMaxAge(3*60*60);
             httpServletResponse.addCookie(tokenCookie);
             return new ResponseUtil().setData(response);
         }
@@ -117,6 +118,20 @@ public class UserController {
 
     }
 
+
+    @GetMapping("/user/verify")
+    public ResponseData userVerify(String uid,String username) {
+        UserVerifyRequest request = new UserVerifyRequest();
+        request.setUserName(username);
+        request.setUuid(uid);
+        UserVerifyResponse response = iUserService.userVerify(request);
+        if (UserRetCode.SUCCESS.getCode().equals(response.getCode())) {
+            return new ResponseUtil().setData(null);
+        }
+
+        return new ResponseUtil().setErrorMsg(response.getMsg());
+
+    }
 
 
 }

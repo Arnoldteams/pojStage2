@@ -128,13 +128,16 @@ public class IProductServiceImpl implements IProductService {
             PageHelper.startPage(request.getPage(), request.getSize());
             List<Item> items = itemMapper.selectByExample(example);
             PageInfo<Item> itemPageInfo = new PageInfo<>(items);
-            List<ProductDto> productDtoList = productConverter.items2Dto(items);
-            PageInfo<ProductDto> pageInfo = new PageInfo<>(productDtoList);
+
+
+            //do->dto
+            List<Item> itemPageInfoList = itemPageInfo.getList();
+            List<ProductDto> productDtoList = productConverter.items2Dto(itemPageInfoList);
             //成功
             response.setCode(ShoppingRetCode.SUCCESS.getCode());
             response.setMsg(ShoppingRetCode.SUCCESS.getMessage());
-            response.setTotal((long) items.size());
-            response.setProductDtoList(pageInfo.getList());
+            response.setTotal(itemPageInfo.getTotal());
+            response.setProductDtoList(productDtoList);
         } catch (Exception e) {
             //异常处理
             e.printStackTrace();
