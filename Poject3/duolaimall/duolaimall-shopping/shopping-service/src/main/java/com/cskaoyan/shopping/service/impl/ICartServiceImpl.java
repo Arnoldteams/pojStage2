@@ -148,6 +148,7 @@ public class ICartServiceImpl implements ICartService {
 
             CartProductDto cartProductDto = map.get(request.getItemId());
             cartProductDto.setProductNum((long)request.getNum());
+            cartProductDto.setChecked(request.getChecked());
             map.put(request.getItemId(),cartProductDto);
 
             response.setCode(ShoppingRetCode.SUCCESS.getCode());

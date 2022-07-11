@@ -109,6 +109,13 @@ public class CartController {
     }
 
 
+    /**
+     * 删除多个购物车商品
+     * @param uid 登录用户id
+     * @return com.cskaoyan.mall.commons.result.ResponseData
+     * @author xyg2597@163.com
+     * @since 2022/07/11 8:55
+     */
     @RequestMapping(value = "items/{uid}",method = RequestMethod.DELETE)
     public ResponseData deleteCheckCartItems(@PathVariable("uid") Long uid){
         DeleteCheckedItemRequest request = new DeleteCheckedItemRequest();
