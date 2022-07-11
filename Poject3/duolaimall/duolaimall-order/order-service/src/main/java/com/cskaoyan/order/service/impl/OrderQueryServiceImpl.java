@@ -48,15 +48,20 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     @Override
     public OrderListResponse orderList(OrderListRequest request) {
         // 参数校验
-        request.requestCheck();
+
         OrderListResponse response = new OrderListResponse();
 
         try {
-            PageHelper.startPage(request.getPage(), request.getSize(), request.getSort());
+            request.requestCheck();
             // 获取该用户的所有订单
+            PageHelper.startPage(request.getPage(), request.getSize(), request.getSort());
             Example example = new Example(Order.class);
             example.createCriteria().andEqualTo("userId", request.getUserId());
             List<Order> orders = orderMapper.selectByExample(example);
+
+            // 分页处理
+            PageInfo<Order> pageInfo = new PageInfo<>(orders);
+
             List<OrderDetailInfo> orderDetailInfos = converter.order2detail(orders);
 
             for (OrderDetailInfo orderDetailInfo : orderDetailInfos) {
@@ -75,11 +80,8 @@ public class OrderQueryServiceImpl implements OrderQueryService {
                 orderDetailInfo.setOrderShippingDto(orderShippingDto);
             }
 
-            // 分页处理
-            PageInfo<OrderDetailInfo> pageInfo = new PageInfo<>(orderDetailInfos);
-            int size = pageInfo.getSize();
-            response.setDetailInfoList(pageInfo.getList());
-            response.setTotal((long) size);
+            response.setDetailInfoList(orderDetailInfos);
+            response.setTotal(pageInfo.getTotal());
             response.setCode(SysRetCodeConstants.SUCCESS.getCode());
             response.setMsg(SysRetCodeConstants.SUCCESS.getMessage());
         }catch (Exception e){

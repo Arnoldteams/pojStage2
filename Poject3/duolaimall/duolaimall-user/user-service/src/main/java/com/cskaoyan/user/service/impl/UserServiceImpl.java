@@ -6,10 +6,7 @@ import com.cskaoyan.mall.commons.util.jwt.JwtTokenUtils;
 import com.cskaoyan.user.converter.MemberConverter;
 import com.cskaoyan.user.dal.entitys.Member;
 import com.cskaoyan.user.dal.persistence.MemberMapper;
-import com.cskaoyan.user.dto.QueryMemberResponse;
-import com.cskaoyan.user.dto.UserLoginRequest;
-import com.cskaoyan.user.dto.UserLoginResponse;
-import com.cskaoyan.user.dto.UserTokenDto;
+import com.cskaoyan.user.dto.*;
 import com.cskaoyan.user.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,6 +71,17 @@ public class UserServiceImpl implements IUserService {
             ExceptionProcessorUtils.wrapperHandlerException(response,e);
         }
 
+        return response;
+    }
+
+    @Override
+    public UserVerifyResponse userVerify(UserVerifyRequest userVerifyRequest) {
+        UserVerifyResponse response = new UserVerifyResponse();
+
+        //在member表里修改用户的激活状态
+        Example example = new Example(Member.class);
+        example.createCriteria().andEqualTo("username",userVerifyRequest.getUserName());
+//        memberMapper.updateByExample()
         return response;
     }
 

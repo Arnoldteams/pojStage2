@@ -33,11 +33,10 @@ public class OrderCoreController {
      */
     @PostMapping("/order")
     public ResponseData createOrder(@RequestBody CreateOrderRequest request, HttpServletRequest httpServletRequest){
-        // String userInfo = httpServletRequest.getHeader("user_info");
-        // JSONObject jsonObject = JSON.parseObject(userInfo);
-        // long uid = Long.parseLong(jsonObject.get("uid").toString());
-        // request.setUserId(uid);
-        request.setUserId((long) 71);
+        String userInfo = httpServletRequest.getHeader("user_info");
+        JSONObject jsonObject = JSON.parseObject(userInfo);
+        long uid = Long.parseLong(jsonObject.get("uid").toString());
+        request.setUserId(uid);
         CreateOrderResponse response = orderCoreService.createOrder(request);
         if(response.getCode().equals(SysRetCodeConstants.SUCCESS.getCode())){
             return new ResponseUtil().setData(response.getOrderId());

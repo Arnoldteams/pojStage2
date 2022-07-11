@@ -28,6 +28,13 @@ public class LogisticalHandler extends AbstractTransHandler {
         return false;
     }
 
+    /**
+     * @description: 创建物流表
+     * @parameter: [context]
+     * @return: boolean
+     * @author: 帅关
+     * @createTime: 2022/7/11 8:28
+     */
     @Override
     public boolean handle(TransHandlerContext context) {
         CreateOrderContext orderContext = (CreateOrderContext) context;

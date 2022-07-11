@@ -118,5 +118,12 @@ public class UserController {
     }
 
 
+    @GetMapping("/user/verify")
+    public ResponseData userVerify(String uid,String username){
+        UserVerifyRequest request = new UserVerifyRequest();
+        UserVerifyResponse userVerifyResponse = iUserService.userVerify(request);
+        return new ResponseUtil().setData(null);
+    }
+
 
 }

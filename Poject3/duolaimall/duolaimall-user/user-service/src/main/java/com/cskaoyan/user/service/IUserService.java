@@ -2,6 +2,8 @@ package com.cskaoyan.user.service;
 
 import com.cskaoyan.user.dto.UserLoginRequest;
 import com.cskaoyan.user.dto.UserLoginResponse;
+import com.cskaoyan.user.dto.UserVerifyRequest;
+import com.cskaoyan.user.dto.UserVerifyResponse;
 
 /**
  * @Author: 夏一男
@@ -13,4 +15,5 @@ public interface IUserService {
 
     UserLoginResponse userLogin(UserLoginRequest userLoginRequest);
 
+    UserVerifyResponse userVerify(UserVerifyRequest userVerifyRequest);
 }
