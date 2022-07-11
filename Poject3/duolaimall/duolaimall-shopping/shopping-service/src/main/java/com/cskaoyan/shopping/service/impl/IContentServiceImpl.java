@@ -9,6 +9,7 @@ import com.cskaoyan.shopping.dto.PanelContentDto;
 import com.cskaoyan.shopping.service.IContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
@@ -31,7 +32,12 @@ public class IContentServiceImpl implements IContentService {
         NavListResponse response = new NavListResponse();
 
         try {
-            List<PanelContent> panelContents = panelContentMapper.selectAll();
+
+            Example example = new Example(PanelContent.class);
+            example.createCriteria().
+                    orEqualTo("panelId",0);
+
+            List<PanelContent> panelContents = panelContentMapper.selectByExample(example);
             List<PanelContentDto> panelContentDtos = contentConverter.panelContents2Dto(panelContents);
 
             //执行成功
