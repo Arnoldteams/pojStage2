@@ -5,16 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.cskaoyan.mall.commons.constant.SysRetCodeConstants;
 import com.cskaoyan.mall.commons.result.ResponseData;
 import com.cskaoyan.mall.commons.result.ResponseUtil;
-import com.cskaoyan.order.dto.OrderDetailRequest;
-import com.cskaoyan.order.dto.OrderDetailResponse;
-import com.cskaoyan.order.dto.OrderListRequest;
-import com.cskaoyan.order.dto.OrderListResponse;
+import com.cskaoyan.order.dto.*;
 import com.cskaoyan.order.service.OrderQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -56,14 +50,18 @@ public class OrderQueryController {
      * @author: 极其帅气的 Sssd
      */
     @GetMapping("/order/{id}")
-    public ResponseData qurryOrderDetail(@RequestBody OrderDetailRequest request) {
+    public ResponseData qurryOrderDetail(@PathVariable("id") String id) {
+
+        OrderDetailRequest request = new OrderDetailRequest();
+        request.setOrderId(id);
 
         // 调用业务层逻辑
-        OrderDetailResponse response = queryService.orderDetail(request);
+        TrueOrderDetailResponse response = queryService.orderDetail(request);
 
         // 判断返回值
         if (response.getCode().equals(SysRetCodeConstants.SUCCESS.getCode())) {
-            return new ResponseUtil().setData(response);
+            ResponseData<Object> objectResponseData = new ResponseUtil<>().setData(response);
+            return objectResponseData;
         }
 
         return new ResponseUtil<>().setErrorMsg(response.getMsg());
