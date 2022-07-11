@@ -114,15 +114,21 @@ public class IProductServiceImpl implements IProductService {
             if (request.getSort()!=null&&request.getSort()!=""){
                 if ("1".equals(request.getSort())){
                     //升序
-                    example.orderBy("price").desc();
+                    example.orderBy("price").asc();
                 }else{
                     //降序
-                    example.orderBy("price").asc();
+                    example.orderBy("price").desc();
                 }
             }
             //按价格查询
-            if (request.getPriceGt()!=null && request.getPriceLte()!=null){
-                criteria.andBetween("price",request.getPriceGt(),request.getPriceLte());
+//            if (request.getPriceGt()!=null && request.getPriceLte()!=null){
+//                criteria.andBetween("price",request.getPriceGt(),request.getPriceLte());
+//            }
+            if (request.getPriceGt()!=null){
+                criteria.andGreaterThanOrEqualTo("price",request.getPriceGt());
+            }
+            if (request.getPriceLte()!=null){
+                criteria.andLessThanOrEqualTo("price",request.getPriceLte());
             }
             //按所属分类查询
             if (request.getCid()!=null){
