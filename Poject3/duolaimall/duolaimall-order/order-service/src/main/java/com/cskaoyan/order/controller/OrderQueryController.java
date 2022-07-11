@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  *
@@ -32,7 +34,7 @@ public class OrderQueryController {
     OrderQueryService queryService;
 
     @GetMapping("/order")
-    public ResponseData queryAllOrder(@RequestBody OrderListRequest request, HttpServletRequest httpServletRequest){
+    public ResponseData queryAllOrder(OrderListRequest request, HttpServletRequest httpServletRequest){
         // 拿到用户Id
         String userInfo = httpServletRequest.getHeader("user_info");
         JSONObject jsonObject = JSON.parseObject(userInfo);
@@ -41,7 +43,10 @@ public class OrderQueryController {
 
         OrderListResponse response = queryService.orderList(request);
         if(response.getCode().equals(SysRetCodeConstants.SUCCESS.getCode())){
-            return new ResponseUtil().setData(response);
+            HashMap<Object, Object> res = new HashMap<>();
+            res.put("total",response.getTotal());
+            res.put("data",response.getDetailInfoList());
+            return new ResponseUtil().setData(res);
         }
         return new ResponseUtil<>().setErrorMsg(response.getMsg());
 
